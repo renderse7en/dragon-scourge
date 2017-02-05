@@ -5,9 +5,9 @@ $starttime = getmicrotime();
 $numqueries = 0;
 $link = opendb();
 $version = "Beta 4";
-$bnumber = "17";
-$bname = "Haiku";
-$bdate = "8.09.2006";
+$bnumber = "18";
+$bname = "Joe Camel";
+$bdate = "9.03.2006";
 include("lib2.php");
 
 // Handling for servers with magic_quotes turned on.
@@ -149,14 +149,14 @@ function mymail($to, $title, $body, $from = '') { // thanks to arto dot PLEASE d
     $from = trim($from);
 
     if (!$from) {
-    $from = '<$adminemail>';
+    $from = "<$adminemail>";
     }
     
     $rp    = $adminemail;
-    $org    = '$gameurl';
-    $mailer = 'PHP';
+    $org    = "$gameurl";
+    $mailer = "PHP";
     
-    $head  = '';
+    $head  = "";
     $head  .= "Content-Type: text/plain \r\n";
     $head  .= "Date: ". date('r'). " \r\n";
     $head  .= "Return-Path: $rp \r\n";

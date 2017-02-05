@@ -44,7 +44,6 @@ function register() {
 
         // Process password.
         if (trim($password1) == "") { $errors++; $errorlist .= "Password fields is required.<br />"; }
-        if (preg_match("/[^A-z0-9_\-]/", $password1)==1) { $errors++; $errorlist .= "Password must be alphanumeric.<br />"; } // Thanks to "Carlos Pires" from php.net!
         if ($password1 != $password2) { $errors++; $errorlist .= "Passwords don't match.<br />"; }
         $password = md5($password1);
         
@@ -77,7 +76,7 @@ function register() {
             // Send confirmation email if necessary.
             if ($controlrow["verifyemail"] == 1) {
                 if (sendregmail($email1, $verifycode) == true) {
-                    $page = "Your account was created successfully.<br /><br />You should receive an Account Verification email shortly. You will need the verification code contained in that email before you are allowed to log in. Once you have received the email, please visit the <a href=\"users.php?do=verify\">Verification Page</a> to enter your code and start playing.";
+                    $page = "Your account was created successfully.<br /><br />You should receive an Account Verification email shortly. You will need the verification code contained in that email before you are allowed to log in. Once you have received the email, click the verification link it contains to activate your account, and start playing.";
                 } else {
                     $page = "Your account was created successfully.<br /><br />However, there was a problem sending your verification email. Please check with the game administrator to help resolve this problem.";
                 }
@@ -207,7 +206,6 @@ function settings() {
         // Process password.
         if (trim($password1) != "") { 
             if (md5($oldpassword) != $acctrow["password"]) { $errors++; $errorlist .= "Incorrect old password.<br />"; }
-            if (preg_match("/[^A-z0-9_\-]/", $password1)==1) { $errors++; $errorlist .= "Password must be alphanumeric.<br />"; } // Thanks to "Carlos Pires" from php.net!
             if ($password1 != $password2) { $errors++; $errorlist .= "New passwords don't match.<br />"; }
             $password = "password='".md5($password1)."',";
             $newpass = true;

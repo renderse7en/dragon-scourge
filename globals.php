@@ -45,6 +45,7 @@ $fightrow = array(
     "monstermagicdamage"=>0,
     "monsterfiredamage"=>0,
     "monsterlightdamage"=>0,
+    "track"=>"",
     "message"=>"");
 
 ?>

@@ -13,6 +13,8 @@ switch($do) {
 
 function login() {
     
+    $controlrow = dorow(doquery("SELECT * FROM <<control>> WHERE id='1' LIMIT 1"));
+    
     if (isset($_POST["submit"])) {
         
         // Setup.
@@ -29,7 +31,7 @@ function login() {
         // Finish.
         $newcookie = $row["id"] . " " . $username . " " . md5($row["password"] . "--" . $dbsettings["secretword"]);
         if (isset($remember)) { $expiretime = time()+31536000; $newcookie .= " 1"; } else { $expiretime = 0; $newcookie .= " 0"; }
-        setcookie("scourge", $newcookie, $expiretime, "/", "", 0);
+        setcookie($controlrow["cookiename"], $newcookie, $expiretime, "/", "", 0);
         die(header("Location: index.php"));
         
     } else {
@@ -43,7 +45,7 @@ function login() {
 function logout() {
     
     include("globals.php");
-    setcookie("scourge", "", (time()-3600), "/", "", 0);
+    setcookie($controlrow["cookiename"], "", (time()-3600), "/", $controlrow["cookiedomain"], 0);
     die(header("Location: login.php?do=login"));
     
 }

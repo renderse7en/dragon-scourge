@@ -1,5 +1,7 @@
 <?php // index.php :: Case switching to decide what function we need to be running.
 
+error_reporting(E_STRICT);
+
 include("lib.php");
 include("globals.php");
 

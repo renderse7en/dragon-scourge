@@ -201,7 +201,7 @@ function maildelete() {
     if ($message == false) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($message["recipientid"] != $userrow["id"]) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     
-    $delete = doquery("DELETE FROM {{table}} WHERE id='".$_GET["id"]."'", "messages");
+    $delete = doquery("DELETE FROM <<messages>> WHERE id='".$_GET["id"]."'");
     die(header("Location: index.php?do=mailbox"));
         
 }

@@ -26,6 +26,12 @@ function storyteleport() { // Sends to a new location, or just displays a chunk 
             $userrow["world"] = $story["targetworld"];
             $userrow["latitude"] = $story["targetlat"];
             $userrow["longitude"] = $story["targetlon"];
+            // Get first town from new world.
+            $newtown = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' ORDER BY id LIMIT 1"));
+            $towns = explode(",",$userrow["townslist"]);
+            $towns[] = $newtown["id"];
+            $userrow["townslist"] = implode(",",$towns);
+            
         }
         if ($story["targetaction"] != "") {
             $userrow["currentaction"] = $story["targetaction"];
@@ -78,11 +84,7 @@ function storyitem() {
     
     global $userrow, $story;
     
-    $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
-    foreach($premodrow as $a=>$b) {
-            $modrow[$b["fieldname"]] = $b;
-    }
-    
+    $modrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"), "fieldname");
     $thenewitem = explode(",",$story["targetitem"]);
     $newitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='".$thenewitem[1]."' LIMIT 1"));
     $newprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='".$thenewitem[0]."' LIMIT 1"));
@@ -151,6 +153,11 @@ function storyitem() {
             $userrow["world"] = $story["targetworld"];
             $userrow["latitude"] = $story["targetlat"];
             $userrow["longitude"] = $story["targetlon"];
+            // Get first town from new world.
+            $newtown = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' ORDER BY id LIMIT 1"));
+            $towns = explode(",",$userrow["townslist"]);
+            $towns[] = $newtown["id"];
+            $userrow["townslist"] = implode(",",$towns);
         }
         if ($story["targetaction"] != "") {
             $userrow["currentaction"] = $story["targetaction"];
@@ -176,6 +183,11 @@ function storyitem() {
             $userrow["world"] = $story["targetworld"];
             $userrow["latitude"] = $story["targetlat"];
             $userrow["longitude"] = $story["targetlon"];
+            // Get first town from new world.
+            $newtown = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' ORDER BY id LIMIT 1"));
+            $towns = explode(",",$userrow["townslist"]);
+            $towns[] = $newtown["id"];
+            $userrow["townslist"] = implode(",",$towns);
         }
         if ($story["targetaction"] != "") {
             $userrow["currentaction"] = $story["targetaction"];

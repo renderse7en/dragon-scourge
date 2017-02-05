@@ -30,7 +30,7 @@ $text .= "player_y=".$y."&";
 
 // Then do everyone else.
 $users = dorow(doquery("SELECT * FROM <<users>> WHERE world='".$worldrow["id"]."' AND UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND id != '".$userrow["id"]."'"), "id");
-$text .= "users=".count($users)."&";
+if ($users) { $text .= "users=".count($users)."&"; } else { $text .= "users=0&"; }
 $count = 0;
 if ($users != false) {
     foreach ($users as $a => $b) {

@@ -21,7 +21,7 @@ dofight();
 
 function rollmonster() {
     
-    global $userrow, $monsterrow;
+    global $userrow, $monsterrow, $fightrow;
     if($userrow["latitude"] < 0) { $latitude = $userrow["latitude"] * -1; } else { $latitude = $userrow["latitude"]; }
     if($userrow["longitude"] < 0) { $longitude = $userrow["longitude"] * -1; } else { $longitude = $userrow["longitude"]; }
     $maxlevel = ceil(max($latitude, $longitude) / 5);
@@ -32,6 +32,9 @@ function rollmonster() {
     $userrow["currentmonsterhp"] = (ceil(rand($monsterrow["maxhp"] * .75, $monsterrow["maxhp"]) * $userrow["difficulty"]));
     $userrow["currentmonsterid"] = $monsterrow["id"];
     $userrow["currentaction"] = "Fighting";
+    
+    $fightrow["track"] .= "init fight / roll monster\nmid: ".$monsterrow["id"]."\nmhp:".$userrow["currentmonsterhp"]."\n\n";
+    
     updateuserrow();
     dofight();
     
@@ -42,6 +45,8 @@ function dofight() {
     global $userrow, $monsterrow, $fightrow, $spells;
     
     if (isset($_POST["fight"])) {
+        
+        $fightrow["track"] .= "init turn\nmid:".$userrow["currentmonsterid"]."\nmhp:".$userrow["currentmonsterhp"]."\n\n";
         
         playerturn();
         if ($userrow["currentmonsterhp"] <= 0) { youwin(); }
@@ -60,7 +65,8 @@ function dofight() {
             "monsterphysdamage"=>$fightrow["monsterphysdamage"],
             "monstermagicdamage"=>$fightrow["monstermagicdamage"],
             "monsterfiredamage"=>$fightrow["monsterfiredamage"],
-            "monsterlightdamage"=>$fightrow["monsterlightdamage"]);
+            "monsterlightdamage"=>$fightrow["monsterlightdamage"],
+            "track"=>$fightrow["track"]);
         $pagerow["spells"] = dospellslist();
         display("Fighting",parsetemplate(gettemplate("fight_turn"),$pagerow));
         
@@ -92,7 +98,8 @@ function dofight() {
             "monsterphysdamage"=>$fightrow["monsterphysdamage"],
             "monstermagicdamage"=>$fightrow["monstermagicdamage"],
             "monsterfiredamage"=>$fightrow["monsterfiredamage"],
-            "monsterlightdamage"=>$fightrow["monsterlightdamage"]);
+            "monsterlightdamage"=>$fightrow["monsterlightdamage"],
+            "track"=>$fightrow["track"]);
         $pagerow["spells"] = dospellslist();
         display("Fighting",parsetemplate(gettemplate("fight_turn"),$pagerow));
     
@@ -101,7 +108,7 @@ function dofight() {
         if (rand(4,10) + ceil(sqrt($userrow["dexterity"])) < (rand(1,5) + ceil(sqrt((0.75 * $monsterrow["physattack"]))))) {
             
             monsterturn();
-            $fightrow["message"] = "You tried to run away, but the monster blocked you!<br />";
+            $fightrow["message"] .= "You tried to run away, but the monster blocked you!<br />";
             if ($userrow["currenthp"] <= 0) { youlose(); }
             updateuserrow();
             
@@ -112,7 +119,8 @@ function dofight() {
                 "monsterphysdamage"=>$fightrow["monsterphysdamage"],
                 "monstermagicdamage"=>$fightrow["monstermagicdamage"],
                 "monsterfiredamage"=>$fightrow["monsterfiredamage"],
-                "monsterlightdamage"=>$fightrow["monsterlightdamage"]);
+                "monsterlightdamage"=>$fightrow["monsterlightdamage"],
+                "track"=>$fightrow["track"]);
             $pagerow["spells"] = dospellslist();
             display("Fighting",parsetemplate(gettemplate("fight_monsteronly"),$pagerow));
             
@@ -129,7 +137,7 @@ function dofight() {
         if (rand(1,10) + ceil(sqrt($userrow["dexterity"])) < (rand(1,7) + ceil(sqrt((0.75 * $monsterrow["physattack"]))))) {
  
             monsterturn();
-            $fightrow["message"] = "The monster attacked before you were ready!<br />";
+            $fightrow["message"] .= "The monster attacked before you were ready!<br />";
             if ($userrow["currenthp"] <= 0) { youlose(); }
             updateuserrow();
             
@@ -140,7 +148,8 @@ function dofight() {
                 "monsterphysdamage"=>$fightrow["monsterphysdamage"],
                 "monstermagicdamage"=>$fightrow["monstermagicdamage"],
                 "monsterfiredamage"=>$fightrow["monsterfiredamage"],
-                "monsterlightdamage"=>$fightrow["monsterlightdamage"]);
+                "monsterlightdamage"=>$fightrow["monsterlightdamage"],
+                "track"=>$fightrow["track"]);
             $pagerow["spells"] = dospellslist();
             display("Fighting",parsetemplate(gettemplate("fight_monsteronly"),$pagerow));
             
@@ -148,7 +157,8 @@ function dofight() {
     
         $pagerow = array(
             "monstername"=>$monsterrow["name"],
-            "monsterhp"=>$userrow["currentmonsterhp"]);
+            "monsterhp"=>$userrow["currentmonsterhp"],
+            "track"=>$fightrow["track"]);
         $pagerow["spells"] = dospellslist();
         display("Fighting",parsetemplate(gettemplate("fight_new"),$pagerow));
         
@@ -165,24 +175,28 @@ function playerturn() {
         $physhit = ceil(rand($userrow["physattack"]*.75, $userrow["physattack"]) / 3);
         $physblock = ceil(rand($monsterrow["physdefense"]*.75, $monsterrow["physdefense"]) / 3);
         $fightrow["playerphysdamage"] = max($physhit - $physblock, 1);
+        $fightrow["track"] .= "physdam init: " . $fightrow["playerphysdamage"] . "\n";
     }
     
     if ($userrow["magicattack"] != 0) {
         $magichit = ceil(rand($userrow["magicattack"]*.75, $userrow["magicattack"]) / 3);
         $magicblock = ceil(rand($monsterrow["magicdefense"]*.75, $monsterrow["magicdefense"]) / 3);
         $fightrow["playermagicdamage"] = max($magichit - $magicblock, 0);
+        $fightrow["track"] .= "magicdam init: " . $fightrow["playermagicdamage"] . "\n";
     }
     
     if ($userrow["fireattack"] != 0) {
         $firehit = ceil(rand($userrow["fireattack"]*.75, $userrow["fireattack"]) / 3);
         $fireblock = ceil(rand($monsterrow["firedefense"]*.75, $monsterrow["firedefense"]) / 3);
         $fightrow["playerfiredamage"] = max($firehit - $fireblock, 0);
+        $fightrow["track"] .= "firedam init: " . $fightrow["playerfiredamage"] . "\n";
     }
     
     if ($userrow["lightattack"] != 0) {
         $lighthit = ceil(rand($userrow["lightattack"]*.75, $userrow["lightattack"]) / 3);
         $lightblock = ceil(rand($monsterrow["lightdefense"]*.75, $monsterrow["lightdefense"]) / 3);
         $fightrow["playerlightdamage"] = max($lighthit - $lightblock, 0);
+        $fightrow["track"] .= "lightdam init: " . $fightrow["playerlightdamage"] . "\n";
     }
     
     // Chance to make an excellent hit.
@@ -192,7 +206,8 @@ function playerturn() {
         $fightrow["playermagicdamage"] *= 2;
         $fightrow["playerfiredamage"] *= 2;
         $fightrow["playerlightdamage"] *= 2;
-        $fightrow["message"] = "<b>Excellent hit!</b><br />"; 
+        $fightrow["message"] .= "<b>Excellent hit!</b><br />"; 
+        $fightrow["track"] .= "excellent\nphys:".$fightrow["playerphysdamage"]."\nmagic:".$fightrow["playermagicdamage"]."\nfire:".$fightrow["playerfiredamage"]."\nlight:".$fightrow["playerlightdamage"]."\n";
     }
     
     // Chance for monster to dodge.
@@ -202,7 +217,8 @@ function playerturn() {
         $fightrow["playermagicdamage"] = 0;
         $fightrow["playerfiredamage"] = 0;
         $fightrow["playerlightdamage"] = 0;
-        $fightrow["message"] = "<b>The monster dodged your hit!</b><br />"; 
+        $fightrow["message"] .= "<b>The monster dodged your hit!</b><br />"; 
+        $fightrow["track"] .= "monster dodge: all damage to zero\n";
     }
     
     // Now we add Per Turn mods.
@@ -212,6 +228,7 @@ function playerturn() {
     
     // Subtract all damage from monster's hp.
     $userrow["currentmonsterhp"] -= ($fightrow["playerphysdamage"] + $fightrow["playermagicdamage"] + $fightrow["playerfiredamage"] + $fightrow["playerlightdamage"]);
+    $fightrow["track"] .= "end turn - mhp:".$userrow["currentmonsterhp"];
     
 }
 
@@ -245,12 +262,12 @@ function monsterturn() {
     
     // Chance to make an excellent hit.
     $toexcellent = rand(0,150);
-    if ($toexcellent <= sqrt($monsterrow["dexterity"])) { 
+    if ($toexcellent <= sqrt($monsterrow["physdefense"])) { 
         $fightrow["monsterphysdamage"] *= 2;
         $fightrow["monstermagicdamage"] *= 2;
         $fightrow["monsterfiredamage"] *= 2;
         $fightrow["monsterlightdamage"] *= 2;
-        $fightrow["message"] = "<b>Excellent hit!</b><br />"; 
+        $fightrow["message"] .= "<b>The monster made an excellent hit!</b><br />"; 
     }
     
     // Chance for player to dodge.
@@ -260,7 +277,7 @@ function monsterturn() {
         $fightrow["monstermagicdamage"] = 0;
         $fightrow["monsterfiredamage"] = 0;
         $fightrow["monsterlightdamage"] = 0;
-        $fightrow["message"] = "<b>You dodged the monster's hit!</b><br />"; 
+        $fightrow["message"] .= "<b>You dodged the monster's hit!</b><br />"; 
     }
     
     // Now we add Per Turn mods.
@@ -316,10 +333,14 @@ function youwin() {
         $preprefixrow = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemprefixes"));
         $presuffixrow = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemsuffixes"));
         
-        $idstring = "";
-        if (rand(0,4)==1) { $idstring .= $preprefixrow["id"] . ","; } else { $idstring .= "0,"; }
-        $idstring .= $preitemsrow["id"] . ",";
-        if (rand(0,4)==1) { $idstring .= $presuffixrow["id"]; } else { $idstring .= "0"; }
+        if ($preitemsrow["isunique"] == 1) {
+            $idstring = "0," . $preitemsrow["id"] . ",0";
+        } else {
+            $idstring = "";
+            if (rand(0,4)==1) { $idstring .= $preprefixrow["id"] . ","; } else { $idstring .= "0,"; }
+            $idstring .= $preitemsrow["id"] . ",";
+            if (rand(0,4)==1) { $idstring .= $presuffixrow["id"]; } else { $idstring .= "0"; }
+        }
         $userrow["dropidstring"] = $idstring;
         $fightrow["message"] .= "<a href=\"index.php?do=itemdrop\" class=\"red\"><b>The monster has dropped an item! Click here for more information.</b></a><br />";
         

@@ -3,7 +3,7 @@
 function updateuserrow() {
     
     global $userrow;
-    $userrow = array_map("addslashes", $userrow);
+    $userrow = array_map("uber_mres", $userrow);
     
     $querystring = "";
     foreach($userrow as $a=>$b) {

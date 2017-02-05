@@ -3,14 +3,15 @@
 function checkcookies() {
 
     include("../config.php");
+    global $controlrow;
     
     $row = false;
     
-    if (isset($_COOKIE["scourge"])) {
+    if (isset($_COOKIE[$controlrow["cookiename"]])) {
         
         // COOKIE FORMAT:
         // {ID} {USERNAME} {PASSWORDHASH} {REMEMBERME}
-        $theuser = explode(" ",$_COOKIE["scourge"]);
+        $theuser = explode(" ",$_COOKIE[$controlrow["cookiename"]]);
         if (!is_numeric($theuser[0])) { err("Invalid cookie data (Error 0). Please clear cookies and log in again."); }
         $row = dorow(doquery("SELECT * FROM {{table}} WHERE username='$theuser[1]' LIMIT 1", "accounts"));
         if ($row == false) { err("Invalid cookie data (Error 1). Please clear cookies and log in again."); }
@@ -20,7 +21,7 @@ function checkcookies() {
         // If we've gotten this far, cookie should be valid, so write a new one.
         $newcookie = implode(" ",$theuser);
         if ($theuser[3] == 1) { $expiretime = time()+31536000; } else { $expiretime = 0; }
-        setcookie ("scourge", $newcookie, $expiretime, "/", "", 0);
+        setcookie ($controlrow["cookiename"], $newcookie, $expiretime, "/", $controlrow["cookiedomain"], 0);
         
     }
     

@@ -7,7 +7,7 @@ $template = <<<END
 Leave these fields blank if you wish to keep your old password.<br /><br />
 Old Password:<br /><input type="password" name="oldpassword" size="30" maxlength="30" /><br />
 New Password:<br /><input type="password" name="password1" size="30" maxlength="30" /><br />
-Verify New Password:<br /><input type="password" name="password2" size="30" maxlength="30" /><br />Passwords must be 30 alphanumeric characters or less.<br /><br /><br />
+Verify New Password:<br /><input type="password" name="password2" size="30" maxlength="30" /><br /><br /><br />
 </td></tr>
 <tr><td width="30%">Email Address:</td><td><input type="text" name="email" size="30" maxlength="200" value="{{emailaddress}}"/></td></tr>
 <tr><td width="30%">Image Format:</td><td><select name="imageformat">{{imageformat}}</select><br />(Older versions of Internet Explorer may not be compatible with transparent PNG images. If you notice problems with item and monster images, please select GIF.)</td></tr>

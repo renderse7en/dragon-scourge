@@ -340,7 +340,7 @@ function youwin() {
 function youlose() {
     
     global $userrow, $monsterrow, $fightrow;
-    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1""));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1"));
     
     if ($pvp["player1id"] == $userrow["id"]) { 
         $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player2id"]."' LIMIT 1")); 

@@ -119,12 +119,7 @@ function buy() { // Buy items from merchants.
         $newbaseitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='$idstring[1]' LIMIT 1"));
         $newprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='$idstring[0]' LIMIT 1"));
         $newsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='$idstring[2]' LIMIT 1"));
-        $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
-        
-        // Format the mod name row.
-        foreach($premodrow as $a=>$b) {
-            $modrow[$b["fieldname"]] = $b;
-        }
+        $modrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"), "fieldname");
         
         $newfullitem = builditem($newprefix, $newbaseitem, $newsuffix, $modrow);
         
@@ -232,7 +227,7 @@ function buy() { // Buy items from merchants.
     } else {
         
         // Grab lots of stuff from the DB.
-        $preitemsrow = dorow(doquery("SELECT * FROM <<itembase>> WHERE reqlevel>='".$townrow["itemminlvl"]."' AND reqlevel<='".$townrow["itemmaxlvl"]."' ORDER BY RAND() LIMIT 10"));
+        $preitemsrow = dorow(doquery("SELECT * FROM <<itembase>> WHERE reqlevel>='".$townrow["itemminlvl"]."' AND reqlevel<='".$townrow["itemmaxlvl"]."' AND isunique='0' ORDER BY RAND() LIMIT 10"));
         $preprefixrow = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE reqlevel<='".$userrow["level"]."'"));
         $presuffixrow = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE reqlevel<='".$userrow["level"]."'"));
         $allitemsrow = dorow(doquery("SELECT * FROM <<itembase>>"));
@@ -416,6 +411,8 @@ function bank() {
         
         $row["formatbank"] = number_format($userrow["bank"]);
         $row["formatgold"] = number_format($userrow["gold"]);
+        $row["maxpocket"] = $userrow["gold"];
+        $row["maxbank"] = $userrow["bank"];
         
         display("Deposit/Withdraw Gold at the Bank", parsetemplate(gettemplate("town_bank1"),$row));
         

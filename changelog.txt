@@ -3,6 +3,21 @@ Changelog
 
 ***** BETA FOUR *****
 
+09.03.2006 - Build 18 (Joe Camel):
+- Fixed function redeclaration with Blessed Strike & Stone Skin spells.
+- When you're all alone, you no longer have a little blue "undefined" orb to keep you company.
+- Changing worlds after a quest now gives you the world's starting town to avoid panel errors.
+- Minor optimization fix for item building.
+- Unique items no longer drop with prefixes/suffixes, and you can no longer buy unique items.
+- Removed alphanumeric requirement for passwords.
+- hpleech(monster) now properly accounts for difficulty multiplier when checking against the monster's maxhp.
+- Added Deposit/Withdraw All links to the Bank.
+- Fixed PVP and Post office bugs related to the new doquery syntax.
+- Fixed single-quote bugs in mymail().
+- Removed verbiage from the levelup template that was no longer necessary.
+- Fixed some more verbiage in the registration message that was also no longer necessary.
+- Added admin-definable cookie name and cookie domain to controlrow.
+
 8.09.2006 - Build 17 (Haiku):
 - Moved stylesheets into .css files.
 - Added javascript tooltips for the class info when creating a new character.
