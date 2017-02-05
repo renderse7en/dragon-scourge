@@ -605,10 +605,12 @@ function levelspell() {
         // This is to ensure that people don't edit the source to just add more fields.
         $total = $userrow["levelspell"];
         for($i=0; $i<$total; $i++) {
-            if (!isset($spells[$_POST["spell".$i]])) { err("That spell doesn't exist."); }
-            $userrow["spell".$_POST["slot".$i]."id"] = $_POST["spell".$i];
-            $userrow["spell".$_POST["slot".$i]."name"] = $spells[$_POST["spell".$i]]["name"];
-            $userrow["levelspell"]--;
+            if ($_POST["spell".$i] != 0) {
+                if (!isset($spells[$_POST["spell".$i]])) { err("That spell doesn't exist."); }
+                $userrow["spell".$_POST["slot".$i]."id"] = $_POST["spell".$i];
+                $userrow["spell".$_POST["slot".$i]."name"] = $spells[$_POST["spell".$i]]["name"];
+                $userrow["levelspell"]--;
+            }
         }
         
         // Finish.

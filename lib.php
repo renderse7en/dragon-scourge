@@ -5,9 +5,9 @@ $starttime = getmicrotime();
 $numqueries = 0;
 $link = opendb();
 $version = "Beta 3";
-$bnumber = "15";
-$bname = "Dead Man's Chest";
-$bdate = "4.08.2006";
+$bnumber = "16";
+$bname = "Road Rage";
+$bdate = "4.26.2006";
 
 // Handling for servers with magic_quotes turned on.
 // Example from php.net.

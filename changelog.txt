@@ -3,6 +3,12 @@ Changelog
 
 ***** BETA THREE *****
 
+4.26.2006 - Build 16 (Road Rage):
+- Fixed a bug that prevented you from applying fewer than your max levelspell points.
+- Added links back to the stores after buying maps/items or using the bank.
+- Added a link back to town after gambling.
+- Fixed the link in the error message when failing to create a guild.
+
 4.08.2006 - Build 15 (Dead Man's Chest):
 - Character profiles now display class name instead of ID numbers.
 - Fixed incorrect minimum level display in guild start/apply error messages.

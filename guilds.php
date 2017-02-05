@@ -141,7 +141,7 @@ function guildcreate() {
         } else {
             
             // Die gracefully on errors.
-            err("The following error(s) occurred when your account was being made:<br /><span style=\"color:red;\">$errorlist</span><br />Please <a href=\"users.php?do=register\">go back</a> and try again.");
+            err("The following error(s) occurred when your account was being made:<br /><span style=\"color:red;\">$errorlist</span><br />Please <a href=\"users.php?do=guildcreate\">go back</a> and try again.");
             
         }
         

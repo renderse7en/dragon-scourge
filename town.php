@@ -317,11 +317,11 @@ function gamble() {
             if ($thecup == $thewin) {
                 $userrow["gold"] += ($amount * 10);
                 doquery("UPDATE {{table}} SET gold=gold+($amount * 10) WHERE id='".$userrow["id"]."' LIMIT 1", "users");
-                display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 10)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a>?");
+                display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 10)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             } else {
                 $userrow["gold"] -= $amount;
                 doquery("UPDATE {{table}} SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1", "users");
-                display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a>?");
+                display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             }
             
         }
@@ -334,11 +334,11 @@ function gamble() {
             if ($thecup == $thewin) {
                 $userrow["gold"] += ($amount * 2);
                 doquery("UPDATE {{table}} SET gold=gold+($amount * 2) WHERE id='".$userrow["id"]."' LIMIT 1", "users");
-                display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 2)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a>?");
+                display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 2)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             } else {
                 $userrow["gold"] -= $amount;
                 doquery("UPDATE {{table}} SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1", "users");
-                display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a>?");
+                display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             }
             
         }
