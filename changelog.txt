@@ -1,0 +1,140 @@
+DRAGON SCOURGE
+Changelog
+
+***** BETA TWO *****
+12.10.2005 - Build 12 (Eggs):
+- Members can now leave the Guild without requiring an officer to demote them to zero.
+- Rank 5 members can now edit/update Guild settings.
+- # of Members is now set to 1 when a Guild is created, and updated correctly when an application is approved.
+- The Guild founder is now notified via the Post Office when someone applies to join.
+- Members can now arbitrarily deposit money to the Guild bank.
+- You can no longer send guild money to yourself. Checks and balances, man!
+- Fixed image format selection so that it actually works.
+- Removed Language selection from account registration/settings.
+
+12.02.2005 - Build 11 (Chopsticks):
+- Added guilds/clans.
+- Fixed bug with 0 or 1 shouts.
+- Removed an unused table row from extended profile.
+- Users can now select PNG or GIF formats for item/monster images in their Account Settings.
+- Added $controlrow option to enable/disable item/monster images (setting up for the Premium/Standard versions).
+- New set of item images in town (to replace the ones I stole from Diablo II).
+- Items in town are now created based on min/max levels for the town, instead of the user's exact level.
+- Greatly expanded the list of base items.
+- Fighting now has chances for excellent hit (double damage) and monster dodging (zero damage).
+
+
+***** BETA ONE *****
+
+11.10.2005 - Build 10 (Fingers):
+- Map image has now been replaced with a fully dynamic Flash movie to prevent cache issues.
+- Babblebox now refreshes itself every 45 seconds.
+
+11.07.2005 - Build 09 (Billiards):
+- Fixed spell return bug that would cause SQL errors in PVP.
+- Removed hard-coded avatar image sizes.
+- Fixed the "death by 0hp monster" bug.
+- Fixed reply bug in the Post Office.
+- Post Office should now check for sent gold AND postage when calculating for the error message.
+- Entering pvp.php and ending up in the dowait() function properly shows fightrow variables.
+- Monsters no longer have magic defense. (This is for balance testing. Some monsters will still end up with some eventually.)
+
+11.02.2005 - Build 08 (Magic):
+- Spending level points now increments current hp/mp as well as max hp/mp.
+- Improved error handling in users.php.
+- Character creation screen now properly displays max avatar filesize.
+- Challenging for duels is now moved to town.php, so that pvp.php can *never* run without a valid currentpvp number in $userrow.
+- You no longer get stranded in the duel screen if the other player declines the challenge.
+- You can no longer challenge yourself (or any other character on your account) to a duel.
+- The "No" button on the Inn screen now works properly.
+- Removed "jewel" slot from onlinechar, since jewels are not currently implemented.
+- Shields and helmets now display properly in profile and onlinechar.
+- $controlrow is now properly retrieved while a user is not logged in.
+- Hall of Fame experience points are now run through number_format().
+- Fixed addslashes_deep() to actually add slashes, instead of strip them.
+
+10.24.2005 - Build 07 (Lucky):
+- Increased error checking to prevent pvp.php from running without the proper variables in place.
+- Closed up travel/map loophole that lets you jump to places without owning the map.
+- Fixed a possible error in an empty Post Office outbox.
+- All "Please go back and try again" error messages now link back to index.php.
+- Avatar system changes:
+   * External avatars are no longer allowed.
+   * Max avatar size (bytes) is now a changeable controlrow variable.
+   * Uploading a new avatar now deletes your old one to save server space.
+   * File extensions are no longer case sensitive.
+- Botcheck system changes:
+   * Closed up loophole that let you keep exploring without verifying the image text.
+   * Images are now generated with random filenames to prevent old images from showing up.
+   * Images are now deleted after successful verification.
+
+10.22.2005 - Build 06 (Courtney):
+- Added Spells.
+- Added PVP.
+- Various minor bugfixes/changes that I can't remember cuz I wasn't updating this as I went along.
+- Intra-account money transfers are limited to 10% of the user's gold.
+- Increased size of pop-up map.
+
+***** ALPHA TWO *****
+
+5.6.2005 - Build 05 (Lifesavers):
+- Added live image map with town/player locations.
+- Added Babblebox.
+- Added Who's Online.
+- Fixed improper table with for IE6.
+- Moved the scrollable div tag into the primary template and out of the sub templates.
+- Removed a possible infinite loop in the anti-macro function.
+- Added "Return to [Town|Game]" links to the templates that were missing them.
+- Fixed a problem with the Top 10 list if there was only one character in the game.
+- Character names are (once again) limited to alphanumerics, to prevent annoying database issues. (Regex has been altered to allow spaces & hyphens, though.)
+
+4.23.2005 - Build 04 (Golf):
+- Added image-based compass navigation.
+- Fights happen slightly less often now (1/5 rather than 1/4).
+- Added anti-macro image verification for protection against space robots.
+
+4.1.2005 - Build 03 (Holy Hand Grenade): 
+- Fixed problem that prevented users from registering.
+- Fixed exploit in the Bank and Post Office that allowed users to withdraw/deposit/send negative numbers.
+- Added God Mode cheat: index.php?do=iddqd
+
+3.29.2005 - Build 02 (Loser):
+- Characters are now separated from Accounts, to allow multiple chars (4) on one account.
+- Added account settings (changing password/email/language).
+- Increased security on POST/GET/COOKIE arrays.
+- You can no longer send a Letter to yourself.
+
+3.28.2005 - Build 01 (Binary):
+- Fixed shield/helmet item slot number mixup.
+- Fixed rounding problem when applying gold/exp bonuses.
+- Fixed Level Points template problem.
+- Added the Hall of Fame (Top 10 list).
+- Added the Post Office (private messaging + money transfers).
+
+3.25.2005 - Build 00 (MI5):
+- Complete ground-up rewrite. Build numbers reset to 00. Everything is new again.
+
+
+***** ALPHA ONE *****
+
+8.2.2004 - Build 23 (johnny):
+- Fixed bug that prevented people from buying items.
+- Fixed URL cheat that allowed people to buy any item in the game.
+- Fixed bug that could cause negative damage to monsters (ie. heal them).
+
+7.30.2004 - Build 22 (catch):
+- Removed dev site link from ?do=version.
+- Added changelog link to ?do=version.
+- Fixed URL cheat that allowed people to get healed for free.
+- Fixed number_format for gold/exp on the charprofile screen.
+
+7.28.2004 - Build 21 (beer):
+- Fixed problem with having occasional monster hp values as decimals instead of integers.
+- Language name values are now properly lowercased for storage.
+- Added "Not Working Yet" messages for arena/onlinechar/help.
+- Fixed a problem with the fight screen showing the wrong player lat/lon values.
+- Fixed a problem with users getting stuck off edge of the map.
+- Added language indexes for x_submit and x_reset.
+
+7.19.2004 - Build 20 (pr0n):
+- Initial public testing release.
