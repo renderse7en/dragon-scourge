@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 2.6.4-pl3
+-- version 2.6.0-pl3
 -- http://www.phpmyadmin.net
 -- 
--- Host: mysql.dragonscourge.com
--- Generation Time: Feb 08, 2006 at 07:47 AM
+-- Host: localhost
+-- Generation Time: Feb 26, 2006 at 02:10 PM
 -- Server version: 4.1.14
--- PHP Version: 4.4.1
+-- PHP Version: 5.0.5
 -- 
--- Database: `scourge`
+-- Database: `scourge2`
 -- 
 
 -- --------------------------------------------------------
@@ -22,22 +22,17 @@ CREATE TABLE `sx_accounts` (
   `username` varchar(30) NOT NULL default '',
   `password` varchar(32) NOT NULL default '',
   `emailaddress` varchar(200) NOT NULL default '',
-  `verifycode` varchar(8) NOT NULL default '',
+  `verifycode` varchar(32) NOT NULL default '',
   `regdate` datetime NOT NULL default '0000-00-00 00:00:00',
   `regip` varchar(16) NOT NULL default '',
   `authlevel` tinyint(3) unsigned NOT NULL default '1',
   `language` varchar(30) NOT NULL default '',
   `characters` tinyint(3) unsigned NOT NULL default '0',
   `activechar` int(10) unsigned NOT NULL default '0',
-  `imageformat` varchar(4) NOT NULL default '',
+  `imageformat` varchar(4) NOT NULL default '0',
+  `minimap` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table `sx_accounts`
--- 
-
--- --------------------------------------------------------
+) ;
 
 -- 
 -- Table structure for table `sx_babblebox`
@@ -52,13 +47,7 @@ CREATE TABLE `sx_babblebox` (
   `content` varchar(255) NOT NULL default '',
   `guild` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table `sx_babblebox`
--- 
-
--- --------------------------------------------------------
+) ;
 
 -- 
 -- Table structure for table `sx_classes`
@@ -74,7 +63,7 @@ CREATE TABLE `sx_classes` (
   `hpperdexterity` float unsigned NOT NULL default '0',
   `mpperenergy` float unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_classes`
@@ -115,15 +104,17 @@ CREATE TABLE `sx_control` (
   `pvprefresh` int(10) NOT NULL default '0',
   `pvptimeout` int(10) NOT NULL default '0',
   `guildstartup` int(10) unsigned NOT NULL default '100000',
+  `guildstartlvl` int(10) unsigned NOT NULL default '0',
+  `guildjoinlvl` int(10) unsigned NOT NULL default '0',
   `guildupdate` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_control`
 -- 
 
-INSERT INTO `sx_control` VALUES (1, 'Dragon Scourge', 1, '/home/renderse7en/dragonscourge.com/play/', 'http://www.dragonscourge.com/play/', 1, 'http://se7enet.com/forums/ubbthreads.php', '/home/renderse7en/dragonscourge.com/play/images/users/', 'http://www.dragonscourge.com/play/images/users/', 15000, 1, 1, 1, 1, 'jamin@se7enet.com', 1, 1, 0, 1, 255, 30, 120, 100000, 24);
+INSERT INTO `sx_control` VALUES (1, 'Dragon Scourge', 1, 'd:\\server\\docroot\\scourge\\', 'http://localhost/scourge/', 1, 'http://se7enet.com/forums/ubbthreads.php', 'd:\\server\\docroot\\scourge\\images\\users\\', 'http://localhost/scourge/images/users/', 15000, 1, 1, 1, 1, 'jamin@se7enet.com', 0, 1, 1, 1, 255, 15, 120, 100000, 35, 10, 24);
 
 -- --------------------------------------------------------
 
@@ -140,7 +131,7 @@ CREATE TABLE `sx_difficulties` (
   `multiplier` float NOT NULL default '0',
   `deathpenalty` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_difficulties`
@@ -163,13 +154,7 @@ CREATE TABLE `sx_guildapps` (
   `charid` int(10) unsigned NOT NULL default '0',
   `charname` varchar(30) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table `sx_guildapps`
--- 
-
--- --------------------------------------------------------
+) ;
 
 -- 
 -- Table structure for table `sx_guilds`
@@ -198,11 +183,7 @@ CREATE TABLE `sx_guilds` (
   `statement` text NOT NULL,
   `news` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table `sx_guilds`
--- 
+) ;
 
 -- --------------------------------------------------------
 
@@ -238,7 +219,7 @@ CREATE TABLE `sx_itembase` (
   `mod6name` varchar(50) NOT NULL default '',
   `mod6attr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_itembase`
@@ -431,7 +412,7 @@ CREATE TABLE `sx_itemmodnames` (
   `prettyname` varchar(50) NOT NULL default '',
   `percent` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_itemmodnames`
@@ -480,7 +461,7 @@ CREATE TABLE `sx_itemprefixes` (
   `basename` varchar(50) NOT NULL default '',
   `baseattr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_itemprefixes`
@@ -511,7 +492,7 @@ CREATE TABLE `sx_itemsuffixes` (
   `basename` varchar(50) NOT NULL default '',
   `baseattr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_itemsuffixes`
@@ -539,11 +520,12 @@ CREATE TABLE `sx_messages` (
   `message` text NOT NULL,
   `gold` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_messages`
 -- 
+
 
 -- --------------------------------------------------------
 
@@ -576,220 +558,220 @@ CREATE TABLE `sx_monsters` (
   `newstory` int(10) unsigned NOT NULL default '0',
   `hpleech` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_monsters`
 -- 
 
-INSERT INTO `sx_monsters` VALUES (1, 'Small Slime', 1, 1, 3, 2, 3, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (2, 'Shade', 1, 1, 3, 3, 3, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (3, 'Slime', 1, 2, 4, 3, 4, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (4, 'Small Drake', 1, 2, 5, 4, 5, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (5, 'Skeleton', 1, 3, 7, 5, 7, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (6, 'Haunt', 1, 3, 8, 6, 8, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (7, 'Big Slime', 1, 4, 10, 7, 10, 16, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (8, 'Drake', 1, 4, 11, 8, 11, 18, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (9, 'Ghost', 1, 5, 11, 8, 12, 19, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (10, 'Bee', 1, 5, 12, 9, 12, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (11, 'Scorpion', 1, 6, 12, 9, 13, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (12, 'Dawk', 1, 6, 15, 10, 15, 23, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (13, 'Nymph', 1, 7, 16, 11, 16, 25, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (14, 'Ember', 1, 7, 16, 11, 17, 27, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (15, 'Daydream', 1, 8, 18, 12, 18, 29, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (16, 'Wasp', 1, 8, 19, 13, 20, 30, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (17, 'Shadow', 1, 9, 22, 16, 22, 35, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (18, 'Harpy', 1, 9, 22, 16, 24, 38, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (19, 'Air Elemental', 1, 10, 24, 17, 26, 41, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (20, 'Rogue', 1, 10, 28, 19, 29, 44, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (21, 'Lynx', 1, 11, 31, 23, 32, 49, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (22, 'Trickster', 1, 11, 33, 25, 35, 56, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (23, 'Goblin', 1, 12, 34, 24, 35, 56, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (24, 'Charmer', 1, 12, 38, 26, 38, 61, 58, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (25, 'Raven', 1, 13, 39, 25, 41, 62, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (26, 'Bobcat', 1, 13, 44, 29, 44, 70, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (27, 'Lycan', 1, 14, 48, 34, 48, 73, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (28, 'Fiend', 1, 14, 49, 32, 52, 81, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (29, 'Liche', 1, 15, 51, 38, 56, 84, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (30, 'Dawkin', 1, 15, 54, 36, 60, 94, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (31, 'Anarchist', 1, 16, 58, 45, 64, 102, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (32, 'Hellcat', 1, 16, 64, 47, 68, 102, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (33, 'Fallen Cherub', 1, 17, 70, 46, 72, 111, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (34, 'Grey Wolf', 1, 17, 74, 54, 76, 118, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (35, 'Black Bear', 1, 18, 77, 50, 80, 127, 133, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (36, 'Knight', 1, 18, 78, 58, 84, 132, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (37, 'Giant', 1, 19, 84, 56, 88, 134, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (38, 'Young Wyrm', 1, 19, 92, 58, 92, 145, 156, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (39, 'Lesser Devil', 1, 20, 91, 62, 96, 153, 157, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (40, 'Lesser Demon', 1, 20, 100, 68, 100, 154, 158, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (42, 'Silver Slime', 2, 1, 100, 70, 104, 165, 157, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (43, 'Apparition', 2, 1, 101, 75, 108, 162, 158, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (44, 'Phantasm', 2, 2, 101, 74, 112, 174, 164, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (45, 'Poltergeist', 2, 2, 114, 82, 116, 174, 159, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (46, 'Wraith', 2, 3, 113, 80, 120, 185, 176, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (47, 'Big Drake', 2, 3, 112, 86, 124, 186, 186, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (48, 'Illusion', 2, 4, 118, 81, 128, 198, 208, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (49, 'Dawkare', 2, 4, 130, 89, 132, 201, 206, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (50, 'Illusionist', 2, 5, 130, 85, 136, 204, 221, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (51, 'Skeleton Soldier', 2, 5, 126, 93, 140, 210, 219, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (52, 'Devil', 2, 6, 141, 101, 145, 232, 209, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (53, 'Demon', 2, 6, 150, 99, 150, 228, 210, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (54, 'Brown Bear', 2, 7, 155, 104, 155, 244, 237, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (55, 'Black Wolf', 2, 7, 151, 111, 160, 248, 248, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (56, 'Water Elemental', 2, 8, 149, 113, 165, 255, 253, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (57, 'Harridan', 2, 8, 169, 102, 170, 269, 288, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (58, 'Sylph', 2, 9, 170, 111, 175, 275, 300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (59, 'Orc', 2, 9, 164, 121, 180, 287, 302, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (60, 'Dawkra', 2, 10, 167, 128, 185, 296, 276, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (61, 'Shaman', 2, 10, 175, 128, 190, 295, 295, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (62, 'Cinder', 2, 11, 194, 133, 195, 309, 322, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (63, 'Yellowjacket', 2, 11, 190, 130, 200, 318, 315, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (64, 'Rogue Scorpion', 2, 12, 197, 142, 205, 324, 337, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (65, 'Magidrake', 2, 12, 202, 133, 210, 324, 347, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (66, 'Dream', 2, 13, 211, 151, 215, 342, 363, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (67, 'Ocelot', 2, 13, 198, 148, 220, 348, 328, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (68, 'Shadow Raven', 2, 14, 216, 156, 225, 342, 342, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (69, 'Knave', 2, 14, 217, 141, 230, 357, 329, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (70, 'Lycanthor', 2, 15, 217, 165, 235, 365, 362, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (71, 'Mirage', 2, 15, 236, 168, 240, 384, 369, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (72, 'Magician', 2, 16, 236, 152, 245, 378, 401, 160, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (73, 'Mace Knight', 2, 16, 250, 150, 250, 380, 392, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (74, 'Lesser Wyvern', 2, 17, 245, 169, 255, 408, 380, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (75, 'Serafiend', 2, 17, 245, 156, 260, 409, 397, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (76, 'Zhora''s Follower', 2, 18, 255, 183, 265, 422, 389, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (77, 'Zhora''s Cantor', 2, 18, 268, 181, 270, 416, 425, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (78, 'Liche Captain', 2, 19, 267, 176, 275, 421, 455, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (79, 'Leviathan', 2, 19, 278, 188, 280, 448, 462, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (80, 'Renegade', 2, 20, 268, 177, 285, 445, 450, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (81, 'Dark Slime', 3, 1, 270, 195, 290, 456, 429, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (82, 'Phantom', 3, 1, 287, 180, 295, 470, 513, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (83, 'Spirit', 3, 2, 291, 204, 300, 474, 512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (84, 'Specter', 3, 2, 292, 209, 307, 476, 505, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (85, 'Winged Drake', 3, 3, 299, 189, 314, 484, 523, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (86, 'Shimmer', 3, 3, 312, 196, 321, 498, 459, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (87, 'Dawkor', 3, 4, 319, 197, 328, 515, 546, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (88, 'Enchanter', 3, 4, 312, 201, 335, 530, 546, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (89, 'Mounted Skeleton', 3, 5, 336, 209, 342, 548, 565, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (90, 'Greater Devil', 3, 5, 336, 224, 349, 559, 571, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (91, 'Greater Demon', 3, 6, 346, 235, 356, 542, 526, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (92, 'Polar Bear', 3, 6, 331, 236, 363, 581, 541, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (93, 'Red Wolf', 3, 7, 352, 259, 370, 589, 631, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (94, 'Earth Elemental', 3, 7, 351, 261, 377, 581, 628, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (95, 'Ogress', 3, 8, 377, 231, 384, 603, 664, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (96, 'Nisse', 3, 8, 360, 262, 391, 607, 559, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (97, 'Troll', 3, 9, 359, 251, 398, 613, 613, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (98, 'Wizard', 3, 9, 377, 252, 405, 628, 679, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (99, 'Fire', 3, 10, 396, 252, 412, 631, 581, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (100, 'Hornet', 3, 10, 407, 260, 419, 650, 618, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (101, 'Red Scorpion', 3, 11, 409, 256, 426, 678, 678, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (102, 'Hallucination', 3, 11, 403, 269, 433, 676, 676, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (103, 'Leopard', 3, 12, 432, 295, 440, 687, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (104, 'Frost Raven', 3, 12, 421, 273, 447, 698, 671, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (105, 'Scoundrel', 3, 13, 441, 296, 454, 691, 761, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (106, 'Fallen Muse', 3, 13, 448, 314, 461, 706, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (107, 'Snow Leopard', 3, 14, 431, 286, 468, 745, 760, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (108, 'Lycanthra', 3, 14, 452, 323, 475, 713, 671, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (109, 'Axe Knight', 3, 15, 454, 328, 482, 767, 775, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (110, 'Cheetah', 3, 15, 460, 313, 489, 783, 729, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (111, 'Wyvern', 3, 16, 477, 333, 496, 774, 744, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (112, 'Cherufiend', 3, 16, 478, 322, 503, 755, 725, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (113, 'Zhora''s Advocate', 3, 17, 485, 342, 510, 781, 750, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (114, 'Zhora''s Elder', 3, 17, 497, 362, 517, 786, 779, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (115, 'Liche Prince', 3, 18, 524, 367, 524, 813, 757, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (116, 'Behemoth', 3, 18, 505, 319, 531, 829, 788, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (117, 'Insurgent', 3, 19, 517, 350, 538, 818, 761, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (118, 'Greater Wyvern', 3, 20, 491, 371, 545, 834, 901, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (119, 'Devil Lord', 4, 1, 500, 339, 555, 866, 841, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (120, 'Demon Lord', 4, 1, 565, 390, 565, 888, 906, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (121, 'Grizzly Bear', 4, 2, 547, 368, 575, 880, 863, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (122, 'Arctic Wolf', 4, 2, 580, 369, 585, 884, 805, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (123, 'Fire Elemental', 4, 3, 548, 381, 595, 947, 919, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (124, 'Gorgon', 4, 3, 575, 382, 605, 920, 865, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (125, 'Enchantress', 4, 4, 560, 369, 615, 984, 1014, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (126, 'Ogre', 4, 4, 588, 432, 625, 938, 845, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (127, 'Sorcerer', 4, 5, 610, 445, 635, 991, 932, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (128, 'Blaze', 4, 5, 607, 400, 645, 968, 1056, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (129, 'Demon Hornet', 4, 6, 629, 413, 655, 1009, 1090, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (130, 'Silver Scorpion', 4, 6, 626, 433, 665, 1045, 1045, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (131, 'Torment', 4, 7, 648, 459, 675, 1020, 1020, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (132, 'Fire Raven', 4, 7, 651, 439, 685, 1090, 1178, 0, 0, 600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (133, 'Hellion', 4, 8, 640, 480, 695, 1085, 1064, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (134, 'Fallen Angel', 4, 8, 642, 459, 705, 1058, 1037, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (135, 'Werewolf', 4, 9, 673, 444, 715, 1130, 1130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (136, 'Armored Knight', 4, 9, 667, 464, 725, 1153, 1130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (137, 'Archfiend', 4, 10, 684, 486, 735, 1140, 1220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (138, 'Zhora''s Fanatic', 4, 10, 686, 515, 745, 1192, 1145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (139, 'Zhora''s Priest', 4, 11, 718, 529, 755, 1156, 1099, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (140, 'Liche King', 4, 11, 765, 490, 765, 1224, 1114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (141, 'Colossus', 4, 12, 706, 473, 775, 1194, 1159, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (142, 'Nihilist', 4, 12, 785, 534, 785, 1202, 1178, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (143, 'Armored Skeleton', 4, 13, 795, 501, 795, 1209, 1197, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (144, 'Puma', 4, 13, 749, 556, 805, 1248, 1211, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (145, 'Devil King', 4, 14, 758, 563, 815, 1304, 1239, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (146, 'Demon King', 4, 14, 751, 545, 825, 1246, 1271, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (147, 'Kodiak Bear', 4, 15, 810, 568, 835, 1320, 1360, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (148, 'Haunted Wolf', 4, 15, 829, 507, 845, 1352, 1285, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (149, 'Light Elemental', 4, 16, 830, 590, 855, 1368, 1396, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (150, 'Medusa', 4, 16, 831, 597, 865, 1384, 1495, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (151, 'Siren', 4, 17, 797, 525, 875, 1400, 1400, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (152, 'Uruk', 4, 17, 868, 611, 885, 1381, 1492, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (153, 'Warlock', 4, 18, 851, 627, 895, 1343, 1249, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (154, 'Jaguar', 4, 18, 869, 589, 905, 1394, 1436, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (155, 'Necromancer', 4, 19, 842, 577, 915, 1373, 1470, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (156, 'Demagogue', 4, 19, 833, 555, 925, 1434, 1320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (157, 'Titan', 4, 20, 917, 571, 935, 1403, 1263, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (158, 'Lion', 4, 20, 870, 577, 945, 1512, 1603, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (159, 'Pyre', 5, 1, 941, 596, 960, 1460, 1606, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (160, 'Figment', 5, 1, 975, 644, 975, 1560, 1701, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (161, 'Demon Scorpion', 5, 1, 981, 674, 990, 1505, 1611, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (162, 'Nightmare', 5, 2, 945, 674, 1005, 1558, 1403, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (163, 'Silver Raven', 5, 2, 929, 684, 1020, 1632, 1600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (164, 'Bandit', 5, 2, 932, 621, 1035, 1553, 1398, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (165, 'Fallen Archangel', 5, 3, 966, 672, 1050, 1607, 1511, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (166, 'Tiger', 5, 3, 1044, 693, 1065, 1704, 1773, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (167, 'Fallen Seraph', 5, 3, 1070, 670, 1080, 1696, 1595, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (168, 'Werebear', 5, 4, 1095, 657, 1095, 1698, 1648, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (169, 'Demon Knight', 5, 4, 1110, 700, 1110, 1754, 1912, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (170, 'Magic Wyvern', 5, 4, 1125, 720, 1125, 1789, 1754, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (171, 'Fiendlord', 5, 5, 1026, 764, 1140, 1767, 1927, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (172, 'Zhora''s Zealot', 5, 5, 1144, 740, 1155, 1802, 1983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (173, 'Zhora''s Bishop', 5, 6, 1135, 726, 1170, 1755, 1633, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (174, 'Liche Lord', 5, 6, 1150, 783, 1185, 1825, 1698, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (175, 'Fire Wyvern', 5, 7, 1176, 756, 1200, 1800, 1872, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (176, 'Zhora''s Obsessive', 5, 7, 1094, 851, 1215, 1920, 1882, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (177, 'Zhora''s Archbishop', 5, 8, 1194, 861, 1230, 1907, 1736, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (178, 'Grey Daemon', 5, 8, 1196, 810, 1245, 1968, 2047, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (179, 'Hellhound', 5, 9, 1248, 832, 1260, 1941, 1883, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (180, 'Great Wyrm', 5, 9, 1250, 765, 1275, 2002, 2183, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (181, 'Green Dragon', 5, 10, 1252, 787, 1290, 1987, 1809, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (182, 'Red Daemon', 5, 10, 1214, 823, 1305, 2023, 2125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (183, 'Hellbeast', 5, 11, 1281, 911, 1320, 2086, 2024, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (184, 'Frost Wyrm', 5, 11, 1269, 801, 1335, 2136, 2286, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (185, 'Blue Dragon', 5, 12, 1229, 851, 1350, 2106, 2296, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (186, 'Dark Daemon', 5, 12, 1229, 888, 1365, 2144, 1973, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (187, 'Hellbear', 5, 13, 1353, 966, 1380, 2195, 2020, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (188, 'Red Wyrm', 5, 13, 1270, 921, 1395, 2107, 2150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (189, 'Red Dragon', 5, 14, 1368, 875, 1410, 2242, 2310, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (190, 'Black Daemon', 5, 14, 1326, 984, 1425, 2138, 1946, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (191, 'Hellwolf', 5, 15, 1397, 908, 1440, 2204, 2359, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (192, 'Blue Wyrm', 5, 15, 1383, 1004, 1455, 2212, 2257, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (193, 'Dark Dragon', 5, 16, 1323, 941, 1470, 2323, 2207, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (194, 'Fallen Dragon', 5, 16, 1382, 981, 1485, 2317, 2503, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (195, 'Shadow Dragon', 5, 17, 1440, 1005, 1500, 2355, 2214, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (196, 'Black Dragon', 5, 17, 1409, 970, 1515, 2349, 2443, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (197, 'Ancient Dragon', 5, 18, 1500, 980, 1530, 2418, 2660, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (198, 'False Dragon', 5, 18, 1545, 1020, 1545, 2333, 2124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (199, 'Daemonlord', 5, 19, 1420, 1092, 1560, 2372, 2230, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (200, 'Dragonlord', 5, 20, 1497, 1024, 1575, 2410, 2555, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO `sx_monsters` VALUES (201, 'Razora', 1, 99, 150, 60, 120, 192, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0);
-INSERT INTO `sx_monsters` VALUES (202, 'Numoren', 2, 99, 300, 300, 300, 453, 499, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 0);
-INSERT INTO `sx_monsters` VALUES (203, 'Crestfall', 3, 99, 800, 1000, 500, 755, 808, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 0);
-INSERT INTO `sx_monsters` VALUES (204, 'Lucifuge''s Throneguard', 4, 99, 200, 300, 700, 1064, 958, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12, 0);
-INSERT INTO `sx_monsters` VALUES (205, 'Lucifuge', 4, 99, 1500, 1500, 850, 1318, 1358, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 0);
-INSERT INTO `sx_monsters` VALUES (206, 'Xiran''s Minion', 5, 99, 500, 400, 1200, 1908, 1928, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 0);
-INSERT INTO `sx_monsters` VALUES (207, 'Xiran''s Cardinal', 5, 99, 750, 750, 1300, 1976, 1917, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17, 0);
-INSERT INTO `sx_monsters` VALUES (208, 'Xiran', 5, 99, 1000, 1000, 1400, 2128, 2150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 0);
-INSERT INTO `sx_monsters` VALUES (209, 'Xiran', 5, 99, 5000, 5000, 1600, 2528, 2478, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 19, 0);
+INSERT INTO `sx_monsters` VALUES (1, 'Small Slime', 1, 1, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (2, 'Shade', 1, 1, 4, 2, 3, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (3, 'Slime', 1, 2, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (4, 'Small Drake', 1, 2, 4, 3, 4, 5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (5, 'Skeleton', 1, 3, 5, 3, 5, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (6, 'Haunt', 1, 3, 6, 4, 6, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (7, 'Big Slime', 1, 4, 7, 5, 7, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (8, 'Drake', 1, 4, 8, 5, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (9, 'Ghost', 1, 5, 9, 6, 9, 10, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (10, 'Bee', 1, 5, 10, 4, 9, 10, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (11, 'Scorpion', 1, 6, 8, 6, 10, 11, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (12, 'Dawk', 1, 6, 14, 8, 11, 11, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (13, 'Nymph', 1, 7, 15, 6, 12, 12, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (14, 'Ember', 1, 7, 12, 7, 12, 14, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (15, 'Daydream', 1, 8, 12, 8, 13, 14, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (16, 'Wasp', 1, 8, 15, 10, 14, 14, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (17, 'Shadow', 1, 9, 15, 8, 16, 16, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (18, 'Harpy', 1, 9, 15, 12, 17, 17, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (19, 'Air Elemental', 1, 10, 17, 11, 19, 18, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (20, 'Rogue', 1, 10, 22, 14, 21, 20, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (21, 'Lynx', 1, 11, 19, 14, 23, 24, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (22, 'Trickster', 1, 11, 25, 17, 25, 26, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (23, 'Goblin', 1, 12, 27, 17, 25, 27, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (24, 'Charmer', 1, 12, 27, 14, 27, 29, 18, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (25, 'Raven', 1, 13, 30, 12, 29, 29, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (26, 'Bobcat', 1, 13, 26, 21, 31, 29, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (27, 'Lycan', 1, 14, 37, 15, 34, 36, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (28, 'Fiend', 1, 14, 42, 26, 37, 40, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (29, 'Liche', 1, 15, 44, 23, 40, 42, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (30, 'Dawkin', 1, 15, 35, 21, 42, 40, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (31, 'Anarchist', 1, 16, 38, 25, 45, 49, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (32, 'Hellcat', 1, 16, 47, 30, 48, 49, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (33, 'Fallen Cherub', 1, 17, 56, 29, 51, 55, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (34, 'Grey Wolf', 1, 17, 63, 36, 54, 52, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (35, 'Black Bear', 1, 18, 48, 29, 56, 55, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (36, 'Knight', 1, 18, 55, 33, 59, 64, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (37, 'Giant', 1, 19, 58, 38, 62, 66, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (38, 'Young Wyrm', 1, 19, 73, 44, 65, 60, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (39, 'Lesser Devil', 1, 20, 82, 44, 68, 69, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (40, 'Lesser Demon', 1, 20, 73, 36, 70, 70, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (42, 'Silver Slime', 2, 1, 83, 44, 73, 72, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (43, 'Apparition', 2, 1, 68, 34, 76, 81, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (44, 'Phantasm', 2, 2, 66, 47, 79, 76, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (45, 'Poltergeist', 2, 2, 96, 33, 82, 83, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (46, 'Wraith', 2, 3, 73, 38, 84, 79, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (47, 'Big Drake', 2, 3, 89, 59, 87, 84, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (48, 'Illusion', 2, 4, 104, 37, 90, 86, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (49, 'Dawkare', 2, 4, 110, 50, 93, 86, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (50, 'Illusionist', 2, 5, 93, 50, 96, 87, 40, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (51, 'Skeleton Soldier', 2, 5, 104, 48, 98, 95, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (52, 'Devil', 2, 6, 121, 57, 102, 112, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (53, 'Demon', 2, 6, 95, 48, 105, 113, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (54, 'Brown Bear', 2, 7, 103, 76, 109, 100, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (55, 'Black Wolf', 2, 7, 123, 45, 112, 104, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (56, 'Water Elemental', 2, 8, 122, 82, 116, 128, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (57, 'Harridan', 2, 8, 96, 71, 119, 109, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (58, 'Sylph', 2, 9, 115, 69, 123, 111, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (59, 'Orc', 2, 9, 135, 82, 126, 123, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (60, 'Dawkra', 2, 10, 108, 65, 130, 121, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (61, 'Shaman', 2, 10, 122, 80, 133, 136, 98, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (62, 'Cinder', 2, 11, 159, 62, 137, 124, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (63, 'Yellowjacket', 2, 11, 115, 96, 140, 138, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (64, 'Rogue Scorpion', 2, 12, 123, 58, 144, 139, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (65, 'Magidrake', 2, 12, 156, 68, 147, 140, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (66, 'Dream', 2, 13, 170, 84, 151, 165, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (67, 'Ocelot', 2, 13, 162, 90, 154, 168, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (68, 'Shadow Raven', 2, 14, 189, 81, 158, 152, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (69, 'Knave', 2, 14, 181, 91, 161, 168, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (70, 'Lycanthor', 2, 15, 157, 109, 165, 162, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (71, 'Mirage', 2, 15, 138, 105, 168, 155, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (72, 'Magician', 2, 16, 164, 105, 172, 166, 70, 140, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (73, 'Mace Knight', 2, 16, 156, 86, 175, 175, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (74, 'Lesser Wyvern', 2, 17, 171, 90, 179, 167, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (75, 'Serafiend', 2, 17, 195, 128, 182, 166, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (76, 'Zhora''s Follower', 2, 18, 155, 125, 186, 201, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (77, 'Zhora''s Cantor', 2, 18, 214, 103, 189, 188, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (78, 'Liche Captain', 2, 19, 180, 101, 193, 203, 134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (79, 'Leviathan', 2, 19, 214, 108, 196, 195, 139, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (80, 'Renegade', 2, 20, 164, 138, 200, 210, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (81, 'Dark Slime', 3, 1, 189, 98, 203, 203, 143, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (82, 'Phantom', 3, 1, 230, 131, 207, 205, 152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (83, 'Spirit', 3, 2, 168, 147, 210, 198, 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (84, 'Specter', 3, 2, 254, 93, 215, 213, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (85, 'Winged Drake', 3, 3, 231, 117, 220, 207, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (86, 'Shimmer', 3, 3, 261, 120, 225, 219, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (87, 'Dawkor', 3, 4, 217, 113, 230, 210, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (88, 'Enchanter', 3, 4, 264, 132, 235, 254, 130, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (89, 'Mounted Skeleton', 3, 5, 257, 137, 240, 262, 134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (90, 'Greater Devil', 3, 5, 245, 125, 245, 221, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (91, 'Greater Demon', 3, 6, 228, 133, 250, 250, 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (92, 'Polar Bear', 3, 6, 299, 161, 255, 240, 171, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (93, 'Red Wolf', 3, 7, 218, 140, 259, 259, 171, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (94, 'Earth Elemental', 3, 7, 228, 151, 264, 288, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (95, 'Ogress', 3, 8, 299, 111, 269, 283, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (96, 'Nisse', 3, 8, 283, 154, 274, 247, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (97, 'Troll', 3, 9, 285, 154, 279, 254, 204, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (98, 'Wizard', 3, 9, 341, 145, 284, 287, 158, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (99, 'Fire', 3, 10, 249, 162, 289, 284, 134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (100, 'Hornet', 3, 10, 339, 150, 294, 265, 165, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (101, 'Red Scorpion', 3, 11, 311, 198, 299, 273, 148, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (102, 'Hallucination', 3, 11, 320, 152, 304, 332, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (103, 'Leopard', 3, 12, 302, 136, 308, 315, 221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (104, 'Frost Raven', 3, 12, 357, 132, 313, 282, 226, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (105, 'Scoundrel', 3, 13, 315, 153, 318, 299, 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (106, 'Fallen Muse', 3, 13, 343, 130, 323, 353, 177, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (107, 'Snow Leopard', 3, 14, 394, 145, 328, 322, 136, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (108, 'Lycanthra', 3, 14, 277, 187, 333, 314, 220, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (109, 'Axe Knight', 3, 15, 376, 224, 338, 352, 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (110, 'Cheetah', 3, 15, 381, 151, 343, 326, 170, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (111, 'Wyvern', 3, 16, 369, 209, 348, 328, 233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (112, 'Cherufiend', 3, 16, 304, 177, 353, 343, 217, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (113, 'Zhora''s Advocate', 3, 17, 290, 225, 357, 343, 151, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (114, 'Zhora''s Elder', 3, 17, 301, 160, 362, 348, 195, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (115, 'Liche Prince', 3, 18, 426, 206, 367, 342, 233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (116, 'Behemoth', 3, 18, 421, 190, 372, 361, 235, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (117, 'Insurgent', 3, 19, 336, 264, 377, 393, 181, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (118, 'Greater Wyvern', 3, 20, 444, 161, 382, 409, 324, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (119, 'Devil Lord', 4, 1, 351, 218, 389, 393, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (120, 'Demon Lord', 4, 1, 476, 175, 396, 361, 206, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (121, 'Grizzly Bear', 4, 2, 347, 162, 403, 363, 167, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (122, 'Arctic Wolf', 4, 2, 468, 177, 410, 427, 261, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (123, 'Fire Elemental', 4, 3, 334, 180, 417, 422, 233, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (124, 'Gorgon', 4, 3, 344, 225, 424, 441, 270, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (125, 'Enchantress', 4, 4, 466, 173, 431, 427, 265, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (126, 'Ogre', 4, 4, 526, 276, 438, 456, 242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (127, 'Sorcerer', 4, 5, 517, 303, 445, 450, 180, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (128, 'Blaze', 4, 5, 394, 195, 452, 457, 270, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (129, 'Demon Hornet', 4, 6, 469, 212, 459, 432, 337, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (130, 'Silver Scorpion', 4, 6, 560, 275, 466, 499, 300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (131, 'Torment', 4, 7, 488, 261, 473, 521, 402, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (132, 'Fire Raven', 4, 7, 533, 303, 480, 432, 242, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (133, 'Hellion', 4, 8, 400, 341, 487, 517, 321, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (134, 'Fallen Angel', 4, 8, 470, 223, 494, 524, 325, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (135, 'Werewolf', 4, 9, 476, 281, 501, 517, 342, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (136, 'Armored Knight', 4, 9, 514, 336, 508, 473, 308, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (137, 'Archfiend', 4, 10, 443, 351, 515, 541, 390, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (138, 'Zhora''s Fanatic', 4, 10, 569, 256, 522, 502, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (139, 'Zhora''s Priest', 4, 11, 529, 212, 529, 540, 351, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (140, 'Liche King', 4, 11, 617, 231, 536, 579, 261, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (141, 'Colossus', 4, 12, 576, 315, 543, 505, 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (142, 'Nihilist', 4, 12, 440, 297, 550, 594, 327, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (143, 'Armored Skeleton', 4, 13, 574, 385, 557, 563, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (144, 'Puma', 4, 13, 525, 339, 564, 559, 403, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (145, 'Devil King', 4, 14, 532, 309, 571, 526, 369, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (146, 'Demon King', 4, 14, 544, 284, 578, 619, 353, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (147, 'Kodiak Bear', 4, 15, 474, 369, 585, 574, 328, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (148, 'Haunted Wolf', 4, 15, 687, 338, 592, 652, 268, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (149, 'Light Elemental', 4, 16, 647, 264, 599, 582, 414, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (150, 'Medusa', 4, 16, 649, 243, 606, 619, 477, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (151, 'Siren', 4, 17, 528, 270, 613, 675, 507, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (152, 'Uruk', 4, 17, 540, 385, 620, 577, 456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (153, 'Warlock', 4, 18, 653, 421, 627, 615, 382, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (154, 'Jaguar', 4, 18, 666, 317, 634, 603, 248, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (155, 'Necromancer', 4, 19, 584, 295, 641, 622, 461, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (156, 'Demagogue', 4, 19, 733, 376, 648, 713, 414, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (157, 'Titan', 4, 20, 636, 446, 655, 590, 384, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (158, 'Lion', 4, 20, 643, 358, 662, 662, 391, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (159, 'Pyre', 5, 1, 780, 296, 672, 686, 309, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (160, 'Figment', 5, 1, 820, 315, 683, 663, 478, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (161, 'Demon Scorpion', 5, 1, 791, 402, 693, 666, 300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (162, 'Nightmare', 5, 2, 789, 437, 704, 761, 381, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (163, 'Silver Raven', 5, 2, 793, 472, 714, 650, 423, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (164, 'Bandit', 5, 2, 638, 435, 725, 740, 541, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (165, 'Fallen Archangel', 5, 3, 633, 500, 735, 765, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (166, 'Tiger', 5, 3, 746, 493, 746, 709, 369, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (167, 'Fallen Seraph', 5, 3, 734, 492, 756, 802, 618, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (168, 'Werebear', 5, 4, 875, 422, 767, 691, 422, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (169, 'Demon Knight', 5, 4, 653, 412, 777, 708, 411, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (170, 'Magic Wyvern', 5, 4, 639, 387, 788, 725, 363, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (171, 'Fiendlord', 5, 5, 727, 479, 798, 878, 387, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (172, 'Zhora''s Zealot', 5, 5, 963, 365, 809, 882, 706, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (173, 'Zhora''s Bishop', 5, 6, 983, 344, 819, 738, 436, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (174, 'Liche Lord', 5, 6, 872, 457, 830, 797, 495, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (175, 'Fire Wyvern', 5, 7, 714, 454, 840, 857, 678, 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (176, 'Zhora''s Obsessive', 5, 7, 945, 435, 851, 937, 694, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (177, 'Zhora''s Archbishop', 5, 8, 861, 595, 861, 887, 444, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (178, 'Grey Daemon', 5, 8, 750, 567, 872, 960, 653, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (179, 'Hellhound', 5, 9, 794, 618, 882, 935, 403, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (180, 'Great Wyrm', 5, 9, 965, 518, 893, 858, 550, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (181, 'Green Dragon', 5, 10, 795, 587, 903, 876, 684, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (182, 'Red Daemon', 5, 10, 869, 421, 914, 988, 623, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (183, 'Hellbeast', 5, 11, 906, 444, 924, 943, 406, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (184, 'Frost Wyrm', 5, 11, 964, 533, 935, 973, 506, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (185, 'Blue Dragon', 5, 12, 1116, 492, 945, 993, 408, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (186, 'Dark Daemon', 5, 12, 1138, 478, 956, 995, 697, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (187, 'Hellbear', 5, 13, 947, 426, 966, 938, 488, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (188, 'Red Wyrm', 5, 13, 919, 509, 977, 1026, 821, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (189, 'Red Dragon', 5, 14, 1106, 533, 987, 1057, 772, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (190, 'Black Daemon', 5, 14, 1048, 440, 998, 1048, 504, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (191, 'Hellwolf', 5, 15, 1170, 555, 1008, 1109, 488, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (192, 'Blue Wyrm', 5, 15, 1121, 530, 1019, 1040, 676, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (193, 'Dark Dragon', 5, 16, 1235, 484, 1029, 927, 649, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (194, 'Fallen Dragon', 5, 16, 1207, 676, 1040, 1009, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (195, 'Shadow Dragon', 5, 17, 1166, 735, 1050, 1113, 702, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (196, 'Black Dragon', 5, 17, 1104, 680, 1061, 1008, 504, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (197, 'Ancient Dragon', 5, 18, 868, 675, 1071, 986, 740, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (198, 'False Dragon', 5, 18, 1169, 758, 1082, 1050, 473, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (199, 'Daemonlord', 5, 19, 1082, 557, 1092, 1049, 787, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (200, 'Dragonlord', 5, 20, 971, 728, 1103, 1159, 916, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `sx_monsters` VALUES (201, 'Razora', 1, 99, 150, 60, 120, 120, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0);
+INSERT INTO `sx_monsters` VALUES (202, 'Numoren', 2, 99, 300, 300, 300, 300, 200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 0);
+INSERT INTO `sx_monsters` VALUES (203, 'Crestfall', 3, 99, 800, 1000, 500, 550, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 0);
+INSERT INTO `sx_monsters` VALUES (204, 'Lucifuge''s Throneguard', 4, 99, 200, 300, 700, 750, 400, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12, 0);
+INSERT INTO `sx_monsters` VALUES (205, 'Lucifuge', 4, 99, 1500, 1500, 850, 900, 850, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 0);
+INSERT INTO `sx_monsters` VALUES (206, 'Xiran''s Minion', 5, 99, 500, 400, 1200, 1250, 1100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 0);
+INSERT INTO `sx_monsters` VALUES (207, 'Xiran''s Cardinal', 5, 99, 750, 750, 1300, 1400, 1250, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17, 0);
+INSERT INTO `sx_monsters` VALUES (208, 'Xiran', 5, 99, 1000, 1000, 1400, 1500, 1300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 0);
+INSERT INTO `sx_monsters` VALUES (209, 'Xiran', 5, 99, 5000, 5000, 1600, 1800, 1200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 19, 0);
 
 -- --------------------------------------------------------
 
@@ -806,14 +788,15 @@ CREATE TABLE `sx_pvp` (
   `player2name` varchar(30) NOT NULL default '',
   `playerturn` int(10) unsigned NOT NULL default '0',
   `accepted` tinyint(3) unsigned NOT NULL default '0',
-  `turntime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `turntime` timestamp NOT NULL,
   `fightrow` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_pvp`
 -- 
+
 
 -- --------------------------------------------------------
 
@@ -832,7 +815,7 @@ CREATE TABLE `sx_spells` (
   `classonly` int(10) unsigned NOT NULL default '0',
   `classexclude` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_spells`
@@ -923,7 +906,7 @@ CREATE TABLE `sx_story` (
   `rewardname` varchar(30) NOT NULL default '',
   `rewardattr` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_story`
@@ -969,7 +952,7 @@ CREATE TABLE `sx_towns` (
   `itemminlvl` int(10) unsigned NOT NULL default '0',
   `itemmaxlvl` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_towns`
@@ -1108,13 +1091,7 @@ CREATE TABLE `sx_users` (
   `mpgain` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   FULLTEXT KEY `item1name` (`item1name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table `sx_users`
--- 
-
--- --------------------------------------------------------
+) ;
 
 -- 
 -- Table structure for table `sx_worlds`
@@ -1127,7 +1104,7 @@ CREATE TABLE `sx_worlds` (
   `size` smallint(5) unsigned NOT NULL default '0',
   `bossid` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
 -- 
 -- Dumping data for table `sx_worlds`
@@ -1138,3 +1115,4 @@ INSERT INTO `sx_worlds` VALUES (2, 'Lorenfall', 100, 0);
 INSERT INTO `sx_worlds` VALUES (3, 'Borderlands', 100, 0);
 INSERT INTO `sx_worlds` VALUES (4, 'Inferno', 100, 0);
 INSERT INTO `sx_worlds` VALUES (5, 'Unreality', 100, 0);
+        

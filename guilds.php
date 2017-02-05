@@ -12,13 +12,13 @@ function guildmain() {
         if (!isset($_GET["list"])) { guildhome(); }
     }
     
-    $guilds = doquery("SELECT * FROM {{table}} WHERE isactive='1' ORDER BY honor", "guilds");
+    $guilds = dorow(doquery("SELECT * FROM {{table}} WHERE isactive='1' ORDER BY honor", "guilds"), "id");
     $row["guildlist"] = "<table style=\"width: 95%;\" cellspacing=\"0\" cellpadding=\"0\"><tr><td><b>Guild Name & Tag</b></td><td style=\"text-align: center;\"><b>Honor</b></td><td style=\"text-align: right;\"><b>Functions</b></td></tr>";
     $bgcolor = "background-color: #ffffff;";
-    if (mysql_num_rows($guilds) > 0) { 
-        while ($guildrow = mysql_fetch_array($guilds)) {
-            if ($userrow["guild"] == 0) { $applylink = "<a href=\"index.php?do=guildapp&id=".$guildrow["id"]."\">Apply to Join</a> | "; } else { $applylink = ""; }
-            $row["guildlist"] .= "<tr><td style=\"$bgcolor padding: 3px;\">[<span style=\"color: ".$guildrow["color1"].";\"><b>".$guildrow["tagline"]."</b></span>] <span style=\"color: ".$guildrow["color2"].";\"><b>".$guildrow["name"]."</b></span></td><td style=\"$bgcolor padding: 3px; text-align: center;\">".$guildrow["honor"]."</td><td style=\"$bgcolor padding: 3px; text-align: right;\">$applylink<a href=\"index.php?do=guildmembers&id=".$guildrow["id"]."\">Member List</a></td></tr>\n";
+    if ($guilds != false) { 
+        foreach($guilds as $a => $b) {
+            if ($userrow["guild"] == 0) { $applylink = "<a href=\"index.php?do=guildapp&id=".$b["id"]."\">Apply to Join</a> | "; } else { $applylink = ""; }
+            $row["guildlist"] .= "<tr><td style=\"$bgcolor padding: 3px;\">[<span style=\"color: ".$b["color1"].";\"><b>".$b["tagline"]."</b></span>] <span style=\"color: ".$b["color2"].";\"><b>".$b["name"]."</b></span></td><td style=\"$bgcolor padding: 3px; text-align: center;\">".$b["honor"]."</td><td style=\"$bgcolor padding: 3px; text-align: right;\">$applylink<a href=\"index.php?do=guildmembers&id=".$b["id"]."\">Member List</a></td></tr>\n";
             if ($bgcolor == "background-color: #ffffff;") { $bgcolor = "background-color: #dddddd;"; } else { $bgcolor = "background-color: #ffffff;"; }
         }
     } else {
@@ -37,7 +37,7 @@ function guildhome() {
     if ($userrow["guild"] == 0) { err("You are not yet a member of any Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     $guild = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["guild"]."' LIMIT 1", "guilds"));
     
-    if ($guild["lastupdate"] <= (mktime() - ($controlrow["guildupdate"] * 3600))) { guildupdate(); }
+    if ($guild["lastupdate"] <= (mktime() - ($controlrow["guildupdate"] * 3600))) { $guild = guildupdate(); }
     
     switch($userrow["guildrank"]) {
         case 1: $template = "guild_homelow"; break;
@@ -55,19 +55,19 @@ function guildhome() {
     $pagerow["bank"] = number_format($guild["bank"]);
     
     // Pull memberslist for select box.
-    $members = doquery("SELECT * FROM {{table}} WHERE guild='".$userrow["guild"]."' ORDER BY guildrank", "users");
+    $members = dorow(doquery("SELECT * FROM {{table}} WHERE guild='".$userrow["guild"]."' ORDER BY guildrank", "users"), "id");
     $pagerow["memberselect"] = "<select name=\"charid\" style=\"font: 10px Arial;\">";
-    while ($memrow = mysql_fetch_array($members)) {
-        $pagerow["memberselect"] .= "<option value=\"".$memrow["id"]."\">".$memrow["charname"]." (Rank ".$memrow["guildrank"].")</option>\n";
+    foreach($members as $a => $b) {
+        $pagerow["memberselect"] .= "<option value=\"".$b["id"]."\">".$b["charname"]." (Rank ".$b["guildrank"].")</option>\n";
     }
     $pagerow["memberselect"] .= "</select>";
     
     // Pull applications for selectbox.
-    $apps = doquery("SELECT * FROM {{table}} WHERE guild='".$userrow["guild"]."' ORDER BY id", "guildapps");
-    if (mysql_num_rows($apps) > 0) { 
+    $apps = dorow(doquery("SELECT * FROM {{table}} WHERE guild='".$userrow["guild"]."' ORDER BY id", "guildapps"), "id");
+    if ($apps != false) { 
         $pagerow["appselect"] = "<select name=\"charid\" style=\"font: 10px Arial;\">";
-        while ($approw = mysql_fetch_array($apps)) {
-            $pagerow["appselect"] .= "<option value=\"".$approw["charid"]."\">".$approw["charname"]."</option>\n";
+        foreach ($apps as $a => $b) {
+            $pagerow["appselect"] .= "<option value=\"".$b["charid"]."\">".$b["charname"]."</option>\n";
         }
         $pagerow["appselect"] .= "</select><br /><input type=\"submit\" name=\"approve\" value=\"Approve\" /> <input type=\"submit\" name=\"deny\" value=\"Deny\" />";
     } else {
@@ -93,7 +93,7 @@ function guildcreate() {
     if ($userrow["guild"] != 0) { err("You are already a member of another Guild. You must renounce your current membership before starting your own Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     $appquery = doquery("SELECT * FROM {{table}} WHERE charid='".$userrow["id"]."' LIMIT 1", "guildapps");
     if (mysql_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    if ($userrow["level"] < 10) { err("You cannot join a guild until you are at least Level 10. Please continue playing until you make Level 10, then try again."); }
+    if ($userrow["level"] < $controlrow["guildstartlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildstartlvl"].". Please continue playing until you make Level 10, then try again."); }
     
     if (isset($_POST["submit"])) {
         
@@ -227,7 +227,7 @@ function guildapp() {
     if ($userrow["guild"] != 0) { err("You are already a member of another Guild. You must renounce your current membership before joining this Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     $appquery = doquery("SELECT * FROM {{table}} WHERE charid='".$userrow["id"]."' LIMIT 1", "guildapps");
     if (mysql_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    if ($userrow["level"] < 10) { err("You cannot join a guild until you are at least Level 10. Please continue playing until you make Level 10, then try again."); }
+    if ($userrow["level"] < $controlrow["guildjoinlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildjoinlvl"].". Please continue playing until you make Level 10, then try again."); }
     
     if (isset($_POST["yes"])) {
         
@@ -258,12 +258,12 @@ function guildmembers() {
     $guild = dorow(doquery("SELECT * FROM {{table}} WHERE id='$id' LIMIT 1", "guilds"));
     if ($guild == false) { err("Invalid input. Please <a href=\"index.php\">go back</a> and try again."); }
     
-    $query = doquery("SELECT * FROM {{table}} WHERE guild='$id' ORDER BY guildrank DESC", "users");
+    $guildmembers = dorow(doquery("SELECT * FROM {{table}} WHERE guild='$id' ORDER BY guildrank DESC", "users"), "id");
     $row["guildmembers"] = "<table style=\"width: 95%;\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"background-color: #dddddd; padding: 3px;\"><b>Name</b></td><td style=\"background-color: #dddddd; padding: 3px; text-align: right;\"><b>Rank</b></td></tr>\n";
     $bgcolor = "background-color: #ffffff;";
-    if (mysql_num_rows($query) > 0) { 
-        while ($guildrow = mysql_fetch_array($query)) {
-            $row["guildmembers"] .= "<tr><td style=\"$bgcolor padding: 3px;\">[<span style=\"color: ".$guild["color1"].";\"><b>".$guild["tagline"]."</b></span>]<span style=\"color: ".$guild["color2"].";\"><b>".$guildrow["charname"]."</b></span></td><td style=\"$bgcolor padding: 3px; text-align: right;\">".$guild["rank".$guildrow["guildrank"]]."</td></tr>\n";
+    if ($guildmembers != false) { 
+        foreach ($guildmembers as $a => $b) {
+            $row["guildmembers"] .= "<tr><td style=\"$bgcolor padding: 3px;\">[<span style=\"color: ".$guild["color1"].";\"><b>".$guild["tagline"]."</b></span>]<span style=\"color: ".$guild["color2"].";\"><b>".$b["charname"]."</b></span></td><td style=\"$bgcolor padding: 3px; text-align: right;\">".$guild["rank".$b["guildrank"]]."</td></tr>\n";
             if ($bgcolor == "background-color: #ffffff;") { $bgcolor = "background-color: #dddddd;"; } else { $bgcolor = "background-color: #ffffff;"; }
         }
     } else {
@@ -447,9 +447,9 @@ function guilddisband() {
     
     if (isset($_POST["yes"])) {
         
-        $query = doquery("SELECT * FROM {{table}} WHERE guild='".$guild["id"]."'", "users");
-        while ($row = mysql_fetch_array($query)) {
-            $send = doquery("INSERT INTO {{table}} SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='".$row["id"]."', recipientname='".$row["charname"]."', status='0', title='Guild Disbanded', message='Your Guild leader has chosen to disband the guild. Your member status has been reset, and you can now apply to join another guild if you wish.<br /><br /><b>Do not reply to this message!</b>', gold='0'", "messages");
+        $guildmembers = dorow(doquery("SELECT * FROM {{table}} WHERE guild='".$guild["id"]."'", "users"), "id");
+        foreach ($guildmembers as $a => $b) {
+            $send = doquery("INSERT INTO {{table}} SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='".$b["id"]."', recipientname='".$b["charname"]."', status='0', title='Guild Disbanded', message='Your Guild leader has chosen to disband the guild. Your member status has been reset, and you can now apply to join another guild if you wish.<br /><br /><b>Do not reply to this message!</b>', gold='0'", "messages");
         }
         $updatemem = doquery("UPDATE {{table}} SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE guild='".$guild["id"]."'", "users");
         $delete = doquery("DELETE FROM {{table}} WHERE id='".$guild["id"]."'", "guilds");
@@ -494,19 +494,24 @@ function guildupdate() {
     global $userrow;
     
     $guild = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["guild"]."' LIMIT 1", "guilds"));
-    $userquery = doquery("SELECT * FROM {{table}} WHERE guild='".$userrow["guild"]."'", "users");
+    $users = dorow(doquery("SELECT * FROM {{table}} WHERE guild='".$userrow["guild"]."'", "users"), "id");
     
     $honor = $guild["members"];
     $totalexp = 0;
-    while ($users = mysql_fetch_array($userquery)) {
-        $totalexp += $users["experience"];
-        $honor += ($users["pvpwins"] * 2);
-        $honor -= $users["pvplosses"];
+    foreach ($users as $a => $b) {
+        $totalexp += $b["experience"];
+        $honor += ($b["pvpwins"] * 2);
+        $honor -= $b["pvplosses"];
     }
     $honor += floor(sqrt($totalexp));
     
     $lastupdate = mktime();
     $update = doquery("UPDATE {{table}} SET honor='$honor',lastupdate='$lastupdate' WHERE id='".$userrow["guild"]."' LIMIT 1", "guilds");
+    
+    // Now update the array and send back to main guild function.
+    $guild["honor"] = $honor;
+    $guild["lastupdate"] = $lastupdate;
+    return ($guild);
     
 }
 

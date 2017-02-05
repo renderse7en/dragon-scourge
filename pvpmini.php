@@ -9,7 +9,16 @@ $row = dorow(doquery("SELECT *,UNIX_TIMESTAMP(turntime) as fturntime FROM {{tabl
 // Check for timeout.
 if ($row["fturntime"] < (time() - $controlrow["pvptimeout"])) {
     
-    $query = doquery("UPDATE {{table}} SET currentpvp='0', currentaction='In Town' WHERE id='".$row["player1id"]."' OR id='".$row["player2id"]."' LIMIT 2", "users");
+    // If the PVP was accepted, whoever timed out loses.
+    if ($row["accepted"] == 1) {
+        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$row["player2id"]."' LIMIT 1", "users"));
+        if ($monsterrow["level"] > $userrow["pvphighest"]) { $highest = ", pvphighest='".$monsterrow["level"]."'"; } else { $highest = ""; }
+        doquery("UPDATE {{table}} SET currentpvp='0', currentaction='In Town', pvpwins = pvpwins + 1 $highest WHERE id='".$row["player1id"]."' LIMIT 1", "users");
+        doquery("UPDATE {{table}} SET currentpvp='0', currentaction='In Town', pvplosses = pvplosses + 1 WHERE id='".$row["player2id"]."' LIMIT 1", "users");
+    } else {
+        doquery("UPDATE {{table}} SET currentpvp='0', currentaction='In Town' WHERE id='".$row["player1id"]."' OR id='".$row["player2id"]."' LIMIT 2", "users");
+    }
+    
     $query2 = doquery("DELETE FROM {{table}} WHERE id='".$row["id"]."'", "pvp");
     $pagerow["content"] = "The other player did not respond and this Duel has timed out. Thanks for playing.<br /><br />This window will refresh to the main screen in ".$controlrow["pvprefresh"]." seconds.";
     $pagerow["target"] = "_top";

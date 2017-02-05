@@ -2,8 +2,19 @@ DRAGON SCOURGE
 Changelog
 
 ***** BETA THREE *****
+2.26.2006 - Build 14 (Pete Rose):
+- The poor sods who are stuck on dial-up can now select to not show the minimap in their account settings.
+- Fixed a problem with guild names in paneltop.
+- Fixed minor bug in account settings that caused a server error when not changing your password.
+- Manually logging out of the game now resets your onlinetime so you no longer appear in Who's Online.
+- Letting a duel time out after it's been accepted now counts against your duelling wins/losses.
+- Overhauled dorow() to allow forcing array indexes by a specific column. Modified several functions accordingly.
+- Guild Honor is now shown correctly on the main Guild Hall page immediately after an update.
+- Guild shoutboxes now add the guild ID from userrow instead of in the GET request. More secure.
+- Guild minimim join/start levels are now admin-editable in controlrow.
+- updateuserrow() now array_maps addslashes to allow apostrophes in item names.
+
 2.04.2006 - Build 13 (Unlucky):
-- 
 - Dying now properly takes you back to the actual lat/lon of the world's first town (rather than 0,0 every time).
 - Added 160+ new monsters for the later realms.
 - Buy Maps now correctly only shows available maps from the Realm you're in.

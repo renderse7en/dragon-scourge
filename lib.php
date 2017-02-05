@@ -5,9 +5,9 @@ $starttime = getmicrotime();
 $numqueries = 0;
 $link = opendb();
 $version = "Beta 3";
-$bnumber = "13";
-$bname = "Unlucky";
-$bdate = "2.04.2006";
+$bnumber = "14";
+$bname = "Pete Rose";
+$bdate = "2.26.2006";
 
 // Handling for servers with magic_quotes turned on.
 // Example from php.net.
@@ -45,21 +45,35 @@ function doquery($query, $table) { // Something of a tiny little database abstra
     
 }
 
-function dorow($sqlquery) { // Abstraction layer part deux.
+function dorow($sqlquery, $force = "") { // Abstraction layer part deux.
     
-    switch(mysql_num_rows($sqlquery)) {
+    switch (mysql_num_rows($sqlquery)) {
+        
         case 0:
             $row = false;
             break;
         case 1:
-            $row = mysql_fetch_array($sqlquery, MYSQL_ASSOC);
+            if ($force == "") {
+                $row = mysql_fetch_assoc($sqlquery);
+            } else {
+                $temprow = mysql_fetch_assoc($sqlquery);
+                $row[$temprow[$force]] = $temprow;
+            }
             break;
         default:
-            $row = array();
-            while ($array = mysql_fetch_array($sqlquery, MYSQL_ASSOC)) {
-                $row[] = $array;
+            if ($force == "") {
+                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                    $row[] = $temprow;
+                }
+            } else {
+                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                    $row[$temprow[$force]] = $temprow;
+                }
             }
+            break;
+    
     }
+        
     return $row;
     
 }
@@ -195,6 +209,7 @@ function err($error, $system = false, $panels = true) { // Basic little error ha
 function updateuserrow() {
     
     global $userrow;
+    $userrow = array_map("addslashes", $userrow);
     
     $querystring = "";
     foreach($userrow as $a=>$b) {

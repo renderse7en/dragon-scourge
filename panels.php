@@ -2,7 +2,7 @@
 
 function panelleft() {
     
-    global $controlrow, $userrow, $townrow, $worldrow;
+    global $controlrow, $userrow, $acctrow, $townrow, $worldrow;
     $row = array();
     
     // Action handling.
@@ -30,6 +30,24 @@ function panelleft() {
         $row["longitude"] = $userrow["longitude"] . "E";
     }
     
+    // Minimap option.
+    if ($acctrow["minimap"] == 0) { 
+        
+        $row["minimap"] = "<a href=\"javascript:void(0)\" onClick=\"Javascript:window.open('index.php?do=showmap','','width=550,height=550,toolbar=no, location=no,directories=no,status=yes,menubar=no,scrollbars=no,copyhistory=yes, resizable=yes');\">View Map</a><br /><br />";
+        
+    } else {
+        
+$row["minimap"] = <<<THEVERYENDOFYOU
+<div style="border: solid 1px black; width: 106px; height: 106px; padding: 0px; margin: 0px 0px 5px 0px;">
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="106" height="106" id="mapmini" align="middle">
+<param name="allowScriptAccess" value="sameDomain" />
+<param name="movie" value="mapmini.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><embed src="mapmini.swf" quality="high" bgcolor="#ffffff" width="106" height="106" name="mapmini" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+</div>
+THEVERYENDOFYOU;
+    
+    }
+    
     // Travel To handling.
     $row["travelto"] = "";
     
@@ -43,11 +61,11 @@ function panelleft() {
     $townstring .= ") AND world='".$userrow["world"]."'";
     
     // Then we do the query.
-    $traveltoquery = doquery("SELECT id,name FROM {{table}} WHERE $townstring ORDER BY id", "towns");
+    $traveltoquery = dorow(doquery("SELECT id,name FROM {{table}} WHERE $townstring ORDER BY id", "towns"), "id");
     
     // Finally we build the link list.
-    while ($d = mysql_fetch_array($traveltoquery)) {
-        $row["travelto"] .= "<a href=\"index.php?do=travel:".$d["id"]."\">".$d["name"]."</a><br />\n";
+    foreach ($traveltoquery as $a => $b) {
+        $row["travelto"] .= "<a href=\"index.php?do=travel:".$b["id"]."\">".$b["name"]."</a><br />\n";
     }
     
     // And then we're done with this panel.
@@ -70,10 +88,10 @@ function panelright() {
     // Who's Online.
     if ($controlrow["showonline"] == 1) {
         $row["whosonline"] = "<div class=\"big\"><b>Who's Online</b></div>";
-        $users = doquery("SELECT * FROM {{table}} WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."'", "users");
-        $number = mysql_num_rows($users);
+        $users = dorow(doquery("SELECT * FROM {{table}} WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."'", "users"), "id");
+        $number = count($users);
         $row["whosonline"] .= "There are <b>$number</b> user(s) online within the last 10 minutes: ";
-        while($b = mysql_fetch_array($users)) { 
+        foreach ($users as $a => $b) {
             if ($b["guild"] != 0) { 
                 $charname = "[<span style=\"color: ".$b["tagcolor"].";\">".$b["guildtag"]."</span>]<span style=\"color: ".$b["namecolor"].";\">".$b["charname"]."</span>";
             } else { 
@@ -94,7 +112,7 @@ function paneltop($loggedin = true) {
     global $acctrow, $userrow;
     if ($loggedin == true || isset($acctrow)) {
         
-        if ($userrow == false) { $userrow["charname"] = "No Characters Yet"; }
+        if ($userrow == false) { $userrow["charname"] = "No Characters Yet"; $userrow["guild"] = 0; }
         if ($acctrow["authlevel"] == 2) { $admin = " (<a href=\"admin/index.php\">Admin</a>)"; } else { $admin = ""; }
         if ($userrow["guild"] != 0) { 
             $charname = "[<span style=\"color: ".$userrow["tagcolor"].";\">".$userrow["guildtag"]."</span>]<span style=\"color: ".$userrow["namecolor"].";\">".$userrow["charname"]."</span>";

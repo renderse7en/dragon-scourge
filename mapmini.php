@@ -29,17 +29,19 @@ $text .= "player_x=".$x."&";
 $text .= "player_y=".$y."&";
 
 // Then do everyone else.
-$users = doquery("SELECT * FROM {{table}} WHERE world='".$worldrow["id"]."' AND UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND id != '".$userrow["id"]."'", "users");
-$text .= "users=".mysql_num_rows($users)."&";
+$users = dorow(doquery("SELECT * FROM {{table}} WHERE world='".$worldrow["id"]."' AND UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND id != '".$userrow["id"]."'", "users"), "id");
+$text .= "users=".count($users)."&";
 $count = 0;
-while ($b = mysql_fetch_array($users)) { 
-    $lat = $b["latitude"];
-    $lon = $b["longitude"];
-    if ($lat >= 0) { $y = ceil(($worldrow["size"] - $lat) * $perpix); } else { $y = 50 + ceil(($lat * -1) * $perpix); }
-    if ($lon >= 0) { $x = 50 + ceil($lon * $perpix); } else { $x = ceil(($worldrow["size"] + $lon) * $perpix); }
-    $text .= "user".$count."_x=".$x."&";
-    $text .= "user".$count."_y=".$y."&";
-    $count++;
+if ($users != false) {
+    foreach ($users as $a => $b) {
+        $lat = $b["latitude"];
+        $lon = $b["longitude"];
+        if ($lat >= 0) { $y = ceil(($worldrow["size"] - $lat) * $perpix); } else { $y = 50 + ceil(($lat * -1) * $perpix); }
+        if ($lon >= 0) { $x = 50 + ceil($lon * $perpix); } else { $x = ceil(($worldrow["size"] + $lon) * $perpix); }
+        $text .= "user".$count."_x=".$x."&";
+        $text .= "user".$count."_y=".$y."&";
+        $count++;
+    }
 }
 
 // Then do quests.

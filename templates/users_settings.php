@@ -11,6 +11,7 @@ Verify New Password:<br /><input type="password" name="password2" size="30" maxl
 </td></tr>
 <tr><td width="30%">Email Address:</td><td><input type="text" name="email" size="30" maxlength="200" value="{{emailaddress}}"/></td></tr>
 <tr><td width="30%">Image Format:</td><td><select name="imageformat">{{imageformat}}</select><br />(Older versions of Internet Explorer may not be compatible with transparent PNG images. If you notice problems with item and monster images, please select GIF.)</td></tr>
+<tr><td width="30%">Show Minimap:</td><td><select name="minimap">{{minimap}}</select><br />(The maps in this game are Flash-based. Setting this option to 'No' may increase page download times if you have a slow internet connection.)</td></tr>
 <tr><td colspan="2"><input type="submit" name="submit" value="Submit" /> <input type="reset" name="reset" value="Reset" /></td></tr>
 </table>
 </form>

@@ -337,11 +337,11 @@ function bank() {
 
 function halloffame() {
     
-    $topquery = doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} ORDER BY experience DESC LIMIT 25", "users");
+    $top = dorow(doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} ORDER BY experience DESC LIMIT 25", "users"), "id");
     $row["halltable"] = "";
     $i = 1;
     
-    while ($b = mysql_fetch_array($topquery)) {
+    foreach ($top as $a => $b) {
         if ($b["charpicture"] != "") {
             $b["avatar"] = "<img src=\"".$b["charpicture"]."\" alt=\"".$b["charname"]."\" />";
         } else {
@@ -367,25 +367,17 @@ function duel() {
     
     global $userrow;
     
-    $query = doquery("SELECT * FROM {{table}} WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' AND id !='".$userrow["id"]."' ORDER BY id", "users");
-    $row = dorow($query);
+    $row = dorow(doquery("SELECT * FROM {{table}} WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' AND id !='".$userrow["id"]."' ORDER BY id", "users"), "id");
     
     $list = "";
-    if (mysql_num_rows($query) == 0) {
+    if ($row == false) {
         $list .= "There is nobody available to challenge at this time.<br />";
-    } elseif (mysql_num_rows($query) == 1) { 
-        if ($row["guild"] != 0) { 
-            $charname = "[<span style=\"color: ".$row["tagcolor"].";\">".$row["guildtag"]."</span>]<span style=\"color: ".$row["namecolor"].";\">".$row["charname"]."</span>";
-        } else { 
-            $charname = $row["charname"];
-        }
-        $list .= "<a href=\"index.php?do=challenge&uid=".$row["id"]."\">$charname (Level ".$row["level"].")</a><br />";
     } else {
         foreach($row as $a=>$b) {
-            if ($row["guild"] != 0) { 
-                $charname = "[<span style=\"color: ".$row["tagcolor"].";\">".$row["guildtag"]."</span>]<span style=\"color: ".$row["namecolor"].";\">".$row["charname"]."</span>";
+            if ($b["guild"] != 0) { 
+                $charname = "[<span style=\"color: ".$b["tagcolor"].";\">".$b["guildtag"]."</span>]<span style=\"color: ".$b["namecolor"].";\">".$b["charname"]."</span>";
             } else { 
-                $charname = $row["charname"];
+                $charname = $b["charname"];
             }
             $list .= "<a href=\"index.php?do=challenge&uid=".$b["id"]."\">".$b["charname"]." (Level ".$b["level"].")</a><br />";
         }

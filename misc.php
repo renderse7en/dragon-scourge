@@ -32,10 +32,10 @@ function babblebox2() {
     global $userrow, $controlrow;
     
     if (isset($_GET["g"])) {
-        if (!is_numeric($_GET["g"])) { err("Invalid input."); }
-        $g = "WHERE guild='".$_GET["g"]."'";
-        $g2 = ", guild='".$_GET["g"]."'";
-        $row["guild"] = "&g=".$_GET["g"];
+        $guild = $userrow["guild"];
+        $g = "WHERE guild='$guild'";
+        $g2 = ", guild='$guild'";
+        $row["guild"] = "&g=yes";
     } else {
         $g = "WHERE guild='0'";
         $row["guild"] = "";
@@ -60,11 +60,11 @@ function babblebox2() {
         
     }
     
-    $shouts = doquery("SELECT * FROM {{table}} $g ORDER BY id LIMIT 20", "babblebox");
+    $shouts = dorow(doquery("SELECT * FROM {{table}} $g ORDER BY id LIMIT 20", "babblebox"), "id");
     $row["shouts"] = "";
     $background = 1;
-    if (mysql_num_rows($shouts) > 0) {
-        while ($b = mysql_fetch_array($shouts)) {
+    if ($shouts != false) {
+        foreach ($shouts as $a => $b) {
             $row["shouts"] .= "<div class=\"babble$background\">[<a href=\"users.php?do=profile&uid=".$b["charid"]."\" target=\"_parent\">".$b["charname"]."</a>] ".$b["content"]."</div>\n";
             if ($background == 1) { $background = 2; } else { $background = 1; }
         }

@@ -57,6 +57,7 @@ function register() {
         
         // Process other stuff.
         if ($imageformat != ".png" && $imageformat != ".gif") { $errors++; $errorlist .= "Invalid input for image format selection.<br />"; }
+        if (!is_numeric($minimap)) { $errors++; $errorlist .= "Invalid input for minimap selection.<br />"; }
         
         if ($errors == 0) {
             
@@ -71,7 +72,7 @@ function register() {
             }
             
             // Now update.
-            $query = doquery("INSERT INTO {{table}} SET id='',regdate=NOW(),regip='".$_SERVER["REMOTE_ADDR"]."',verifycode='$verifycode',username='$username',password='$password',emailaddress='$email1',language='English',imageformat='$imageformat'", "accounts") or die(mysql_error());
+            $query = doquery("INSERT INTO {{table}} SET id='',regdate=NOW(),regip='".$_SERVER["REMOTE_ADDR"]."',verifycode='$verifycode',username='$username',password='$password',emailaddress='$email1',language='English',imageformat='$imageformat', minimap='$minimap'", "accounts") or die(mysql_error());
             
             // Send confirmation email if necessary.
             if ($controlrow["verifyemail"] == 1) {
@@ -96,6 +97,7 @@ function register() {
     }
 
     $row["imageformat"] = "<option value=\".png\">PNG</option><option value=\".gif\">GIF</option>";
+    $row["minimap"] = "<option value=\"1\">Yes</option><option value=\"0\">No</option>";
     display("Register", parsetemplate(gettemplate("users_register1"), $row), false);
     
 }
@@ -205,7 +207,7 @@ function settings() {
             if ($password1 != $password2) { $errors++; $errorlist .= "New passwords don't match.<br />"; }
             $password = "password='".md5($password1)."',";
             $newpass = true;
-        }
+        } else { $password = ""; }
         
         // Process email address.
         if (trim($email) == "") { $errors++; $errorlist .= "Email field is required.<br />"; }
@@ -215,10 +217,11 @@ function settings() {
         
         // Process other stuff.
         if ($imageformat != ".png" && $imageformat != ".gif") { $errors++; $errorlist .= "Invalid input for image format selection.<br />"; }
+        if (!is_numeric($minimap)) { $errors++; $errorlist .= "Invalid input for minimap selection.<br />"; }
         
         if ($errors == 0) { 
             
-            $query = doquery("UPDATE {{table}} SET $password emailaddress='$email', imageformat='$imageformat' WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
+            $query = doquery("UPDATE {{table}} SET $password emailaddress='$email', imageformat='$imageformat', minimap='$minimap' WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
         
             if (isset($newpass)) { 
                 setcookie("scourge", "", (time()-3600), "/", "", 0);
@@ -244,6 +247,11 @@ function settings() {
         $row["imageformat"] = "<option value=\".png\" selected=\"selected\">PNG</option><option value=\".gif\">GIF</option>";
     } else {
         $row["imageformat"] = "<option value=\".png\">PNG</option><option value=\".gif\" selected=\"selected\">GIF</option>";
+    }
+    if ($acctrow["minimap"] == 0) {
+        $row["minimap"] = "<option value=\"1\">Yes</option><option value=\"0\" selected=\"selected=\">No</option>";
+    } else {
+        $row["minimap"] = "<option value=\"1\">Yes</option><option value=\"0\">No</option>";
     }
     display("Account Settings", parsetemplate(gettemplate("users_settings"), $row));
     
@@ -278,11 +286,8 @@ function characters() {
         } else { $row["newcharlink"] = ""; }
         
         // Grab characters.
-        $charquery = doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} WHERE account='".$acctrow["id"]."' ORDER BY birthdate", "users");
-        $charrow = dorow($charquery);
+        $charrow = dorow(doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} WHERE account='".$acctrow["id"]."' ORDER BY birthdate", "users"), "id");
         
-        // Different loop style if there's multiple available characters.
-        if (mysql_num_rows($charquery) > 1) { 
             foreach($charrow as $a=>$b) { 
                 
                 // Default character.
@@ -314,20 +319,6 @@ function characters() {
                 }
             }
             
-        } else {
-        
-            $row["selectcharlist"] .= "<option value=\"".$charrow["id"]."\">".$charrow["charname"]."</option>";
-                    
-            if ($charrow["charpicture"] != "") {
-                $charrow["avatar"] = "<img src=\"".$charrow["charpicture"]."\" alt=\"".$charrow["charname"]."\" />";
-            } else {
-                $charrow["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$charrow["charname"]."\" />";
-            }
-            $charrow["isdefault"] = "";
-            $row["fullcharlist"] .= parsetemplate(gettemplate("users_charlistrow"), $charrow);
-        
-        }
-        
         display("Characters", parsetemplate(gettemplate("users_charlist"), $row));
         
     } else {

@@ -14,8 +14,13 @@ if ($acctrow == false && substr($_SERVER["REQUEST_URI"], -21) != "users.php?do=r
 if ($acctrow != false && $acctrow["characters"] == 0 && substr($_SERVER["REQUEST_URI"], -20) != "users.php?do=charnew") { die(header("Location: users.php?do=charnew")); }
 
 // User row.
-$online = doquery("UPDATE {{table}} SET onlinetime=NOW() WHERE id='".$acctrow["activechar"]."' LIMIT 1", "users");
+if (substr($_SERVER["REQUEST_URI"], -19) != "login.php?do=logout") {
+    $online = doquery("UPDATE {{table}} SET onlinetime=NOW() WHERE id='".$acctrow["activechar"]."' LIMIT 1", "users");
+} else {
+    $online = doquery("UPDATE {{table}} SET onlinetime = DATE_SUB(onlinetime, INTERVAL 11 MINUTE) WHERE id='".$acctrow["activechar"]."' LIMIT 1", "users");
+}
 $userrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$acctrow["activechar"]."' LIMIT 1", "users"));
+if ($userrow != false) { $userrow = array_map("stripslashes", $userrow); }
 
 // World row.
 $worldrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["world"]."' LIMIT 1", "worlds")); 
@@ -28,12 +33,7 @@ if ($userrow["currentaction"] == "In Town") {
 }
 
 // Spells.
-// Can't use dorow because we need ID numbers as array indexes.
-$spells = array();
-$spellsquery = doquery("SELECT * FROM {{table}} ORDER BY id", "spells");
-while ($row = mysql_fetch_array($spellsquery, MYSQL_ASSOC)) {
-                $spells[$row["id"]] = $row;
-}
+$spells = dorow(doquery("SELECT * FROM {{table}} ORDER BY id", "spells"), "id");
 
 // Global fightrow.
 $fightrow = array(

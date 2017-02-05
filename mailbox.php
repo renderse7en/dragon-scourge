@@ -8,16 +8,11 @@ function mailbox() {
     
     global $userrow;
     
-    $messagequery = doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM {{table}} WHERE recipientid='".$userrow["id"]."' ORDER BY postdate DESC", "messages");
-    $messages = dorow($messagequery);
+    $messages = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM {{table}} WHERE recipientid='".$userrow["id"]."' ORDER BY postdate DESC", "messages"), "id");
     $row["messages"] = "<table width=\"97%\">\n";
 
-    if (mysql_num_rows($messagequery) == 0) { 
+    if ($messages == false) { 
         $row["messages"] .= "<tr><td>You do not have any messages.</td></tr>";
-    } elseif (mysql_num_rows($messagequery) == 1) { 
-        if ($messages["status"] == 0) { $messages["new"] = "<span class=\"red\">*</span>"; } else { $messages["new"] = ""; }
-        if ($messages["gold"] != 0) { $messages["money"] = "<span class=\"blue\">\$</span>"; } else { $messages["money"] = ""; }
-        $row["messages"] .= parsetemplate(gettemplate("mailbox_listrow"), $messages);
     } else {
         foreach($messages as $a=>$b) {
             if ($b["status"] == 0) { $b["new"] = "<span class=\"red\">*</span>"; } else { $b["new"] = ""; }
@@ -35,14 +30,11 @@ function outbox() {
     
     global $userrow;
     
-    $messagequery = doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM {{table}} WHERE senderid='".$userrow["id"]."' ORDER BY postdate DESC", "messages");
-    $messages = dorow($messagequery);
+    $messages = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM {{table}} WHERE senderid='".$userrow["id"]."' ORDER BY postdate DESC", "messages"), "id");
     $row["messages"] = "<table width=\"97%\">\n";
 
-    if (mysql_num_rows($messagequery) == 0) { 
+    if ($messages == false) { 
         $row["messages"] .= "<tr><td>You do not have any sent messages.</td></tr>";
-    } elseif (mysql_num_rows($messagequery) == 1) { 
-        $row["messages"] .= parsetemplate(gettemplate("mailbox_listoutrow"), $messages);
     } else {
         foreach($messages as $a=>$b) {
             $row["messages"] .= parsetemplate(gettemplate("mailbox_listoutrow"), $b);

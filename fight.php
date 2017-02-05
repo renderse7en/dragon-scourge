@@ -351,8 +351,7 @@ function youlose() {
         "deathpenalty"=>$userrow["deathpenalty"]);
         
     // Then put them in town & reset fight stuff.
-    $townquery = doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1", "towns");
-    $townrow = mysql_fetch_array($townquery);
+    $townrow = dorow(doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1", "towns"));
     $userrow["latitude"] = $townrow["latitude"];
     $userrow["longitude"] = $townrow["longitude"];
     $userrow["currentaction"] = "In Town";

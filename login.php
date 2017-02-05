@@ -42,6 +42,7 @@ function login() {
 
 function logout() {
     
+    include("globals.php");
     setcookie("scourge", "", (time()-3600), "/", "", 0);
     die(header("Location: login.php?do=login"));
     
