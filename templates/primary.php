@@ -72,7 +72,7 @@ a:hover { color: #663300; }
     {{forumslink}}
     </td>
     <td width="40%" style="text-align:right;">
-    <a href="http://www.dragonscourge.com">Dragon Scourge</a> &copy; 2003-2005 by <a href="http://www.renderse7en.com">renderse7en</a>
+    <a href="http://www.dragonscourge.com">Dragon Scourge</a> &copy; by <a href="http://www.renderse7en.com">renderse7en</a>
     </td>
   </tr>
 </table>

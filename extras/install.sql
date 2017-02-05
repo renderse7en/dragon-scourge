@@ -62,6 +62,7 @@ CREATE TABLE `sx_classes` (
   `damageperstrength` float unsigned NOT NULL default '0',
   `hpperdexterity` float unsigned NOT NULL default '0',
   `mpperenergy` float unsigned NOT NULL default '0',
+  `description` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ;
 
@@ -69,9 +70,9 @@ CREATE TABLE `sx_classes` (
 -- Dumping data for table `sx_classes`
 -- 
 
-INSERT INTO `sx_classes` VALUES (1, 'Barbarian', 0, 0, 3, 2, 1);
-INSERT INTO `sx_classes` VALUES (2, 'Sorceress', 0, 0, 1, 2, 3);
-INSERT INTO `sx_classes` VALUES (3, 'Paladin', 0, 0, 2, 3, 1);
+INSERT INTO `sx_classes` VALUES (1, 'Barbarian', 0, 0, 3, 2, 1, 'Barbarians specialize in physical damage. 3 damage pr str, 2 hp per dex, 1 mp per energy.');
+INSERT INTO `sx_classes` VALUES (2, 'Sorceress', 0, 0, 1, 2, 3, 'Sorceresses specialize in magical damage. 3 mp per energy, 2 hp per dex, 1 damage per str.');
+INSERT INTO `sx_classes` VALUES (3, 'Paladin', 0, 0, 2, 3, 1, 'Paladins specialize in staying alive. 3 hp per dex, 2 damage per str, 1 mp per energy.');
 
 -- --------------------------------------------------------
 

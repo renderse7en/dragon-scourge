@@ -290,8 +290,96 @@ function buy() { // Buy items from merchants.
 
 function gamble() {
     
-    display("Gamble", gettemplate("town_gamble1"));
+    global $userrow;
     
+    $mode = "easy";
+    if (isset($_GET["mode"])) { $mode = $_GET["mode"]; }
+    
+    if (isset($_POST["submit"])) {
+        
+        $amount = $_POST["amount"];
+        
+        // Cup errors.
+        if (!isset($_POST["cup"])) { err("You didn't pick any cup to bet on. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        if (!is_numeric($_POST["cup"])) { err("You didn't pick any cup to bet on. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        
+        // Bet amount errors.
+        if (trim($amount) == "") { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        if (!is_numeric($amount)) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        if ($amount < 0) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        if ($userrow["gold"] < $amount) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        
+        if ($mode == "hard") {
+            
+            $thecup = $_POST["cup"];
+            $thewin = rand(1,9);
+
+            if ($thecup == $thewin) {
+                $userrow["gold"] += ($amount * 10);
+                doquery("UPDATE {{table}} SET gold=gold+($amount * 10) WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 10)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a>?");
+            } else {
+                $userrow["gold"] -= $amount;
+                doquery("UPDATE {{table}} SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a>?");
+            }
+            
+        }
+        
+        if ($mode == "easy") {
+            
+            $thecup = $_POST["cup"];
+            $thewin = rand(1,3);
+
+            if ($thecup == $thewin) {
+                $userrow["gold"] += ($amount * 2);
+                doquery("UPDATE {{table}} SET gold=gold+($amount * 2) WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 2)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a>?");
+            } else {
+                $userrow["gold"] -= $amount;
+                doquery("UPDATE {{table}} SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a>?");
+            }
+            
+        }
+        
+    } else {
+        
+        if ($mode == "hard") {
+            
+            $row["mode"] = "hard";
+            $row["form"] = "<table width=\"200\"><tr>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"1\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"1\" id=\"1\" /></label></td>";
+            $row["form"] .= "<td width=\"34%\" style=\"text-align: center;\"><label for=\"2\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"2\" id=\"2\" /></label></td>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"3\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"3\" id=\"3\" /></label></td>";
+            $row["form"] .= "</tr><tr>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"4\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"4\" id=\"4\" /></label></td>";
+            $row["form"] .= "<td width=\"34%\" style=\"text-align: center;\"><label for=\"5\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"5\" id=\"5\" /></label></td>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"6\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"6\" id=\"6\" /></label></td>";
+            $row["form"] .= "</tr><tr>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"7\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"7\" id=\"7\" /></label></td>";
+            $row["form"] .= "<td width=\"34%\" style=\"text-align: center;\"><label for=\"8\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"8\" id=\"8\" /></label></td>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"9\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"9\" id=\"9\" /></label></td>";
+            $row["form"] .= "</tr></table>";
+            
+        }
+        
+        if ($mode == "easy") {
+            
+            $row["mode"] = "easy";
+            $row["form"] = "<table width=\"200\"><tr>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"1\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"1\" id=\"1\" /></label></td>";
+            $row["form"] .= "<td width=\"34%\" style=\"text-align: center;\"><label for=\"2\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"2\" id=\"2\" /></label></td>";
+            $row["form"] .= "<td width=\"33%\" style=\"text-align: center;\"><label for=\"3\"><img src=\"images/cup.gif\" alt=\"cup\" /><br /><input type=\"radio\" name=\"cup\" value=\"3\" id=\"3\" /></label></td>";
+            $row["form"] .= "</tr></table>";
+            
+        }
+
+        display("Gamble", parsetemplate(gettemplate("town_gamble1"), $row));
+
+    }
+
+        
 }
 
 function bank() {

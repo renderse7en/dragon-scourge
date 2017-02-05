@@ -2,6 +2,15 @@ DRAGON SCOURGE
 Changelog
 
 ***** BETA THREE *****
+
+4.08.2006 - Build 15 (Dead Man's Chest):
+- Character profiles now display class name instead of ID numbers.
+- Fixed incorrect minimum level display in guild start/apply error messages.
+- Finally re-implemented gambling.
+- Added very short tooltip descriptions of the classes when creating new characters.
+- Spiffied up the Version Info page a little bit.
+- A few other minor cosmetic changes.
+
 2.26.2006 - Build 14 (Pete Rose):
 - The poor sods who are stuck on dial-up can now select to not show the minimap in their account settings.
 - Fixed a problem with guild names in paneltop.
@@ -40,6 +49,7 @@ Changelog
 - Added email verification support.
 
 ***** BETA TWO *****
+
 12.10.2005 - Build 12 (Eggs):
 - Members can now leave the Guild without requiring an officer to demote them to zero.
 - Rank 5 members can now edit/update Guild settings.

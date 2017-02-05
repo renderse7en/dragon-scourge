@@ -185,6 +185,10 @@ function profile() {
     
     // Level points.
     if ($newuserrow["levelup"] != 0 || $newuserrow["levelspell"] != 0) { $newuserrow["levelpointscharnotice"] = "You have Level/Spell Points available."; } else { $newuserrow["levelpointscharnotice"] = ""; }
+    
+    // Class.
+    $class = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["charclass"]."' LIMIT 1", "classes"));
+    $newuserrow["charclass"] = $class["name"];
 
     display("Extended Profile",parsetemplate(gettemplate($template),$newuserrow));
     
@@ -419,9 +423,12 @@ function charnew() {
     
     $classes = dorow(doquery("SELECT * FROM {{table}} ORDER BY id", "classes"));
     $row["charclass"] = "";
+    $row["classdesc"] = "";
     foreach($classes as $a=>$b) {
         $row["charclass"] .= "<option value=\"".$b["id"]."\">".$b["name"]."</option>";
+        $row["classdesc"] .= "<a title=\"".$b["description"]."\">".$b["name"]."</a> | ";
     }
+    $row["classdesc"] = rtrim($row["classdesc"], " |");
     $difficulty = dorow(doquery("SELECT * FROM {{table}} ORDER BY id", "difficulties"));
     $row["difficulty"] = "";
     foreach($difficulty as $a=>$b) {

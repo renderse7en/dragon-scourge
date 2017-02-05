@@ -14,13 +14,17 @@ function version() {
     global $version, $bname, $bdate, $bnumber;
     
 $page = <<<END
-<table width="90%">
-<tr><td width="30%">Version Number:</td><td><b>$version</b></td></tr>
+<center>
+<img src="images/r7_logo.png" alt="renderse7en" /><br /><br />
+<span style="font: 12px Verdana;"><a href="http://www.dragonscourge.com" target="_new">Dragon Scourge</a><br />&copy; 2003-2006 by <a href="http://www.renderse7en.com">renderse7en</a></b></span><br /><br />
+<table>
+<tr><td>Version Number:</td><td><b>$version</b></td></tr>
 <tr><td>Build Number:</td><td><b>$bnumber</b></td></tr>
 <tr><td>Build Name:</td><td><b>$bname</b></td></tr>
 <tr><td>Build Date:</td><td><b>$bdate</b></td></tr>
 <tr><td colspan="2"><a href="changelog.txt" target="_new">View the Changelog</a></td></tr>
 </table>
+</center>
 END;
 
     display("Version Information",$page);

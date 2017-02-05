@@ -93,7 +93,7 @@ function guildcreate() {
     if ($userrow["guild"] != 0) { err("You are already a member of another Guild. You must renounce your current membership before starting your own Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     $appquery = doquery("SELECT * FROM {{table}} WHERE charid='".$userrow["id"]."' LIMIT 1", "guildapps");
     if (mysql_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    if ($userrow["level"] < $controlrow["guildstartlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildstartlvl"].". Please continue playing until you make Level 10, then try again."); }
+    if ($userrow["level"] < $controlrow["guildstartlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildstartlvl"].". Please continue playing until your character is Level ".$controlrow["guildstartlvl"].", then try again."); }
     
     if (isset($_POST["submit"])) {
         
@@ -227,7 +227,7 @@ function guildapp() {
     if ($userrow["guild"] != 0) { err("You are already a member of another Guild. You must renounce your current membership before joining this Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     $appquery = doquery("SELECT * FROM {{table}} WHERE charid='".$userrow["id"]."' LIMIT 1", "guildapps");
     if (mysql_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    if ($userrow["level"] < $controlrow["guildjoinlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildjoinlvl"].". Please continue playing until you make Level 10, then try again."); }
+    if ($userrow["level"] < $controlrow["guildjoinlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildjoinlvl"].". Please continue playing until your character is Level ".$controlrow["guildjoinlvl"].", then try again."); }
     
     if (isset($_POST["yes"])) {
         
