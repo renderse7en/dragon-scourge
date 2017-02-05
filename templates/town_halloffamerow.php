@@ -9,7 +9,8 @@ $template = <<<END
 <a href="users.php?do=profile&uid={{id}}">{{newcharname}}</a><br />
 Level: <b>{{level}}</b><br />
 Exp: <b>{{experience}}</b><br />
-Birthday: <b>{{fregdate}}</b>
+Birthday: <b>{{fregdate}}</b><br />
+Duel Record: <b>{{pvpwins}} Won / {{pvplosses}} Lost / Highest Won: {{pvphighest}}</b>
 </td></tr>
 </table>
 END;

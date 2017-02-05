@@ -15,8 +15,9 @@ $template = <<<END
     </tr>
     </table>
 </td><td style="vertical-align: middle;">
-    <span class="red">{{levelup}}</span><br />
-    <span class="blue">{{levelspell}}</span>
+    {{levelup}}<br />
+    {{levelspell}}<br />
+    {{quickheal}}
 </td>
 </td><td style="vertical-align: middle;">
     <table width="100%" cellspacing="0" cellpadding="0">

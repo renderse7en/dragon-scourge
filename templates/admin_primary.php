@@ -35,7 +35,7 @@ a:hover { color: #663300; }
 
 <table cellspacing="0" cellpadding="3" style="width: 800px; height: 570px; border: solid 1px black; background-color: white; ">
   <tr>
-    <td colspan="3" style="border-bottom: solid 1px #cccccc;">
+    <td style="border-bottom: solid 1px #cccccc;">
       <table width="100%" cellspacing="0" cellpadding="0"><tr><td width="65%">
       <a href="index.php"><img src="images/logo.png" alt="{{gamename}}" title="{{gamename}}" /></a>
       </td><td style="vertical-align:middle; white-space:nowrap;">
@@ -48,16 +48,6 @@ a:hover { color: #663300; }
       <img src="images/spacer.gif" alt="" width="140" height="1" /><br />
       {{leftnav}}
     </td>
-    <td valign="top" style="height: 100%;">
-      <div style="width: 475px; height: 405px; overflow: auto;">
-      <div class="big"><b>{{pagetitle}}</b></div>
-      {{content}}
-      </div>
-    </td>
-    <td valign="top" style="height: 100%; border-left: solid 1px #cccccc;">
-      <img src="images/spacer.gif" alt="" width="160" height="1" /><br />
-      {{rightnav}}
-    </td>
   </tr>
   <tr>
     <td colspan="3" style="border-top: solid 1px #cccccc;">{{bottomnav}}</td>
@@ -65,13 +55,10 @@ a:hover { color: #663300; }
 </table>
 <table cellspacing="0" cellpadding="3" style="width: 800px; border: solid 1px black; background-color: white; margin-top: 2px;">
   <tr>
-    <td width="40%">
+    <td width="50%">
     Version <a href="index.php?do=version">{{version}}</a> / {{numqueries}} Queries / {{totaltime}} Seconds
     </td>
-    <td width="20%" style="text-align: center;">
-    {{forumslink}}
-    </td>
-    <td width="40%" style="text-align:right;">
+    <td width="50%" style="text-align:right;">
     <a href="http://www.dragonscourge.com">Dragon Scourge</a> &copy; 2003-2005 by <a href="http://www.renderse7en.com">renderse7en</a>
     </td>
   </tr>

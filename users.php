@@ -65,6 +65,7 @@ function register() {
                 for ($i=0; $i<8; $i++) {
                     $verifycode .= chr(rand(65,90));
                 }
+                $verifycode = md5($verifycode);
             } else {
                 $verifycode='1';
             }
@@ -96,6 +97,29 @@ function register() {
 
     $row["imageformat"] = "<option value=\".png\">PNG</option><option value=\".gif\">GIF</option>";
     display("Register", parsetemplate(gettemplate("users_register1"), $row), false);
+    
+}
+
+function sendregmail($emailaddress, $vercode) {
+    
+    global $controlrow;
+    extract($controlrow);
+    $verurl = $gameurl . "verify.php?code=$vercode";
+    
+$email = <<<END
+You or someone using your email address recently signed up for an account on the $gamename server, located at $gameurl.
+
+This email is sent to verify your registration email. In order to begin using your account, you must verify your email address. 
+Please click on the link below or copy/paste it into your browser to activate your account. You will not be able to play the game until your account is activated.
+
+Verification URL:
+$verurl
+
+If you were not the person who signed up for the game, please disregard this message. You will not be emailed again.
+END;
+
+    $status = mymail($emailaddress, "$gamename Account Verification", $email);
+    return $status;
     
 }
 

@@ -44,15 +44,10 @@ function panelleft() {
     
     // Then we do the query.
     $traveltoquery = doquery("SELECT id,name FROM {{table}} WHERE $townstring ORDER BY id", "towns");
-    $traveltorow = dorow($traveltoquery);
     
     // Finally we build the link list.
-    if ($userrow["townslist"] != "0,1") { // Multiple towns means multiple arrays.
-        foreach($traveltorow as $c=>$d) {
-            $row["travelto"] .= "<a href=\"index.php?do=travel:".$d["id"]."\">".$d["name"]."</a><br />\n";
-        }
-    } else { // One town means one array.
-        $row["travelto"] .= "<a href=\"index.php?do=travel:".$traveltorow["id"]."\">".$traveltorow["name"]."</a><br />\n";
+    while ($d = mysql_fetch_array($traveltoquery)) {
+        $row["travelto"] .= "<a href=\"index.php?do=travel:".$d["id"]."\">".$d["name"]."</a><br />\n";
     }
     
     // And then we're done with this panel.
@@ -124,7 +119,7 @@ function paneltop($loggedin = true) {
 
 function panelbottom() {
     
-    global $userrow;
+    global $userrow, $spells;
     $row = array();
     
     if ($userrow["charpicture"] != "") {
@@ -133,6 +128,28 @@ function panelbottom() {
         $row["charpicture"] = "images/users/nopicture.gif";
     }
     
+    // Do quickspell stuff.
+    $quickhealid = 0;
+    $quickhealvalue = 0;
+    if ($userrow["currentaction"] == "Exploring") {
+        for ($i=1; $i<11; $i++) {
+            if ($userrow["spell".$i."id"] != 0) {
+                if ($spells[$userrow["spell".$i."id"]]["fname"] == "heal") {
+                    if ($spells[$userrow["spell".$i."id"]]["value"] > $quickhealvalue) { 
+                        $quickhealvalue = $spells[$userrow["spell".$i."id"]]["value"]; 
+                        $quickhealid = $spells[$userrow["spell".$i."id"]]["id"]; 
+                    }
+                }
+            }
+        }
+    }
+    if ($quickhealid != 0) { 
+        $row["quickheal"] = "<a href=\"index.php?do=quickheal&id=$quickhealid\" class=\"red\">(Heal)</a>";
+    } else {
+        $row["quickheal"] = "";
+    }
+    
+    // Do the rest of it.
     $row["level"] = $userrow["level"];
     if ($userrow["levelup"] > 0) { $row["levelup"] = "<a href=\"users.php?do=levelup\" class=\"red\">(".$userrow["levelup"]." LP)</a>"; } else { $row["levelup"] = ""; }
     if ($userrow["levelspell"] > 0) { $row["levelspell"] = "<a href=\"users.php?do=levelspell\" class=\"blue\">(".$userrow["levelspell"]." SP)</a>"; } else { $row["levelspell"] = ""; }

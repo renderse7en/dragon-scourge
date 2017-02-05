@@ -28,6 +28,7 @@ if ($lon >= 0) { $x = 50 + ceil($lon * $perpix); } else { $x = ceil(($worldrow["
 $text .= "player_x=".$x."&";
 $text .= "player_y=".$y."&";
 
+// Then do everyone else.
 $users = doquery("SELECT * FROM {{table}} WHERE world='".$worldrow["id"]."' AND UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND id != '".$userrow["id"]."'", "users");
 $text .= "users=".mysql_num_rows($users)."&";
 $count = 0;
@@ -40,6 +41,21 @@ while ($b = mysql_fetch_array($users)) {
     $text .= "user".$count."_y=".$y."&";
     $count++;
 }
+
+// Then do quests.
+if ($userrow["story"] != "0" && $userrow["story"] != "9999") {
+    
+    $lat = $userrow["storylat"];
+    $lon = $userrow["storylon"];
+    if ($lat >= 0) { $y = ceil(($worldrow["size"] - $lat) * $perpix); } else { $y = 250 + ceil(($lat * -1) * $perpix); }
+    if ($lon >= 0) { $x = 250 + ceil($lon * $perpix); } else { $x = ceil(($worldrow["size"] + $lon) * $perpix); }
+    
+    $text .= "story=1&";
+    $text .= "story_x=".$x."&";
+    $text .= "story_y=".$y."&";
+    $text .= "story_name=Quest&";
+    
+} else { $text .= "story=0&"; }
 
 echo($text);
 

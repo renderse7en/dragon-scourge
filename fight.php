@@ -97,6 +97,26 @@ function dofight() {
         display("Fighting",parsetemplate(gettemplate("fight_turn"),$pagerow));
     
     } elseif (isset($_POST["run"])) {
+        
+        if (rand(4,10) + ceil(sqrt($userrow["physdefense"])) < (rand(1,5) + ceil(sqrt($monsterrow["physattack"])))) {
+            
+            monsterturn();
+            $fightrow["message"] = "You tried to run away, but the monster blocked you!<br />";
+            if ($userrow["currenthp"] <= 0) { youlose(); }
+            updateuserrow();
+            
+            $pagerow = array(
+                "message"=>$fightrow["message"],
+                "monstername"=>$monsterrow["name"],
+                "monsterhp"=>$userrow["currentmonsterhp"],
+                "monsterphysdamage"=>$fightrow["monsterphysdamage"],
+                "monstermagicdamage"=>$fightrow["monstermagicdamage"],
+                "monsterfiredamage"=>$fightrow["monsterfiredamage"],
+                "monsterlightdamage"=>$fightrow["monsterlightdamage"]);
+            $pagerow["spells"] = dospellslist();
+            display("Fighting",parsetemplate(gettemplate("fight_monsteronly"),$pagerow));
+            
+        }
     
         $userrow["currentaction"] = "Exploring";
         $userrow["currentmonsterid"] = 0;
@@ -105,6 +125,26 @@ function dofight() {
         die(header("Location: index.php"));
         
     } else {
+        
+        if (rand(1,10) + ceil(sqrt($userrow["physdefense"])) < (rand(1,7) + ceil(sqrt($monsterrow["physattack"])))) {
+ 
+            monsterturn();
+            $fightrow["message"] = "The monster attacked before you were ready!<br />";
+            if ($userrow["currenthp"] <= 0) { youlose(); }
+            updateuserrow();
+            
+            $pagerow = array(
+                "message"=>$fightrow["message"],
+                "monstername"=>$monsterrow["name"],
+                "monsterhp"=>$userrow["currentmonsterhp"],
+                "monsterphysdamage"=>$fightrow["monsterphysdamage"],
+                "monstermagicdamage"=>$fightrow["monstermagicdamage"],
+                "monsterfiredamage"=>$fightrow["monsterfiredamage"],
+                "monsterlightdamage"=>$fightrow["monsterlightdamage"]);
+            $pagerow["spells"] = dospellslist();
+            display("Fighting",parsetemplate(gettemplate("fight_monsteronly"),$pagerow));
+            
+        }
     
         $pagerow = array(
             "monstername"=>$monsterrow["name"],
@@ -224,8 +264,8 @@ function youwin() {
     $userrow["currentfight"] = 0;
     $userrow["currentmonsterid"] = 0;
     $userrow["currentmonsterhp"] = 0;
-    if ($monsterrow["boss"] == 1) {
-        $userrow["story"]++;
+    if ($monsterrow["newstory"] != "0") {
+        $userrow["story"] = $monsterrow["newstory"];
     }
     
     // Now we add Per Kill mods.
@@ -242,6 +282,23 @@ function youwin() {
         $userrow["currentmp"] = $userrow["maxmp"];
         $userrow["currenttp"] = $userrow["maxtp"];
         if (($userrow["level"] % 5 == 0)) { $userrow["levelspell"]++; $template = "fight_levelupspell"; }
+    }
+    
+    // Roll for monster drop.
+    if (rand(0,7) == 1) {
+        
+        // Grab lots of stuff from the DB.
+        $preitemsrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel>='".($userrow["level"] - 5)."' AND reqlevel<='".$userrow["level"]."' AND willdrop='1' ORDER BY RAND() LIMIT 1", "itembase"));
+        $preprefixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemprefixes"));
+        $presuffixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemsuffixes"));
+        
+        $idstring = "";
+        if (rand(0,4)==1) { $idstring .= $preprefixrow["id"] . ","; } else { $idstring .= "0,"; }
+        $idstring .= $preitemsrow["id"] . ",";
+        if (rand(0,4)==1) { $idstring .= $presuffixrow["id"]; } else { $idstring .= "0"; }
+        $userrow["dropidstring"] = $idstring;
+        $fightrow["message"] .= "<a href=\"index.php?do=itemdrop\" class=\"red\"><b>The monster has dropped an item! Click here for more information.</b></a><br />";
+        
     }
     
     // Update for new stats.
@@ -294,8 +351,10 @@ function youlose() {
         "deathpenalty"=>$userrow["deathpenalty"]);
         
     // Then put them in town & reset fight stuff.
-    $userrow["latitude"] = 0;
-    $userrow["longitude"] = 0;
+    $townquery = doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1", "towns");
+    $townrow = mysql_fetch_array($townquery);
+    $userrow["latitude"] = $townrow["latitude"];
+    $userrow["longitude"] = $townrow["longitude"];
     $userrow["currentaction"] = "In Town";
     $userrow["currentfight"] = 0;
     $userrow["currentmonsterid"] = 0;

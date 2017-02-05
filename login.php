@@ -18,12 +18,13 @@ function login() {
         // Setup.
         include("config.php");
         extract($_POST);
-        $query = doquery("SELECT id,password FROM {{table}} WHERE username='$username' LIMIT 1", "accounts");
+        $query = doquery("SELECT * FROM {{table}} WHERE username='$username' LIMIT 1", "accounts");
         $row = dorow($query);
         
         // Errors.
         if ($row == false) { err("Invalid username. Please <a href=\"index.php\">go back</a> and try again.", false, false); }
         if ($row["password"] != md5($password)) { err("Invalid password. Please <a href=\"index.php\">go back</a> and try again.", false, false); }
+        if ($row["verifycode"] != 1) { err("You have not yet verified your account. Please click the link found in your Accoutn Verification email before continuing. If you never received the email, please check your spam filter settings or contact the game administrator for further assistance.", false, false); }
         
         // Finish.
         $newcookie = $row["id"] . " " . $username . " " . md5($row["password"] . "--" . $dbsettings["secretword"]);

@@ -305,6 +305,9 @@ function youwin() {
     mpgain();
     
     // Update for new stats.
+    $userrow["pvpwins"] += 1;
+    $monsterrow["pvplosses"] += 1;
+    if ($monsterrow["level"] > $userrow["pvphighest"]) { $userrow["pvphighest"] = $monsterrow["level"]; }
     updateopponent();
     updateuserrow();
     $fightrowimploded = $fightrow["playerphysdamage"].",".$fightrow["playermagicdamage"].",".$fightrow["playerfiredamage"].",".$fightrow["playerlightdamage"].",".$fightrow["message"];

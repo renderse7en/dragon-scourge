@@ -76,7 +76,7 @@ function map() { // Buy maps to towns for the Travel To menu.
         
     } else {
     
-        $townquery = doquery("SELECT * FROM {{table}} ORDER BY id", "towns");
+        $townquery = doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' ORDER BY id", "towns");
         $townrow = dorow($townquery);
         $townslist = explode(",",$userrow["townslist"]);
         
@@ -232,23 +232,50 @@ function buy() { // Buy items from merchants.
     } else {
         
         // Grab lots of stuff from the DB.
-        $itemsrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel>='".$townrow["itemminlvl"]."' AND reqlevel<='".$townrow["itemmaxlvl"]."' ORDER BY RAND() LIMIT 10 ", "itembase"));
-        $prefixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."'", "itemprefixes"));
-        $suffixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."'", "itemsuffixes"));
+        $preitemsrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel>='".$townrow["itemminlvl"]."' AND reqlevel<='".$townrow["itemmaxlvl"]."' ORDER BY RAND() LIMIT 10 ", "itembase"));
+        $preprefixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."'", "itemprefixes"));
+        $presuffixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."'", "itemsuffixes"));
+        $allitemsrow = dorow(doquery("SELECT * FROM {{table}}", "itembase"));
+        $allprefixrow = dorow(doquery("SELECT * FROM {{table}}", "itemprefixes"));
+        $allsuffixrow = dorow(doquery("SELECT * FROM {{table}}", "itemsuffixes"));
         $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
         
-        // Format the mod name row.
+        // Format the rows.
+        foreach($allitemsrow as $a=>$b) {
+            $itemsrow[$b["id"]] = $b;
+        }
+        foreach($allprefixrow as $a=>$b) {
+            $prefixrow[$b["id"]] = $b;
+        }
+        foreach($allsuffixrow as $a=>$b) {
+            $suffixrow[$b["id"]] = $b;
+        }
         foreach($premodrow as $a=>$b) {
             $modrow[$b["fieldname"]] = $b;
         }
         
-        // Now build the item table.
+        // Build old item table.
+        $row["olditems"] = "";
+        for($i=1; $i<7; $i++) {
+            
+            if ($userrow["item".$i."idstring"] != "0") {
+                $ids = explode(",",$userrow["item".$i."idstring"]);
+                $baseitem = $itemsrow[$ids[1]];
+                if ($ids[0] != 0) { $prefix = $prefixrow[$ids[0]]; } else { $prefix = false; }
+                if ($ids[2] != 0) { $suffix = $suffixrow[$ids[2]]; } else { $suffix = false; }
+                $fullitem = builditem($prefix, $baseitem, $suffix, $modrow);
+                $row["olditems"] .= parsetemplate(gettemplate("town_buy_olditemrow"), $fullitem);
+            }
+            
+        }
+        
+        // Now build the new item table.
         $row["itemtable"] = "";
         for($i=0; $i<10; $i++) {
             
-            $baseitem = $itemsrow[rand(0,(sizeof($itemsrow)-1))];
-            if (rand(0,1)==1) { $prefix = $prefixrow[rand(0,(sizeof($prefixrow)-1))]; } else { $prefix = false; }
-            if (rand(0,1)==1) { $suffix = $suffixrow[rand(0,(sizeof($suffixrow)-1))]; } else { $suffix = false; }
+            $baseitem = $preitemsrow[rand(0,(sizeof($preitemsrow)-1))];
+            if (rand(0,4)==1) { $prefix = $preprefixrow[rand(0,(sizeof($preprefixrow)-1))]; } else { $prefix = false; }
+            if (rand(0,4)==1) { $suffix = $presuffixrow[rand(0,(sizeof($presuffixrow)-1))]; } else { $suffix = false; }
             $fullitem = builditem($prefix, $baseitem, $suffix, $modrow);
             $row["itemtable"] .= parsetemplate(gettemplate("town_buy_itemrow"), $fullitem);
             
@@ -258,101 +285,6 @@ function buy() { // Buy items from merchants.
         display("Buy Weapons & Armor", parsetemplate(gettemplate("town_buy1"),$row));
         
     }
-    
-}
-
-function builditem($prefix, $baseitem, $suffix, $modrow) {
-    
-    global $controlrow, $acctrow, $userrow;
-    
-    // First setup the basic item attributes.
-    $baseitem["baseid"] = $baseitem["id"];
-    $baseitem["fullid"] = $baseitem["id"];
-    $baseitem["attrtype"] = $modrow[$baseitem["basename"]]["prettyname"];
-    $baseitem["basevalue"] = $baseitem["baseattr"];
-    $baseitem["image"] = "";
-    
-    // Next give pretty names to any item modifiers.
-    $baseitem["itemmods"] = "";
-    for($j=1; $j<7; $j++) { 
-        if ($baseitem["mod".$j."name"] != "") {
-            $baseitem["itemmods"] .= $modrow[$baseitem["mod".$j."name"]]["prettyname"] . ": +" . $baseitem["mod".$j."attr"];
-            if ($modrow[$baseitem["mod".$j."name"]]["percent"] == 1) { $baseitem["itemmods"] .= "%"; }
-            $baseitem["itemmods"] .= "<br />\n";
-        }
-    }
-    
-    // Add prefix mods if applicable.
-    if ($prefix != false) {
-        $baseitem["fullid"] = $prefix["id"] . "," . $baseitem["fullid"];
-        $baseitem["name"] = $prefix["name"] . " " . $baseitem["name"];
-        $baseitem["buycost"] += $prefix["buycost"];
-        $baseitem["sellcost"] += $prefix["sellcost"];
-        $baseitem["reqlevel"] = max($baseitem["reqlevel"], $prefix["reqlevel"]);
-        $baseitem["reqstrength"] += $prefix["reqstrength"];
-        $baseitem["reqenergy"] += $prefix["reqenergy"];
-        $baseitem["reqdexterity"] += $prefix["reqdexterity"];
-        $baseitem["itemmods"] .= $modrow[$prefix["basename"]]["prettyname"] . ": +" . $prefix["baseattr"];
-        if ($modrow[$prefix["basename"]]["percent"] == 1) { $baseitem["itemmods"] .= "%"; }
-        $baseitem["itemmods"] .= "<br />\n";
-    } else { $baseitem["fullid"] = "0," . $baseitem["fullid"]; }
-    
-    // Add suffix mods if applicable.
-    if ($suffix != false) {
-        $baseitem["fullid"] .= "," . $suffix["id"];
-        $baseitem["name"] .= " " . $suffix["name"];
-        $baseitem["buycost"] += $suffix["buycost"];
-        $baseitem["sellcost"] += $suffix["sellcost"];
-        $baseitem["reqlevel"] = max($baseitem["reqlevel"], $suffix["reqlevel"]);
-        $baseitem["reqstrength"] += $suffix["reqstrength"];
-        $baseitem["reqenergy"] += $suffix["reqenergy"];
-        $baseitem["reqdexterity"] += $suffix["reqdexterity"];
-        $baseitem["itemmods"] .= $modrow[$suffix["basename"]]["prettyname"] . ": +" . $suffix["baseattr"];
-        if ($modrow[$suffix["basename"]]["percent"] == 1) { $baseitem["itemmods"] .= "%"; }
-        $baseitem["itemmods"] .= "<br />\n";
-    } else { $baseitem["fullid"] .= ",0"; }
-    
-    // Check requirements.
-    $baseitem["requirements"] = true;
-    if ($baseitem["reqlevel"] == 1) { $baseitem["level"] = ""; } else { 
-        $baseitem["level"] = "Required Level: " . $baseitem["reqlevel"];
-        if ($baseitem["reqlevel"] > $userrow["level"]) { 
-            $baseitem["level"] = "<span class=\"red\">".$baseitem["level"]."</span>"; 
-            $baseitem["requirements"] = false; 
-        }
-        $baseitem["level"] .= "<br />\n";
-    }
-    if ($baseitem["reqstrength"] == 0) { $baseitem["strength"] = ""; } else { 
-        $baseitem["strength"] = "Required Strength: " . $baseitem["reqstrength"];
-        if ($baseitem["reqstrength"] > $userrow["strength"]) { 
-            $baseitem["strength"] = "<span class=\"red\">".$baseitem["strength"]."</span>"; 
-            $baseitem["requirements"] = false; 
-        }
-        $baseitem["strength"] .= "<br />\n";
-    }
-    if ($baseitem["reqdexterity"] == 0) { $baseitem["dexterity"] = ""; } else { 
-        $baseitem["dexterity"] = "Required Dexterity: " . $baseitem["reqdexterity"];
-        if ($baseitem["reqdexterity"] > $userrow["dexterity"]) { 
-            $baseitem["dexterity"] = "<span class=\"red\">".$baseitem["dexterity"]."</span>"; 
-            $baseitem["requirements"] = false; 
-        }
-        $baseitem["dexterity"] .= "<br />\n";
-    }
-    if ($baseitem["reqenergy"] == 0) { $baseitem["energy"] = ""; } else { 
-        $baseitem["energy"] = "Required Energy: " . $baseitem["reqenergy"];
-        if ($baseitem["reqenergy"] > $userrow["energy"]) { 
-            $baseitem["energy"] = "<span class=\"red\">".$baseitem["energy"]."</span>"; 
-            $baseitem["requirements"] = false; 
-        }
-        $baseitem["energy"] .= "<br />\n";
-    }
-    
-    if ($controlrow["showimages"] == 1) { 
-        $baseitem["image"] = "<img src=\"images/items/".$baseitem["slotnumber"].$acctrow["imageformat"]."\" alt=\"".$baseitem["name"]."\" title=\"".$baseitem["name"]."\" />";
-    }
-    
-    // And send it back.
-    return $baseitem;
     
 }
 
@@ -405,44 +337,25 @@ function bank() {
 
 function halloffame() {
     
-    $topquery = doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} ORDER BY experience DESC LIMIT 10", "users");
-    $top = dorow($topquery);
+    $topquery = doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} ORDER BY experience DESC LIMIT 25", "users");
     $row["halltable"] = "";
     $i = 1;
     
-    if (mysql_num_rows($topquery) > 1) { 
-        foreach($top as $a=>$b) {
-            if ($b["charpicture"] != "") {
-                $b["avatar"] = "<img src=\"".$b["charpicture"]."\" alt=\"".$b["charname"]."\" />";
-            } else {
-                $b["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$b["charname"]."\" />";
-            }
-            $b["experience"] = number_format($b["experience"]);
-            $b["number"] = $i;
-            if ($b["guild"] != 0) { 
-                $charname = "[<span style=\"color: ".$b["tagcolor"].";\">".$b["guildtag"]."</span>]<span style=\"color: ".$b["namecolor"].";\">".$b["charname"]."</span>";
-            } else { 
-                $charname = $b["charname"];
-            }
-            $b["newcharname"] = $charname;
-            $row["halltable"] .= parsetemplate(gettemplate("town_halloffamerow"), $b);
-            $i++;
-        }
-    } else { 
-        if ($top["charpicture"] != "") {
-            $top["avatar"] = "<img src=\"".$top["charpicture"]."\" alt=\"".$top["charname"]."\" />";
+    while ($b = mysql_fetch_array($topquery)) {
+        if ($b["charpicture"] != "") {
+            $b["avatar"] = "<img src=\"".$b["charpicture"]."\" alt=\"".$b["charname"]."\" />";
         } else {
-            $top["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$top["charname"]."\" />";
+            $b["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$b["charname"]."\" />";
         }
-        $top["experience"] = number_format($top["experience"]);
-        $top["number"] = $i;
-        if ($top["guild"] != 0) { 
-            $charname = "[<span style=\"color: ".$top["tagcolor"].";\">".$top["guildtag"]."</span>]<span style=\"color: ".$top["namecolor"].";\">".$top["charname"]."</span>";
+        $b["experience"] = number_format($b["experience"]);
+        $b["number"] = $i;
+        if ($b["guild"] != 0) { 
+            $charname = "[<span style=\"color: ".$b["tagcolor"].";\">".$b["guildtag"]."</span>]<span style=\"color: ".$b["namecolor"].";\">".$b["charname"]."</span>";
         } else { 
-            $charname = $top["charname"];
+            $charname = $b["charname"];
         }
-        $top["newcharname"] = $charname;
-        $row["halltable"] .= parsetemplate(gettemplate("town_halloffamerow"), $top);
+        $b["newcharname"] = $charname;
+        $row["halltable"] .= parsetemplate(gettemplate("town_halloffamerow"), $b);
         $i++;
     }
     $row["halltable"] .= "<br />\n";

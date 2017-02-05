@@ -36,9 +36,15 @@ function move() { // Primary exploring function. Move them with the compass butt
         }
     }
     
+    // Breakout for story.
+    if ($userrow["story"] != "0" && $userrow["storylat"] == $userrow["latitude"] && $userrow["storylon"] == $userrow["longitude"]) {
+        $string = ltrim($string," ,");
+        doquery("UPDATE {{table}} SET $string WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+        die(header("Location: story.php"));
+    }
+    
     // Breakout for towns.
-    $query = doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' LIMIT 1", "towns");
-    $row = dorow($query);
+    $row = dorow(doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' LIMIT 1", "towns"));
     if ($row != false) {
         $townslist = explode(",",$userrow["townslist"]);
         if (!in_array($row["id"], $townslist)) { 
@@ -64,7 +70,7 @@ function move() { // Primary exploring function. Move them with the compass butt
     
     // If we've gotten this far, nothing has happened.
     $userrow["currentaction"] = "Exploring";
-    doquery("UPDATE {{table}} SET currentaction='Exploring' $string WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+    doquery("UPDATE {{table}} SET currentaction='Exploring', dropidstring='0' $string WHERE id='".$userrow["id"]."' LIMIT 1", "users");
     display("Exploring", gettemplate("explore"));
     
 }
@@ -93,8 +99,120 @@ function travel($id) { // Move them with the Travel To list.
     $userrow["longitude"] = $row["longitude"];
     $userrow["latitude"] = $row["latitude"];
     $userrow["currenttp"] -= $row["travelpoints"];
-    $query = doquery("UPDATE {{table}} SET latitude='".$userrow["latitude"]."', longitude='".$userrow["longitude"]."', currenttp='".$userrow["currenttp"]."', currentaction='In Town' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+    $query = doquery("UPDATE {{table}} SET dropidstring='0', latitude='".$userrow["latitude"]."', longitude='".$userrow["longitude"]."', currenttp='".$userrow["currenttp"]."', currentaction='In Town' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
     display("Exploring", parsetemplate(gettemplate("town_enter"), $row));
+    
+}
+
+function quickheal() { // Quick heal.
+    
+    global $userrow, $spells;
+    
+    if (isset($_GET["id"])) { $id = $_GET["id"]; } else { err("Invalid ID entered. Please <a href=\"index.php\">go back</a> and try again."); }
+    
+    // Errors.
+    if (!is_numeric($id)) { err("Invalid ID entered. Please <a href=\"index.php\">go back</a> and try again."); }
+    if ($userrow["currentaction"] != "Exploring") { err("The Quick Heal function is only available while exploring. You cannot use it in town or while fighting. Please <a href=\"index.php\">go back</a> and try again."); }
+    $hasspell = false;
+    for($i=1; $i<11; $i++) {
+        if ($userrow["spell".$i."id"] == $id) { $hasspell = true; }
+    }
+    if ($hasspell == false) { err("You don't have that spell yet. Please <a href=\"index.php\">go back</a> and try again."); }
+    if ($spells[$id]["fname"] != "heal") { err("That is not a Heal spell. Please <a href=\"index.php\">go back</a> and try again."); }
+    if ($userrow["currentmp"] < $spells[$id]["mp"]) { err("You don't have enough MP to cast that spell. Please <a href=\"index.php\">go back</a> and try again."); }
+    if ($userrow["currenthp"] == $userrow["maxhp"]) { err("Your HP is already full. Please <a href=\"index.php\">go back</a> and try again."); }
+    
+    // Now heal them.
+    $userrow["currenthp"] = min($userrow["currenthp"] + $spells[$id]["value"], $userrow["maxhp"]);
+    $userrow["currentmp"] = $userrow["currentmp"] - $spells[$id]["mp"];
+    doquery("UPDATE {{table}} SET currenthp='".$userrow["currenthp"]."', currentmp='".$userrow["currentmp"]."' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+    display("Exploring", gettemplate("explore_quickheal"));
+    
+}
+
+function itemdrop() { // Handling for item drops from monsters.
+    
+    global $userrow;
+    
+    if ($userrow["dropidstring"] == "0") { err("No item has been dropped. Please <a href=\"index.php\">go back</a> and try again."); }
+    
+    $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+    foreach($premodrow as $a=>$b) {
+            $modrow[$b["fieldname"]] = $b;
+    }
+    
+    $thenewitem = explode(",",$userrow["dropidstring"]);
+    $newitem = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$thenewitem[1]."' LIMIT 1", "itembase"));
+    $newprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$thenewitem[0]."' LIMIT 1", "itemprefixes"));
+    $newsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$thenewitem[2]."' LIMIT 1", "itemsuffixes"));
+    $newfullitem = builditem($newprefix, $newitem, $newsuffix, $modrow);
+    $row["itemtable"] = parsetemplate(gettemplate("explore_drop_itemrow"), $newfullitem);
+    
+    if ($userrow["item".$newitem["slotnumber"]."idstring"] != "0") {
+        $theolditem = explode(",",$userrow["item".$newitem["slotnumber"]."idstring"]);
+        $olditem = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$theolditem[1]."' LIMIT 1", "itembase"));
+        $oldprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$theolditem[0]."' LIMIT 1", "itemprefixes"));
+        $oldsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$theolditem[2]."' LIMIT 1", "itemsuffixes"));
+        $oldfullitem = builditem($oldprefix, $olditem, $oldsuffix, $modrow);
+        $row["olditems"] = parsetemplate(gettemplate("town_buy_olditemrow"), $oldfullitem);
+    } else {
+        $oldfullitem = false; $oldprefix = false; $oldsuffix = false;
+        $row["olditems"] = "You don't have any item in this slot.";
+    }
+    
+    if (isset($_POST["accept"])) {
+        
+        // Requirements check.
+        if ($newfullitem["requirements"] == false) { err("You do not meet one or more of the requirements for this item. Please <a href=\"index.php\">go back</a> and try again."); }
+       
+        // Now do stuff to userrow (new item only).
+        $userrow["item" . $newfullitem["slotnumber"] . "idstring"] = $newfullitem["fullid"];
+        $userrow["item" . $newfullitem["slotnumber"] . "name"] = $newfullitem["name"];
+        $userrow[$newfullitem["basename"]] += $newfullitem["baseattr"];
+        for($j=1; $j<7; $j++) { 
+            if ($newfullitem["mod".$j."name"] != "") {
+                $userrow[$newfullitem["mod".$j."name"]] += $newfullitem["mod".$j."attr"];
+            }
+        }
+        if ($newprefix != false) {
+            $userrow[$newprefix["basename"]] += $newprefix["baseattr"];
+        }
+        if ($newsuffix != false) {
+            $userrow[$newsuffix["basename"]] += $newsuffix["baseattr"];
+        }
+        
+        // Do more stuff to userrow (old item only).
+        if ($oldfullitem != false) {
+            
+            $userrow[$oldfullitem["basename"]] -= $oldfullitem["baseattr"];
+            for($j=1; $j<7; $j++) { 
+                if ($oldfullitem["mod".$j."name"] != "") {
+                    $userrow[$oldfullitem["mod".$j."name"]] -= $oldfullitem["mod".$j."attr"];
+                }
+            }
+            if ($oldprefix != false) {
+                $userrow[$oldprefix["basename"]] -= $oldprefix["baseattr"];
+            }
+            if ($oldsuffix != false) {
+                $userrow[$oldsuffix["basename"]] -= $oldsuffix["baseattr"];
+            }
+            
+        }
+        
+        updateuserrow();
+        display("Item Drop", gettemplate("explore_drop_accept"));
+        
+    }
+    
+    if (isset($_POST["ignore"])) {
+        
+        die(header("Location: index.php"));
+        
+    }
+    
+    // And we're done.
+    display("Item Drop", parsetemplate(gettemplate("explore_drop"),$row));
+
     
 }
 

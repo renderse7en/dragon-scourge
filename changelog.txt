@@ -1,6 +1,33 @@
 DRAGON SCOURGE
 Changelog
 
+***** BETA THREE *****
+2.04.2006 - Build 13 (Unlucky):
+- 
+- Dying now properly takes you back to the actual lat/lon of the world's first town (rather than 0,0 every time).
+- Added 160+ new monsters for the later realms.
+- Buy Maps now correctly only shows available maps from the Realm you're in.
+- Fixed some weirdness with the Travel To menu in the second Realm.
+- Added storyline/quests.
+- Added item drops from monsters.
+- Monsters now have a chance to swing first, and to block you from running.
+- Added Quick Heal to panel_bottom.
+- Users who are already a member of a guild no longer see the "Apply to Join" link on the Guild List page.
+- Added Honor Points to guilds.
+   * plus 1 point per member.
+   * plus floored square root of total combined member experience.
+   * plus 2 points per member PVP win.
+   * minus 1 point per member PVP loss.
+   * Calculated every 24 hours automatically, and upon every approve/remove/leave.
+   * Displayed on the Guild List page.
+- Added stats for your current items on the first Buy screen.
+- You cannot create/join a guild until Level 10 to help prevent bank abuse.
+- Added PVP logging - wins, losses, and highest lvl character killed.
+- Hall of Fame now shows top 25 chars.
+- Hall of Fame now uses stock mysql_fetch_array() instead of custom dorow().
+- Items now have a 1 in 5 chance of having prefixes/suffixes (it used to be 50:50).
+- Added email verification support.
+
 ***** BETA TWO *****
 12.10.2005 - Build 12 (Eggs):
 - Members can now leave the Guild without requiring an officer to demote them to zero.

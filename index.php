@@ -10,6 +10,8 @@ if(isset($_GET["do"])) {
         // Exploring.
         case "explore": include("explore.php"); move(); break;
         case "travel": include("explore.php"); travel($do[1]); break;
+        case "quickheal": include("explore.php"); quickheal(); break;
+        case "itemdrop": include("explore.php"); itemdrop(); break;
         case "humanity": include("explore.php"); botkillah(); break;
         // Towns.
         case "inn": include("town.php"); inn(); break;
@@ -43,6 +45,7 @@ if(isset($_GET["do"])) {
         case "guilddisband": include("guilds.php"); guilddisband(); break;
         case "guildedit": include("guilds.php"); guildedit(); break;
         case "guildleave": include("guilds.php"); guildleave(); break;
+        case "guildupdate": include("guilds.php"); guildupdate(); break;
         // Misc.
         case "babblebox": include("misc.php"); babblebox2(); break;
         case "showmap": include("misc.php"); showmap(); break;
@@ -58,6 +61,9 @@ if(isset($_GET["do"])) {
 function donothing() {
     
     global $userrow;
+    if ($userrow["story"] != "0" && $userrow["storylat"] == $userrow["latitude"] && $userrow["storylon"] == $userrow["longitude"]) {
+        die(header("Location: story.php"));
+    }
     if ($userrow["currentpvp"] != 0) { 
         die(header("Location: pvp.php"));
     }

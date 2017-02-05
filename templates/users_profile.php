@@ -37,6 +37,10 @@ Fire Defense: <b><span style="color: red">{{firedefense}}</span></b><br /><br />
 
 Lightning Damage: <b><span style="color: blue">{{lightattack}}</span></b><br />
 Lightning Defense: <b><span style="color: blue">{{lightdefense}}</span></b><br /><br />
+
+Duels Won: <b>{{pvpwins}}</b><br />
+Duels Lost: <b>{{pvplosses}}</b><br />
+Highest Character Defeated: <b>{{pvphighest}}</b><br /><br />
 </td>
 </tr><tr>
 <td colspan="2" style="border-top: solid 1px #cccccc"><center><a href="index.php">Return to the game.</a></center></td>
