@@ -4,7 +4,7 @@
 //
 //	Program authors: Jamin Blount
 //	Copyright (C) 2007 by renderse7en
-//	Script Version 1.0 Beta 5 Build 19
+//	Script Version 1.0 Beta 5 Build 20
 
 //	You may not distribute this program in any manner, modified or
 //	otherwise, without the express, written consent from

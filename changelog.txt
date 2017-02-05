@@ -3,6 +3,10 @@ Changelog
 
 ***** BETA FIVE *****
 
+9.2.2007 - Build 20 (Consolation Prize Part Deux):
+- Fixed incorrect story values in install.sql.
+- Some changes to the version/copyright/moddedby display.
+
 07.28.2007 - Build 19 (Consolation Prize):
 - Added "moddedby" column to controlrow. Will display next to normal Scourge copyright.
 - Added SigBot, which lets players display their character stats in forum signature images.
