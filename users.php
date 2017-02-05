@@ -1,5 +1,19 @@
 <?php // users.php :: Functions for creating/editing/viewing user accounts and statistics.
 
+//	Dragon Scourge
+//
+//	Program authors: Jamin Blount
+//	Copyright (C) 2007 by renderse7en
+//	Script Version 1.0 Beta 5 Build 19
+
+//	You may not distribute this program in any manner, modified or
+//	otherwise, without the express, written consent from
+//	renderse7en.
+//
+//	You may make modifications, but only for your own use and
+//	within the confines of the Dragon Scourge License Agreement
+//	(see our website for that).
+
 include("lib.php");
 include("globals.php");
 
@@ -261,7 +275,7 @@ function settings() {
 
 function characters() {
     
-    global $acctrow, $userrow;
+    global $acctrow, $userrow, $controlrow;
     
     if (isset($_POST["submit"])) { 
         
@@ -292,33 +306,28 @@ function characters() {
         
             foreach($charrow as $a=>$b) { 
                 
-                // Default character.
                 if ($b["id"] == $acctrow["activechar"]) { 
-                    
                     $row["selectcharlist"] .= "<option value=\"".$b["id"]."\" selected=\"selected\">".$b["charname"]." (Default)</option>";
-                    
-                    if ($b["charpicture"] != "") {
-                        $b["avatar"] = "<img src=\"".$b["charpicture"]."\" alt=\"".$b["charname"]."\" />";
-                    } else {
-                        $b["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$b["charname"]."\" />";
-                    }
                     $b["isdefault"] = "<span class=\"red\">(Default)</span>";
-                    $row["fullcharlist"] .= parsetemplate(gettemplate("users_charlistrow"), $b);
-                
-                // Non-default characters.
                 } else {
-                
                     $row["selectcharlist"] .= "<option value=\"".$b["id"]."\">".$b["charname"]."</option>";
-                    
-                    if ($b["charpicture"] != "") {
-                        $b["avatar"] = "<img src=\"".$b["charpicture"]."\" alt=\"".$b["charname"]."\" />";
-                    } else {
-                        $b["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$b["charname"]."\" />";
-                    }
                     $b["isdefault"] = "";
-                    $row["fullcharlist"] .= parsetemplate(gettemplate("users_charlistrow"), $b);
-                    
                 }
+                
+                if ($b["charpicture"] != "") {
+                    $b["avatar"] = "<img src=\"".$b["charpicture"]."\" alt=\"".$b["charname"]."\" />";
+                } else {
+                    $b["avatar"] = "<img src=\"images/users/nopicture.gif\" alt=\"".$b["charname"]."\" />";
+                }
+                
+                if ($controlrow["showsigbot"] == 1) {
+                    $sigboturl = $controlrow["gameurl"] . "sigbot/" . $userrow["id"] . ".png";
+                    $b["sigboturl"] = "SigBot URL: <a href=\"$sigboturl\" target=\"_new\">$sigboturl</a><br />";
+                } else {
+                    $b["sigboturl"] = "";
+                }
+                $row["fullcharlist"] .= parsetemplate(gettemplate("users_charlistrow"), $b);
+                
             }
             
         display("Characters", parsetemplate(gettemplate("users_charlist"), $row));
@@ -614,6 +623,7 @@ function levelspell() {
         for($i=0; $i<$total; $i++) {
             if ($_POST["spell".$i] != 0) {
                 if (!isset($spells[$_POST["spell".$i]])) { err("That spell doesn't exist."); }
+                if ($_POST["slot".$i] == 0) { err("You didn't select a valid slot for one of your spells."); }
                 $userrow["spell".$_POST["slot".$i]."id"] = $_POST["spell".$i];
                 $userrow["spell".$_POST["slot".$i]."name"] = $spells[$_POST["spell".$i]]["name"];
                 $userrow["levelspell"]--;

@@ -1,6 +1,16 @@
 DRAGON SCOURGE
 Changelog
 
+***** BETA FIVE *****
+
+07.28.2007 - Build 19 (Consolation Prize):
+- Added "moddedby" column to controlrow. Will display next to normal Scourge copyright.
+- Added SigBot, which lets players display their character stats in forum signature images.
+- PVP fights now properly escape the opposing player's $userrow before updating.
+- Fixed misspellings of 'bonusdefense' in spells.php.
+- Fixed error that occurred when you failed to select a spell slot when adding new spells.
+- Minor changes to err() output.
+
 ***** BETA FOUR *****
 
 09.03.2006 - Build 18 (Joe Camel):

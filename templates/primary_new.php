@@ -1,15 +1,18 @@
 <?php
 
-/*
-MODIFYING THIS FILE IN ANY WAY WILL CAUSE THE GAME TO STOP FUNCTIONING.
-In order to protect my intellectual property, certain security measures had to be taken.
-As such, the primary template is locked. Any change to this file will result in the game
-becoming nonfunctional. While I realize that there are valid reasons for wanting to change
-the page structure, it is impossible to allow that without users also being able to remove
-or change my copyright information. If you feel you absolutely must have access to change
-this file at will, consider upgrading to the licensed commercial version of Dragon Scourge.
-Thank you.
-*/
+//	Dragon Scourge
+//
+//	Program authors: Jamin Blount
+//	Copyright (C) 2007 by renderse7en
+//	Script Version 1.0 Beta 5 Build 19
+
+//	You may not distribute this program in any manner, modified or
+//	otherwise, without the express, written consent from
+//	renderse7en.
+//
+//	You may make modifications, but only for your own use and
+//	within the confines of the Dragon Scourge License Agreement
+//	(see our website for that).
 
 $template = <<<END
 <head>

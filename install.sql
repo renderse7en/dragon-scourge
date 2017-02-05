@@ -1,22 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 2.8.0.4
--- http://www.phpmyadmin.net
--- 
--- Host: localhost
--- Generation Time: Aug 09, 2006 at 09:29 PM
--- Server version: 4.1.14
--- PHP Version: 5.0.5
--- 
--- Database: `scourge2`
--- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_accounts`
--- 
-
-CREATE TABLE `sx_accounts` (
+DROP TABLE IF EXISTS `<<accounts>>`;
+CREATE TABLE `<<accounts>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `username` varchar(30) NOT NULL default '',
   `password` varchar(32) NOT NULL default '',
@@ -31,19 +14,10 @@ CREATE TABLE `sx_accounts` (
   `imageformat` varchar(4) NOT NULL default '0',
   `minimap` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_accounts`
--- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_babblebox`
--- 
-
-CREATE TABLE `sx_babblebox` (
+DROP TABLE IF EXISTS `<<babblebox>>`;
+CREATE TABLE `<<babblebox>>` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `posttime` datetime NOT NULL default '0000-00-00 00:00:00',
   `charname` varchar(30) NOT NULL default '',
@@ -51,19 +25,10 @@ CREATE TABLE `sx_babblebox` (
   `content` varchar(255) NOT NULL default '',
   `guild` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_babblebox`
--- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_classes`
--- 
-
-CREATE TABLE `sx_classes` (
+DROP TABLE IF EXISTS `<<classes>>`;
+CREATE TABLE `<<classes>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `expbonus` tinyint(3) unsigned NOT NULL default '0',
@@ -74,23 +39,15 @@ CREATE TABLE `sx_classes` (
   `mpperenergy` float unsigned NOT NULL default '0',
   `description` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_classes`
--- 
-
-INSERT INTO `sx_classes` (`id`, `name`, `expbonus`, `goldbonus`, `damageperstrength`, `defenseperdex`, `hpperlife`, `mpperenergy`, `description`) VALUES (1, 'Barbarian', 0, 0, 3, 1, 2, 1, 'Barbarians specialize in physical damage. 3 damage per strength point, 1 defense per dexterity point, 2 hp per life point, 1 mp per energy point.'),
+INSERT INTO `<<classes>>` (`id`, `name`, `expbonus`, `goldbonus`, `damageperstrength`, `defenseperdex`, `hpperlife`, `mpperenergy`, `description`) VALUES 
+(1, 'Barbarian', 0, 0, 3, 1, 2, 1, 'Barbarians specialize in physical damage. 3 damage per strength point, 1 defense per dexterity point, 2 hp per life point, 1 mp per energy point.'),
 (2, 'Sorceress', 0, 0, 1, 1, 2, 3, 'Sorceresses specialize in magical damage. 1 damage per strength point, 1 defense per dexterity point, 2 hp per life point, 3 mp per energy point.'),
 (3, 'Paladin', 0, 0, 1, 2, 3, 1, 'Paladins specialize in staying alive. 1 damage per strength point, 2 defense per dexterity point, 3 hp per life point, 1 mp per energy point.');
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_control`
--- 
-
-CREATE TABLE `sx_control` (
+DROP TABLE IF EXISTS `<<control>>`;
+CREATE TABLE `<<control>>` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
   `gamename` varchar(50) NOT NULL default '',
   `gameopen` tinyint(3) unsigned NOT NULL default '0',
@@ -100,15 +57,19 @@ CREATE TABLE `sx_control` (
   `avatarpath` varchar(200) NOT NULL default '',
   `avatarurl` varchar(200) NOT NULL default '',
   `avatarmaxsize` int(10) unsigned NOT NULL default '0',
+  `cookiename` varchar(255) NOT NULL default 'scourge',
+  `cookiedomain` varchar(255) NOT NULL default '',
   `showshout` tinyint(3) unsigned NOT NULL default '0',
   `showonline` tinyint(3) unsigned NOT NULL default '0',
   `showitemimages` tinyint(3) unsigned NOT NULL default '0',
   `showmonsterimages` tinyint(3) unsigned NOT NULL default '0',
+  `showsigbot` tinyint(3) unsigned NOT NULL default '0',
   `adminemail` varchar(200) NOT NULL default '',
   `verifyemail` tinyint(3) unsigned NOT NULL default '0',
   `compression` tinyint(3) unsigned NOT NULL default '0',
   `debug` tinyint(3) unsigned NOT NULL default '0',
   `botcheck` int(10) unsigned NOT NULL default '0',
+  `moddedby` text NOT NULL,
   `pvprefresh` int(10) unsigned NOT NULL default '0',
   `pvptimeout` int(10) unsigned NOT NULL default '0',
   `guildstartup` int(10) unsigned NOT NULL default '100000',
@@ -116,21 +77,10 @@ CREATE TABLE `sx_control` (
   `guildjoinlvl` int(10) unsigned NOT NULL default '0',
   `guildupdate` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_control`
--- 
-
-INSERT INTO `sx_control` (`id`, `gamename`, `gameopen`, `gamepath`, `gameurl`, `forumurl`, `avatarpath`, `avatarurl`, `avatarmaxsize`, `showshout`, `showonline`, `showitemimages`, `showmonsterimages`, `adminemail`, `verifyemail`, `compression`, `debug`, `botcheck`, `pvprefresh`, `pvptimeout`, `guildstartup`, `guildstartlvl`, `guildjoinlvl`, `guildupdate`) VALUES (1, 'Dragon Scourge', 1, '', '', '', '', '', 15000, 1, 1, 1, 0, '', 1, 1, 1, 255, 15, 45, 100000, 35, 10, 24);
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_difficulties`
--- 
-
-CREATE TABLE `sx_difficulties` (
+DROP TABLE IF EXISTS `<<difficulties>>`;
+CREATE TABLE `<<difficulties>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `expbonus` tinyint(3) unsigned NOT NULL default '0',
@@ -138,42 +88,24 @@ CREATE TABLE `sx_difficulties` (
   `multiplier` float NOT NULL default '0',
   `deathpenalty` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_difficulties`
--- 
-
-INSERT INTO `sx_difficulties` (`id`, `name`, `expbonus`, `goldbonus`, `multiplier`, `deathpenalty`) VALUES (1, 'Easy', 0, 0, 1, 0),
+INSERT INTO `<<difficulties>>` (`id`, `name`, `expbonus`, `goldbonus`, `multiplier`, `deathpenalty`) VALUES 
+(1, 'Easy', 0, 0, 1, 0),
 (2, 'Medium', 3, 3, 1.5, 3),
 (3, 'Hard', 5, 5, 2, 7);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_guildapps`
--- 
-
-CREATE TABLE `sx_guildapps` (
+DROP TABLE IF EXISTS `<<guildapps>>`;
+CREATE TABLE `<<guildapps>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `guild` int(10) unsigned NOT NULL default '0',
   `charid` int(10) unsigned NOT NULL default '0',
   `charname` varchar(30) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_guildapps`
--- 
-
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_guilds`
--- 
-
-CREATE TABLE `sx_guilds` (
+DROP TABLE IF EXISTS `<<guilds>>`;
+CREATE TABLE `<<guilds>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `lastupdate` bigint(20) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
@@ -195,23 +127,14 @@ CREATE TABLE `sx_guilds` (
   `statement` text NOT NULL,
   `news` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_guilds`
--- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_itembase`
--- 
-
-CREATE TABLE `sx_itembase` (
+DROP TABLE IF EXISTS `<<itembase>>`;
+CREATE TABLE `<<itembase>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `slotnumber` tinyint(3) unsigned NOT NULL default '0',
-  `unique` tinyint(3) unsigned NOT NULL default '0',
+  `isunique` tinyint(3) unsigned NOT NULL default '0',
   `willdrop` tinyint(3) unsigned NOT NULL default '0',
   `buycost` int(10) unsigned NOT NULL default '0',
   `sellcost` int(10) unsigned NOT NULL default '0',
@@ -234,13 +157,10 @@ CREATE TABLE `sx_itembase` (
   `mod6name` varchar(50) NOT NULL default '',
   `mod6attr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_itembase`
--- 
-
-INSERT INTO `sx_itembase` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`, `mod1name`, `mod1attr`, `mod2name`, `mod2attr`, `mod3name`, `mod3attr`, `mod4name`, `mod4attr`, `mod5name`, `mod5attr`, `mod6name`, `mod6attr`) VALUES (1, 'Pointy Stick', 1, 0, 1, 10, 5, 1, 0, 0, 0, 'physattack', 3, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
+INSERT INTO `<<itembase>>` (`id`, `name`, `slotnumber`, `isunique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`, `mod1name`, `mod1attr`, `mod2name`, `mod2attr`, `mod3name`, `mod3attr`, `mod4name`, `mod4attr`, `mod5name`, `mod5attr`, `mod6name`, `mod6attr`) VALUES 
+(1, 'Pointy Stick', 1, 0, 1, 10, 5, 1, 0, 0, 0, 'physattack', 3, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (2, 'Big Stick', 1, 0, 1, 15, 8, 1, 0, 0, 0, 'physattack', 4, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (3, 'Dagger', 1, 0, 1, 20, 10, 1, 0, 0, 0, 'physattack', 5, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (4, 'Hand Axe', 1, 0, 1, 30, 15, 1, 0, 0, 0, 'physattack', 7, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
@@ -414,25 +334,17 @@ INSERT INTO `sx_itembase` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `bu
 (169, 'Titanium Horned Helm', 3, 0, 1, 50000, 25000, 85, 105, 126, 0, 'physdefense', 175, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (51, 'Giant Maul', 1, 0, 1, 38000, 19000, 83, 405, 0, 0, 'physattack', 400, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_itemmodnames`
--- 
-
-CREATE TABLE `sx_itemmodnames` (
+DROP TABLE IF EXISTS `<<itemmodnames>>`;
+CREATE TABLE `<<itemmodnames>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `fieldname` varchar(50) NOT NULL default '',
   `prettyname` varchar(50) NOT NULL default '',
   `percent` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_itemmodnames`
--- 
-
-INSERT INTO `sx_itemmodnames` (`id`, `fieldname`, `prettyname`, `percent`) VALUES (1, 'expbonus', 'Experience Bonus', 1),
+INSERT INTO `<<itemmodnames>>` (`id`, `fieldname`, `prettyname`, `percent`) VALUES 
+(1, 'expbonus', 'Experience Bonus', 1),
 (2, 'goldbonus', 'Gold Bonus', 1),
 (3, 'maxhp', 'Max HP', 0),
 (4, 'maxmp', 'Max MP', 0),
@@ -453,13 +365,8 @@ INSERT INTO `sx_itemmodnames` (`id`, `fieldname`, `prettyname`, `percent`) VALUE
 (19, 'hpgain', 'HP Per Kill', 0),
 (20, 'mpgain', 'MP Per Kill', 0);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_itemprefixes`
--- 
-
-CREATE TABLE `sx_itemprefixes` (
+DROP TABLE IF EXISTS `<<itemprefixes>>`;
+CREATE TABLE `<<itemprefixes>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `slotnumber` tinyint(3) unsigned NOT NULL default '0',
@@ -474,22 +381,14 @@ CREATE TABLE `sx_itemprefixes` (
   `basename` varchar(50) NOT NULL default '',
   `baseattr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_itemprefixes`
--- 
-
-INSERT INTO `sx_itemprefixes` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES (1, 'Sharp', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'physattack', 2),
+INSERT INTO `<<itemprefixes>>` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES 
+(1, 'Sharp', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'physattack', 2),
 (2, 'Magic', 1, 0, 0, 8, 4, 1, 0, 0, 0, 'magicattack', 5);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_itemsuffixes`
--- 
-
-CREATE TABLE `sx_itemsuffixes` (
+DROP TABLE IF EXISTS `<<itemsuffixes>>`;
+CREATE TABLE `<<itemsuffixes>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `slotnumber` tinyint(3) unsigned NOT NULL default '0',
@@ -504,22 +403,14 @@ CREATE TABLE `sx_itemsuffixes` (
   `basename` varchar(50) NOT NULL default '',
   `baseattr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_itemsuffixes`
--- 
-
-INSERT INTO `sx_itemsuffixes` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES (1, 'of the Vampire', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'hpleech', 5),
+INSERT INTO `<<itemsuffixes>>` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES 
+(1, 'of the Vampire', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'hpleech', 5),
 (2, 'of the Bear', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'strength', 5);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_messages`
--- 
-
-CREATE TABLE `sx_messages` (
+DROP TABLE IF EXISTS `<<messages>>`;
+CREATE TABLE `<<messages>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `postdate` datetime NOT NULL default '0000-00-00 00:00:00',
   `senderid` int(10) unsigned NOT NULL default '0',
@@ -531,19 +422,10 @@ CREATE TABLE `sx_messages` (
   `message` text NOT NULL,
   `gold` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_messages`
--- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_monsters`
--- 
-
-CREATE TABLE `sx_monsters` (
+DROP TABLE IF EXISTS `<<monsters>>`;
+CREATE TABLE `<<monsters>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `world` tinyint(3) unsigned NOT NULL default '0',
@@ -567,13 +449,10 @@ CREATE TABLE `sx_monsters` (
   `newstory` int(10) unsigned NOT NULL default '0',
   `hpleech` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_monsters`
--- 
-
-INSERT INTO `sx_monsters` (`id`, `name`, `world`, `level`, `maxexp`, `maxgold`, `maxhp`, `physattack`, `physdefense`, `magicattack`, `magicdefense`, `fireattack`, `firedefense`, `lightattack`, `lightdefense`, `spell1`, `spell2`, `spellimmune1`, `spellimmune2`, `boss`, `newstory`, `hpleech`) VALUES (1, 'Small Slime', 1, 1, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+INSERT INTO `<<monsters>>` (`id`, `name`, `world`, `level`, `maxexp`, `maxgold`, `maxhp`, `physattack`, `physdefense`, `magicattack`, `magicdefense`, `fireattack`, `firedefense`, `lightattack`, `lightdefense`, `spell1`, `spell2`, `spellimmune1`, `spellimmune2`, `boss`, `newstory`, `hpleech`) VALUES 
+(1, 'Small Slime', 1, 1, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2, 'Shade', 1, 1, 4, 2, 3, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (3, 'Slime', 1, 2, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (4, 'Small Drake', 1, 2, 4, 3, 4, 5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -782,13 +661,8 @@ INSERT INTO `sx_monsters` (`id`, `name`, `world`, `level`, `maxexp`, `maxgold`, 
 (208, 'Xiran', 5, 99, 1000, 1000, 1400, 1500, 1300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 0),
 (209, 'Xiran', 5, 99, 5000, 5000, 1600, 1800, 1200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 19, 0);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_pvp`
--- 
-
-CREATE TABLE `sx_pvp` (
+DROP TABLE IF EXISTS `<<pvp>>`;
+CREATE TABLE `<<pvp>>` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `player1id` int(10) unsigned NOT NULL default '0',
   `player2id` int(10) unsigned NOT NULL default '0',
@@ -799,20 +673,10 @@ CREATE TABLE `sx_pvp` (
   `turntime` timestamp NOT NULL,
   `fightrow` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_pvp`
--- 
-
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_spells`
--- 
-
-CREATE TABLE `sx_spells` (
+DROP TABLE IF EXISTS `<<spells>>`;
+CREATE TABLE `<<spells>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `fname` varchar(30) NOT NULL default '',
@@ -822,13 +686,10 @@ CREATE TABLE `sx_spells` (
   `classonly` int(10) unsigned NOT NULL default '0',
   `classexclude` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_spells`
--- 
-
-INSERT INTO `sx_spells` (`id`, `name`, `fname`, `value`, `mp`, `minlevel`, `classonly`, `classexclude`) VALUES (1, 'Heal 1', 'heal', 5, 2, 5, 2, 0),
+INSERT INTO `<<spells>>` (`id`, `name`, `fname`, `value`, `mp`, `minlevel`, `classonly`, `classexclude`) VALUES 
+(1, 'Heal 1', 'heal', 5, 2, 5, 2, 0),
 (2, 'Heal 2', 'heal', 10, 5, 10, 0, 0),
 (3, 'Heal 3', 'heal', 20, 10, 15, 0, 0),
 (4, 'Heal 4', 'heal', 30, 15, 20, 0, 0),
@@ -883,34 +744,29 @@ INSERT INTO `sx_spells` (`id`, `name`, `fname`, `value`, `mp`, `minlevel`, `clas
 (53, 'Prismatic Blast 8', 'prism', 30, 50, 40, 0, 1),
 (54, 'Prismatic Blast 9', 'prism', 35, 65, 45, 0, 1),
 (55, 'Prismatic Blast 10', 'prism', 40, 80, 50, 0, 1),
-(56, 'Stone Skin 1', 'stoneskin', 5, 5, 1, 0, 0),
-(57, 'Stone Skin 2', 'stoneskin', 10, 10, 3, 0, 0),
-(58, 'Stone Skin 3', 'stoneskin', 15, 15, 7, 0, 0),
-(59, 'Stone Skin 4', 'stoneskin', 20, 20, 10, 0, 2),
-(60, 'Stone Skin 5', 'stoneskin', 30, 30, 23, 0, 2),
-(61, 'Stone Skin 6', 'stoneskin', 40, 45, 31, 0, 2),
-(62, 'Stone Skin 7', 'stoneskin', 55, 65, 55, 1, 0),
-(63, 'Stone Skin 8', 'stoneskin', 70, 100, 75, 1, 0),
-(64, 'Stone Skin 9', 'stoneskin', 95, 200, 87, 1, 0),
-(65, 'Stone Skin 10', 'stoneskin', 110, 350, 95, 1, 0),
-(66, 'Blessed Strike 1', 'blessedstrike', 5, 5, 1, 0, 2),
-(67, 'Blessed Strike 2', 'blessedstrike', 10, 10, 3, 0, 2),
-(68, 'Blessed Strike 3', 'blessedstrike', 15, 15, 7, 0, 2),
-(69, 'Blessed Strike 4', 'blessedstrike', 20, 20, 10, 0, 2),
-(70, 'Blessed Strike 5', 'blessedstrike', 25, 30, 23, 0, 2),
-(71, 'Blessed Strike 6', 'blessedstrike', 30, 45, 31, 0, 2),
-(72, 'Blessed Strike 7', 'blessedstrike', 40, 65, 55, 1, 0),
-(73, 'Blessed Strike 8', 'blessedstrike', 55, 100, 75, 1, 0),
-(74, 'Blessed Strike 9', 'blessedstrike', 70, 200, 87, 1, 0),
-(75, 'Blessed Strike 10', 'blessedstrike', 90, 350, 95, 1, 0);
+(56, 'Stone Skin 1', 'bonusdefense', 5, 5, 1, 0, 0),
+(57, 'Stone Skin 2', 'bonusdefense', 10, 10, 3, 0, 0),
+(58, 'Stone Skin 3', 'bonusdefense', 15, 15, 7, 0, 0),
+(59, 'Stone Skin 4', 'bonusdefense', 20, 20, 10, 0, 2),
+(60, 'Stone Skin 5', 'bonusdefense', 30, 30, 23, 0, 2),
+(61, 'Stone Skin 6', 'bonusdefense', 40, 45, 31, 0, 2),
+(62, 'Stone Skin 7', 'bonusdefense', 55, 65, 55, 1, 0),
+(63, 'Stone Skin 8', 'bonusdefense', 70, 100, 75, 1, 0),
+(64, 'Stone Skin 9', 'bonusdefense', 95, 200, 87, 1, 0),
+(65, 'Stone Skin 10', 'bonusdefense', 110, 350, 95, 1, 0),
+(66, 'Blessed Strike 1', 'bonusattack', 5, 5, 1, 0, 2),
+(67, 'Blessed Strike 2', 'bonusattack', 10, 10, 3, 0, 2),
+(68, 'Blessed Strike 3', 'bonusattack', 15, 15, 7, 0, 2),
+(69, 'Blessed Strike 4', 'bonusattack', 20, 20, 10, 0, 2),
+(70, 'Blessed Strike 5', 'bonusattack', 25, 30, 23, 0, 2),
+(71, 'Blessed Strike 6', 'bonusattack', 30, 45, 31, 0, 2),
+(72, 'Blessed Strike 7', 'bonusattack', 40, 65, 55, 1, 0),
+(73, 'Blessed Strike 8', 'bonusattack', 55, 100, 75, 1, 0),
+(74, 'Blessed Strike 9', 'bonusattack', 70, 200, 87, 1, 0),
+(75, 'Blessed Strike 10', 'bonusattack', 90, 350, 95, 1, 0);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_story`
--- 
-
-CREATE TABLE `sx_story` (
+DROP TABLE IF EXISTS `<<story>>`;
+CREATE TABLE `<<story>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `title` text NOT NULL,
   `story` text NOT NULL,
@@ -927,15 +783,12 @@ CREATE TABLE `sx_story` (
   `rewardname` varchar(30) NOT NULL default '',
   `rewardattr` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_story`
--- 
-
-INSERT INTO `sx_story` (`id`, `title`, `story`, `world`, `latitude`, `longitude`, `nextstory`, `targetmonster`, `targetitem`, `targetworld`, `targetlat`, `targetlon`, `targetaction`, `rewardname`, `rewardattr`) VALUES (1, 'Prologue', 'The light has forsaken this land, and not for the first time. Centuries ago, it was overrun by darkness and then saved by a hero whose lifelong quest was to eradicate evil. The hero succeeded, and in the end, Lucifuge, King of the Dragons, was destroyed... at least for the time being. In the many long years since that time, Lucifuge has been gathering his forces and his power, and has finally regained enough of his former strength to return.\r\n\r\nSo the land is once again in need of a saviour. It will be no easy task, dear adventurer. In the last age, Lucifuge and his minions controlled but a small country. This time, he has sent his forces to sow chaos and darkness throughout the world. Only a brave adventurer will be able to conquer him and restore peace and order to the world.\r\n\r\nContinue on, dear adventurer. You shall be tested dearly, but the rewards will be great.', 1, 0, 0, 2, 0, '', 1, 0, 0, 'In Town', '', 0),
-(2, 'Queen of Demons', 'You come to a great stone door, with the inscription ''RAZORA'' carved in the Language of the Fallen. Next to the door lie the skeletons of several dead warriors who failed to enter. One of the skeletons is holding a scrap of paper, which reads:\r\n\r\n"We finally made it. The legends are true, Razora does exist. As I write this, we are standing outside the demon queen''s throneroom. Something is following us, though, and has been for several days. We''re making camp tonight, and we''ll head inside in the morning. After the months of travelling, we definitely need our rest if we''re really preparing to face Razora. We''ve survived this far, surely whatever is following us will hold off one more night..."\r\n\r\nYou are now faced with a choice, dear adventurer. Are you ready to face the demon queen Razora, or do you still need more preparation?', 1, 100, -100, 0, 201, '', 0, 0, 0, 'Fighting', '', 0),
-(3, 'Fallen Queen', 'Razora, the Demon Queen, lies dead at your feet. Even now, her body and all the black blood spilled from it are melting away into the nether. Soon, all that''s left is her heart, which you take with you as proof that you destroyed her.\r\n\r\nOne section of the wall crumbles and falls, and leads to a doorway, guarded by a large statue of an angel. In the angel''s hand is a sword with flames engraved in the blade.\r\n\r\nIt wouldn''t be too much trouble to take the sword, and it does seem like your right to take it, after all the trouble you went through to kill Razora. You can now take the sword and continue through the doorway, or just continue on without it.', 1, 100, -100, 4, 0, '0,170,0', 2, 0, 0, 'Exploring', 'maxhp', 50),
+INSERT INTO `<<story>>` (`id`, `title`, `story`, `world`, `latitude`, `longitude`, `nextstory`, `targetmonster`, `targetitem`, `targetworld`, `targetlat`, `targetlon`, `targetaction`, `rewardname`, `rewardattr`) VALUES 
+(1, 'Prologue', 'The light has forsaken this land, and not for the first time. Centuries ago, it was overrun by darkness and then saved by a hero whose lifelong quest was to eradicate evil. The hero succeeded, and in the end, Lucifuge, King of the Dragons, was destroyed... at least for the time being. In the many long years since that time, Lucifuge has been gathering his forces and his power, and has finally regained enough of his former strength to return.\r\n\r\nSo the land is once again in need of a saviour. It will be no easy task, dear adventurer. In the last age, Lucifuge and his minions controlled but a small country. This time, he has sent his forces to sow chaos and darkness throughout the world. Only a brave adventurer will be able to conquer him and restore peace and order to the world.\r\n\r\nContinue on, dear adventurer. You shall be tested dearly, but the rewards will be great.', 1, 0, 0, 2, 0, '0', 1, 0, 0, '', '', 0),
+(2, 'Queen of Demons', 'You come to a great stone door, with the inscription ''RAZORA'' carved in the Language of the Fallen. Next to the door lie the skeletons of several dead warriors who failed to enter. One of the skeletons is holding a scrap of paper, which reads:\r\n\r\n"We finally made it. The legends are true, Razora does exist. As I write this, we are standing outside the demon queen''s throneroom. Something is following us, though, and has been for several days. We''re making camp tonight, and we''ll head inside in the morning. After the months of travelling, we definitely need our rest if we''re really preparing to face Razora. We''ve survived this far, surely whatever is following us will hold off one more night..."\r\n\r\nYou are now faced with a choice, dear adventurer. Are you ready to face the demon queen Razora, or do you still need more preparation?', 1, 100, -100, 0, 201, '0', 0, 0, 0, '', '', 0),
+(3, 'Fallen Queen', 'Razora, the Demon Queen, lies dead at your feet. Even now, her body and all the black blood spilled from it are melting away into the nether. Soon, all that''s left is her heart, which you take with you as proof that you destroyed her.\r\n\r\nOne section of the wall crumbles and falls, and leads to a doorway, guarded by a large statue of an angel. In the angel''s hand is a sword with flames engraved in the blade.\r\n\r\nIt wouldn''t be too much trouble to take the sword, and it does seem like your right to take it, after all the trouble you went through to kill Razora. You can now take the sword and continue through the doorway, or just continue on without it.', 1, 100, -100, 4, 0, '0', 2, 0, 0, '', 'maxhp', 50),
 (4, 'Shirreh''s Door', 'As you step through the doorway, you have a momentary feeling of the ground being swept out beneath you. Then you are surrounded by light, and you enter a new town. The townsfolk, surprised at your sudden entry through a door that has never been opened, quickly inform you of the legend surrounding the door.\r\n\r\nIt was created by the archangel Shirreh, as a path between this land and the last you were in. Shirreh made the door so that whoever did eventually destroy Razora would be able to travel here and attempt to defeat Numoren, the demon who was given dominion over this land by Lucifuge.\r\n\r\nIt''s time to continue on, dear adventurer. You did well in the last land, but a new evil awaits you here. One small dirt path leads out of town and into the dense jungle.', 2, 0, 0, 5, 0, '', 0, 0, 0, 'In Town', '', 0),
 (5, 'Numoren''s Portal', 'Deep in the heart of the jungles that cover this land, you come to a clearing. In the center of the clearing are two large upright stones, with one more stone on top. You walk around it, and looking through the doorway from one side only shows the other side of the clearing. But looking through it from the other side shows a dark hallway.\r\n\r\nWould you like to step through the magic doorway into the hall, or would you like some more time to get ready for this battle?', 2, 100, 100, 0, 202, '', 0, 0, 0, 'Fighting', '', 0),
 (6, 'Numoren''s Ring', 'Numoren has fallen at your hand, and this land is safe. Shirreh''s second door, identical to the first except for the rune carvings at the top of the frame, appears in a wall behind you.\r\n\r\nAs Numoren''s body disappears in a puff of smoke, you hear a small jingling sound and notice a gold ring falling to the ground. Numoren''s ring glows and you can almost hear it calling your name.\r\n\r\nWould you like to pick up the ring, dear adventurer?', 2, 100, 100, 7, 0, '0,171,0', 3, 0, 0, '', 'goldbonus', 5),
@@ -954,13 +807,8 @@ INSERT INTO `sx_story` (`id`, `title`, `story`, `world`, `latitude`, `longitude`
 (19, 'Epilogue', 'With one final triumphant swing, you pierce Xiran''s heart and immediately your weapon disintegrates in front of your eyes. Xiran falls to the ground, and as the walls of the ice prison are falling down around you, Xiran''s body bursts into flames and is utterly consumed in seconds, leaving only a pile of ash on the floor.\r\n\r\nHis sword, though, remains unscathed by the fire, so as you are looking for the quickest way out of the crumbling building, you grab it and sling it over your shoulder. It''s only fair, after all, since the demon god''s heart took your own weapon away from you.\r\n\r\nYou make your way back to the last outpost, and the entire population has come out to see you. After many long ages, the dreadful task of awating Xiran''s escape has been lifted from their shoulders.\r\n\r\nNow that you''ve finally saved the world, you can''t wait to have a drink...\r\n\r\nThe End', 5, 100, 100, 20, 0, '0,173,0', 0, 0, 0, '', '', 0),
 (20, 'Fin', 'You have now beat the game and have been added to the Scroll of Heroes.  You may continue playing if you want, or of course you could also take a well-deserved rest. Thank you for playing, and we hope you''ve enjoyed it.', 5, 100, 100, 9999, 0, '', 0, 0, 0, '', '', 0);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_towns`
--- 
-
-CREATE TABLE `sx_towns` (
+DROP TABLE IF EXISTS `<<towns>>`;
+CREATE TABLE `<<towns>>` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `world` tinyint(3) unsigned NOT NULL default '0',
@@ -972,13 +820,10 @@ CREATE TABLE `sx_towns` (
   `itemminlvl` int(10) unsigned NOT NULL default '0',
   `itemmaxlvl` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_towns`
--- 
-
-INSERT INTO `sx_towns` (`id`, `name`, `world`, `latitude`, `longitude`, `innprice`, `mapprice`, `travelpoints`, `itemminlvl`, `itemmaxlvl`) VALUES (1, 'Middleton', 1, 0, 0, 5, 0, 0, 1, 5),
+INSERT INTO `<<towns>>` (`id`, `name`, `world`, `latitude`, `longitude`, `innprice`, `mapprice`, `travelpoints`, `itemminlvl`, `itemmaxlvl`) VALUES 
+(1, 'Middleton', 1, 0, 0, 5, 0, 0, 1, 5),
 (2, 'Norfolk', 1, 25, 25, 10, 25, 5, 3, 8),
 (3, 'Calentia', 1, 50, -50, 25, 50, 15, 6, 11),
 (4, 'Resmark', 1, -75, 75, 40, 100, 30, 9, 14),
@@ -1004,13 +849,8 @@ INSERT INTO `sx_towns` (`id`, `name`, `world`, `latitude`, `longitude`, `innpric
 (24, 'Outpost 22', 5, -74, -69, 800, 4500, 400, 80, 84),
 (25, 'Outpost 42', 5, 89, 94, 950, 5000, 425, 83, 85);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_users`
--- 
-
-CREATE TABLE `sx_users` (
+DROP TABLE IF EXISTS `<<users>>`;
+CREATE TABLE `<<users>>` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `account` int(10) unsigned NOT NULL default '0',
   `birthdate` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -1113,30 +953,18 @@ CREATE TABLE `sx_users` (
   `bonusdefense` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   FULLTEXT KEY `item1name` (`item1name`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_users`
--- 
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `sx_worlds`
--- 
-
-CREATE TABLE `sx_worlds` (
+DROP TABLE IF EXISTS `<<worlds>>`;
+CREATE TABLE `<<worlds>>` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `size` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) TYPE=MyISAM ;
 
--- 
--- Dumping data for table `sx_worlds`
--- 
-
-INSERT INTO `sx_worlds` (`id`, `name`, `size`) VALUES (1, 'Raenslide', 100),
+INSERT INTO `<<worlds>>` (`id`, `name`, `size`) VALUES 
+(1, 'Raenslide', 100),
 (2, 'Lorenfall', 100),
 (3, 'Borderlands', 100),
 (4, 'Inferno', 100),

@@ -1,5 +1,19 @@
 <?php // spells.php :: functions for spells.
 
+//	Dragon Scourge
+//
+//	Program authors: Jamin Blount
+//	Copyright (C) 2007 by renderse7en
+//	Script Version 1.0 Beta 5 Build 19
+
+//	You may not distribute this program in any manner, modified or
+//	otherwise, without the express, written consent from
+//	renderse7en.
+//
+//	You may make modifications, but only for your own use and
+//	within the confines of the Dragon Scourge License Agreement
+//	(see our website for that).
+
 function heal($id) {
     
     global $userrow, $spells;
@@ -144,23 +158,23 @@ function stoneskin($id) {
     
         //now define the power of the spell. you can stack these spells, but the more you try to stack it the harder it will be to get a decent number out of the stack. The max will always be 100. This is because the spell works with percentages and 100 will always be the highest.
         $userrow["currentmp"] -= $spells[$id]["mp"];
-        if ($userrow["bonusdefence"] == 0) { 
-        	$userrow["bonusdefence"] = $spells[$id]["value"];
+        if ($userrow["bonusdefense"] == 0) { 
+        	$userrow["bonusdefense"] = $spells[$id]["value"];
     	} else { 
-    		//if a more powerful defence spell is cast, replace the old value with the new one
-    		if ($userrow["bonusdefence"] < $spells[$id]["value"]) {
-			    $userrow["bonusdefence"] = $spells[$id]["value"];
+    		//if a more powerful defense spell is cast, replace the old value with the new one
+    		if ($userrow["bonusdefense"] < $spells[$id]["value"]) {
+			    $userrow["bonusdefense"] = $spells[$id]["value"];
 			} else {
 				//if the same or a weaker spell is cast, determine the maximum stack number and then apply..
-				$newdefmax = ((100 - $userrow["bonusdefence"])+1) / 100;
+				$newdefmax = ((100 - $userrow["bonusdefense"])+1) / 100;
 				if ($newdefmax < 0.2) { $newdefmax = 0.2;}
 				$newdefmax = $spells[$id]["value"] * $newdefmax;
 				$newdefmax = floor($newdefmax);
 				if ($newdefmax < 1) { $newdefmax = 1;}
 				if ($spells[$id]["value"] > $newdefmax) {$spells[$id]["value"] = $newdefmax;}
-				$userrow["bonusdefence"] = $userrow["bonusdefence"] + $spells[$id]["value"];
+				$userrow["bonusdefense"] = $userrow["bonusdefense"] + $spells[$id]["value"];
 	        }
-        	if ($userrow["bonusdefence"] > 200) { $userrow["bonusdefence"] = 200;}
+        	if ($userrow["bonusdefense"] > 200) { $userrow["bonusdefense"] = 200;}
         	// all damage will never go above 50% chance. 0.25% damage will always be 50%
     	}
     	
