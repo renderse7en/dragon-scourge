@@ -39,7 +39,7 @@ function register() {
         // Process username.
         if (trim($username) == "") { $errors++; $errorlist .= "Username field is required.<br />"; }
         if (preg_match("/[^A-z0-9_\-]/", $username)==1) { $errors++; $errorlist .= "Username must be alphanumeric.<br />"; } // Thanks to "Carlos Pires" from php.net!
-        $usernamequery = doquery("SELECT username FROM {{table}} WHERE username='$username' LIMIT 1","accounts");
+        $usernamequery = doquery("SELECT username FROM <<accounts>> WHERE username='$username' LIMIT 1");
         if (mysql_num_rows($usernamequery) > 0) { $errors++; $errorlist .= "Username already taken - unique username required.<br />"; }
 
         // Process password.
@@ -52,7 +52,7 @@ function register() {
         if (trim($email1) == "") { $errors++; $errorlist .= "Email field is required.<br />"; }
         if ($email1 != $email2) { $errors++; $errorlist .= "Emails don't match.<br />"; }
         if (! is_email($email1)) { $errors++; $errorlist .= "Email isn't valid.<br />"; }
-        $emailquery = doquery("SELECT emailaddress FROM {{table}} WHERE emailaddress='$email1' LIMIT 1","accounts");
+        $emailquery = doquery("SELECT emailaddress FROM <<accounts>> WHERE emailaddress='$email1' LIMIT 1");
         if (mysql_num_rows($emailquery) > 0) { $errors++; $errorlist .= "Email already taken - unique email address required.<br />"; }
         
         // Process other stuff.
@@ -72,7 +72,7 @@ function register() {
             }
             
             // Now update.
-            $query = doquery("INSERT INTO {{table}} SET id='',regdate=NOW(),regip='".$_SERVER["REMOTE_ADDR"]."',verifycode='$verifycode',username='$username',password='$password',emailaddress='$email1',language='English',imageformat='$imageformat', minimap='$minimap'", "accounts") or die(mysql_error());
+            $query = doquery("INSERT INTO <<accounts>> SET id='',regdate=NOW(),regip='".$_SERVER["REMOTE_ADDR"]."',verifycode='$verifycode',username='$username',password='$password',emailaddress='$email1',language='English',imageformat='$imageformat', minimap='$minimap'") or die(mysql_error());
             
             // Send confirmation email if necessary.
             if ($controlrow["verifyemail"] == 1) {
@@ -134,7 +134,7 @@ function profile() {
     // Setup for viewing other people's profiles.
     if(isset($_GET["uid"])) {
         if (!is_numeric($_GET["uid"])) { err("Invalid UID."); }
-        $newuserrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$_GET["uid"]."' LIMIT 1", "users"));
+        $newuserrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$_GET["uid"]."' LIMIT 1"));
         if ($newuserrow == false) { err("No such UID."); }
         $template = "users_onlinechar";
     }
@@ -187,7 +187,7 @@ function profile() {
     if ($newuserrow["levelup"] != 0 || $newuserrow["levelspell"] != 0) { $newuserrow["levelpointscharnotice"] = "You have Level/Spell Points available."; } else { $newuserrow["levelpointscharnotice"] = ""; }
     
     // Class.
-    $class = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["charclass"]."' LIMIT 1", "classes"));
+    $class = dorow(doquery("SELECT * FROM <<classes>> WHERE id='".$newuserrow["charclass"]."' LIMIT 1"));
     $newuserrow["charclass"] = $class["name"];
 
     display("Extended Profile",parsetemplate(gettemplate($template),$newuserrow));
@@ -216,7 +216,7 @@ function settings() {
         // Process email address.
         if (trim($email) == "") { $errors++; $errorlist .= "Email field is required.<br />"; }
         if (! is_email($email)) { $errors++; $errorlist .= "Email isn't valid.<br />"; }
-        $emailquery = doquery("SELECT emailaddress FROM {{table}} WHERE emailaddress='$email' AND id != '".$acctrow["id"]."' LIMIT 1","accounts");
+        $emailquery = doquery("SELECT emailaddress FROM <<accounts>> WHERE emailaddress='$email' AND id != '".$acctrow["id"]."' LIMIT 1");
         if (mysql_num_rows($emailquery) > 0) { $errors++; $errorlist .= "Email already taken - unique email address required.<br />"; }
         
         // Process other stuff.
@@ -225,7 +225,7 @@ function settings() {
         
         if ($errors == 0) { 
             
-            $query = doquery("UPDATE {{table}} SET $password emailaddress='$email', imageformat='$imageformat', minimap='$minimap' WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
+            $query = doquery("UPDATE <<accounts>> SET $password emailaddress='$email', imageformat='$imageformat', minimap='$minimap' WHERE id='".$acctrow["id"]."' LIMIT 1");
         
             if (isset($newpass)) { 
                 setcookie("scourge", "", (time()-3600), "/", "", 0);
@@ -269,10 +269,10 @@ function characters() {
         
         // Change the active character for the account.
         if (!is_numeric($_POST["makeactive"])) { err("Invalid UID."); }
-        $newuserrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$_POST["makeactive"]."' LIMIT 1", "users"));
+        $newuserrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$_POST["makeactive"]."' LIMIT 1"));
         if ($newuserrow == false) { err("No such UID."); }
         if ($newuserrow["account"] != $acctrow["id"]) { err("You don't own that UID."); }
-        $setnewchar = doquery("UPDATE {{table}} SET activechar='".$_POST["makeactive"]."' WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
+        $setnewchar = doquery("UPDATE <<accounts>> SET activechar='".$_POST["makeactive"]."' WHERE id='".$acctrow["id"]."' LIMIT 1");
         die(header("Location: users.php?do=characters"));
         
     }
@@ -290,7 +290,7 @@ function characters() {
         } else { $row["newcharlink"] = ""; }
         
         // Grab characters.
-        $charrow = dorow(doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} WHERE account='".$acctrow["id"]."' ORDER BY birthdate", "users"), "id");
+        $charrow = dorow(doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM <<users>> WHERE account='".$acctrow["id"]."' ORDER BY birthdate"), "id");
         
             foreach($charrow as $a=>$b) { 
                 
@@ -348,7 +348,7 @@ function charnew() {
         // Process charname.
         if (trim($charname) == "") { $errors++; $errorlist .= "Character Name field is required.<br />"; }
         if (preg_match("/[^A-z\ 0-9_\-]/", $charname)==1) { $errors++; $errorlist .= "Character names can only contain letters, numbers, spaces and hyphens.<br />"; } // Thanks to "Carlos Pires" from php.net!
-        $characternamequery = doquery("SELECT charname FROM {{table}} WHERE charname='$charname' LIMIT 1","users");
+        $characternamequery = doquery("SELECT charname FROM <<users>> WHERE charname='$charname' LIMIT 1");
         if (mysql_num_rows($characternamequery) > 0) { $errors++; $errorlist .= "Character Name already taken - unique Character Name required.<br />"; }
         
 	    // Upload new charpicture, if required.
@@ -379,13 +379,13 @@ function charnew() {
         // Get bonuses and multipliers from classes/difficulties tables.
         $expbonus = 0;
         $goldbonus = 0;
-        $classes = dorow(doquery("SELECT * FROM {{table}} WHERE id='$charclass' LIMIT 1", "classes"));
+        $classes = dorow(doquery("SELECT * FROM <<classes>> WHERE id='$charclass' LIMIT 1"));
         if ($classes != false) { 
             $expbonus += $classes["expbonus"]; 
             $goldbonus += $classes["goldbonus"]; 
         } else { $errors++; $errorlist .= "Invalid character class"; }
             
-        $difficulties = dorow(doquery("SELECT * FROM {{table}} WHERE id='$difficulty' LIMIT 1", "difficulties"));
+        $difficulties = dorow(doquery("SELECT * FROM <<difficulties>> WHERE id='$difficulty' LIMIT 1"));
         if ($difficulties != false) { 
             $expbonus += $difficulties["expbonus"]; 
             $goldbonus += $difficulties["goldbonus"]; 
@@ -396,13 +396,13 @@ function charnew() {
         if ($errors == 0) {
             
             // Now everything's cool. Create new character row.
-            $query = doquery("INSERT INTO {{table}} SET id='', account='".$acctrow["id"]."', birthdate=NOW(), lastip='".$_SERVER["REMOTE_ADDR"]."', onlinetime=NOW(), charname='$charname', charpicture='$newcharpicture', charclass='$charclass', difficulty='$difficulty', deathpenalty='$deathpenalty', expbonus='$expbonus', goldbonus='$goldbonus'", "users");
+            $query = doquery("INSERT INTO <<users>> SET id='', account='".$acctrow["id"]."', birthdate=NOW(), lastip='".$_SERVER["REMOTE_ADDR"]."', onlinetime=NOW(), charname='$charname', charpicture='$newcharpicture', charclass='$charclass', difficulty='$difficulty', deathpenalty='$deathpenalty', expbonus='$expbonus', goldbonus='$goldbonus'");
             
             // Update account row.
             $default = "";
             if (isset($setdefault)) { $default = "activechar='".mysql_insert_id()."', "; }
             if ($acctrow["characters"] == 0) { $default = "activechar='".mysql_insert_id()."', "; }
-            $query2 = doquery("UPDATE {{table}} SET $default characters=characters+1 WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
+            $query2 = doquery("UPDATE <<accounts>> SET $default characters=characters+1 WHERE id='".$acctrow["id"]."' LIMIT 1");
             
             // And we're finished.
             die(header("Location: users.php?do=characters"));
@@ -421,15 +421,17 @@ function charnew() {
     }
     
     
-    $classes = dorow(doquery("SELECT * FROM {{table}} ORDER BY id", "classes"));
+    $classes = dorow(doquery("SELECT * FROM <<classes>> ORDER BY id"));
     $row["charclass"] = "";
     $row["classdesc"] = "";
+    $count = 1;
     foreach($classes as $a=>$b) {
         $row["charclass"] .= "<option value=\"".$b["id"]."\">".$b["name"]."</option>";
-        $row["classdesc"] .= "<a title=\"".$b["description"]."\">".$b["name"]."</a> | ";
+        $row["classdesc"] .= "<div id=\"t$count\" class=\"tip\">".$b["description"]."</div><a href=\"#\" onmouseout=\"popUp(event,'t$count')\" onmouseover=\"popUp(event,'t$count')\" onclick=\"return false\">".$b["name"]."</a> | ";
+        $count++;
     }
     $row["classdesc"] = rtrim($row["classdesc"], " |");
-    $difficulty = dorow(doquery("SELECT * FROM {{table}} ORDER BY id", "difficulties"));
+    $difficulty = dorow(doquery("SELECT * FROM <<difficulties>> ORDER BY id"));
     $row["difficulty"] = "";
     foreach($difficulty as $a=>$b) {
         $row["difficulty"] .= "<option value=\"".$b["id"]."\">".$b["name"]."</option>";
@@ -448,7 +450,7 @@ function charedit() {
     
     // Change the active character for the account.
     if (!is_numeric($_GET["uid"])) { err("Invalid UID."); }
-    $newuserrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$_GET["uid"]."' LIMIT 1", "users"));
+    $newuserrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$_GET["uid"]."' LIMIT 1"));
     if ($newuserrow == false) { err("No such UID."); }
     if ($newuserrow["account"] != $acctrow["id"]) { err("You don't own that UID."); }
     
@@ -483,7 +485,7 @@ function charedit() {
 	    }
             
         // Now everything's cool.
-        $query = doquery("UPDATE {{table}} SET charpicture='$newcharpicture' WHERE id='".$newuserrow["id"]."' LIMIT 1", "users");
+        $query = doquery("UPDATE <<users>> SET charpicture='$newcharpicture' WHERE id='".$newuserrow["id"]."' LIMIT 1");
         die(header("Location: users.php?do=characters"));
             
     } elseif (isset($_POST["delete"])) {
@@ -494,11 +496,11 @@ function charedit() {
     } elseif (isset($_POST["ultrakill"])) {
         
         // First we delete the char.
-        $query = doquery("DELETE FROM {{table}} WHERE id='".$newuserrow["id"]."'", "users");
+        $query = doquery("DELETE FROM <<users>> WHERE id='".$newuserrow["id"]."'");
         
         // Then we gotta update acctrow accordingly.
-        $query2 = dorow(doquery("SELECT * FROM {{table}} WHERE account='".$acctrow["id"]."' ORDER BY id LIMIT 1", "users"));
-        $query3 = doquery("UPDATE {{table}} SET characters=characters-1, activechar='".$query2["id"]."' WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
+        $query2 = dorow(doquery("SELECT * FROM <<users>> WHERE account='".$acctrow["id"]."' ORDER BY id LIMIT 1"));
+        $query3 = doquery("UPDATE <<accounts>> SET characters=characters-1, activechar='".$query2["id"]."' WHERE id='".$acctrow["id"]."' LIMIT 1");
         die(header("Location: users.php?do=characters"));
     
     } elseif (isset($_POST["wimpout"])) {
@@ -518,7 +520,7 @@ function levelup() {
     
     if ($userrow["levelup"] == 0) { err("You do not currently have any Level Points to spend."); }
     
-    $classrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["charclass"]."' LIMIT 1", "classes"));
+    $classrow = dorow(doquery("SELECT * FROM <<classes>> WHERE id='".$userrow["charclass"]."' LIMIT 1"));
     
     if (isset($_POST["submit"])) {
         
@@ -542,8 +544,13 @@ function levelup() {
                     break;
                 case "dex":
                     $userrow["dexterity"]++;
-                    $userrow["maxhp"] += (1 * $classrow["hpperdexterity"]);
-                    $userrow["currenthp"] += (1 * $classrow["hpperdexterity"]);
+                    $userrow["physdefense"] += (1 * $classrow["defenseperdex"]);
+                    $userrow["levelup"]--;
+                    break;
+                case "lif":
+                    $userrow["life"]++;
+                    $userrow["maxhp"] += (1 * $classrow["hpperlife"]);
+                    $userrow["currenthp"] += (1 * $classrow["hpperlife"]);
                     $userrow["levelup"]--;
                     break;
                 case "enr":
@@ -559,6 +566,7 @@ function levelup() {
         
         // Round down any fractions.
         $userrow["physattack"] = floor($userrow["physattack"]);
+        $userrow["physdefense"] = floor($userrow["physdefense"]);
         $userrow["maxhp"] = floor($userrow["maxhp"]);
         $userrow["maxmp"] = floor($userrow["maxmp"]);
         
@@ -570,11 +578,12 @@ function levelup() {
         
         $row["dropdowns"] = "";
         for($i=0; $i<$userrow["levelup"]; $i++) {
-            $row["dropdowns"] .= "<div style=\"padding-bottom: 5px;\"><select name=\"$i\"><option value=\"0\">Pick One</option><option value=\"str\">Strength</option><option value=\"dex\">Dexterity</option><option value=\"enr\">Energy</option></select></div>\n";
+            $row["dropdowns"] .= "<div style=\"padding-bottom: 5px;\"><select name=\"$i\"><option value=\"0\">Pick One</option><option value=\"str\">Strength</option><option value=\"dex\">Dexterity</option><option value=\"lif\">Life</option><option value=\"enr\">Energy</option></select></div>\n";
         }
         $row["classname"] = $classrow["name"];
         $row["damageperstrength"] = $classrow["damageperstrength"];
-        $row["hpperdexterity"] = $classrow["hpperdexterity"];
+        $row["defenseperdex"] = $classrow["defenseperdex"];
+        $row["hpperlife"] = $classrow["hpperlife"];
         $row["mpperenergy"] = $classrow["mpperenergy"];
         $row["levelup"] = $userrow["levelup"];
         

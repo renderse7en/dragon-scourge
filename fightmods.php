@@ -61,4 +61,88 @@ function mpgain() {
         
 }
 
+function bonusattack() {
+    
+    /***********
+    Description:    Chance to deal extra damage.
+    Occurs:         Per Turn.
+    Applies To:     Player only.
+    Written By:     Anman.
+    ***********/
+    
+    global $userrow, $fightrow;
+        
+    $first = $userrow["bonusattack"] * 0.25;
+    $sec = $userrow["bonusattack"] * 0.5;
+    $third = $userrow["bonusattack"] * 0.75;
+    $rand = rand(0,100);
+    
+    if ($rand <= $first) { $multiplier = 2; } 
+    elseif ($rand <= $sec) { $multiplier = 1.75; } 
+    elseif ($rand <= $third) { $multiplier = 1.5; } 
+    elseif ($rand <= $userrow["bonusattack"] && $rand > $third) { $multiplier = 1.25; } 
+    else { $multiplier = 1; }
+    
+ 	$fightrow["playerphysdamage"] = floor($fightrow["playerphysdamage"] * $multiplier);
+    
+}
+
+function bonusdefense() {
+    
+    /***********
+    Description:    Chance to reduce incurred damage.
+    Occurs:         Per Turn.
+    Applies To:     Player only.
+    Written By:     Anman.
+    ***********/
+    
+    global $userrow, $fightrow;
+        
+    $first = $userrow["bonusdefense"] * 0.25;
+    $sec = $userrow["bonusdefense"] * 0.5;
+    $third = $userrow["bonusdefense"] * 0.75;
+    $rand = rand(0,100);
+    
+    if ($rand <= $first) { $multiplier = 0; } 
+    elseif ($rand <= $sec) { $multiplier = 0.25; } 
+    elseif ($rand <= $third) { $multiplier = 0.5; } 
+    elseif ($rand <= $userrow["bonusdefense"] && $rand > $third) { $multiplier = 0.75; } 
+    else { $multiplier = 1; }
+    
+	$fightrow["monsterphysdamage"] = floor($fightrow["monsterphysdamage"] * $multiplier);
+	$fightrow["monstermagicdamage"] = floor($fightrow["monstermagicdamage"] * $multiplier);
+	$fightrow["monsterfiredamage"] = floor($fightrow["monsterfiredamage"] * $multiplier);
+	$fightrow["monsterlightdamage"] = floor($fightrow["monsterlightdamage"] * $multiplier);
+    
+}
+
+function bonusdefense_pvp() {
+    
+    /***********
+    Description:    Chance to reduce incurred damage - PVP version.
+    Occurs:         Per Turn.
+    Applies To:     Player only.
+    Written By:     Anman.
+    ***********/
+    
+    global $userrow, $monsterrow, $fightrow;
+        
+    $first = $monsterrow["bonusdefense"] * 0.25;
+    $sec = $monsterrow["bonusdefense"] * 0.5;
+    $third = $monsterrow["bonusdefense"] * 0.75;
+    $rand = rand(0,100);
+    
+    if ($rand <= $first) { $multiplier = 0; } 
+    elseif ($rand <= $sec) { $multiplier = 0.25; } 
+    elseif ($rand <= $third) { $multiplier = 0.5; } 
+    elseif ($rand <= $monsterrow["bonusdefense"] && $rand > $third) { $multiplier = 0.75; } 
+    else { $multiplier = 1; }
+    
+	$fightrow["playerphysdamage"] = floor($fightrow["playerphysdamage"] * $multiplier);
+	$fightrow["playermagicdamage"] = floor($fightrow["playermagicdamage"] * $multiplier);
+	$fightrow["playerfiredamage"] = floor($fightrow["playerfiredamage"] * $multiplier);
+	$fightrow["playerlightdamage"] = floor($fightrow["playerlightdamage"] * $multiplier);
+    
+}
+
 ?>

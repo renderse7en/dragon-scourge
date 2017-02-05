@@ -13,15 +13,15 @@ donothing();
 function donothing() {
     
     global $userrow, $monsterrow, $fightrow;
-    $pvp = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp"));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1"));
     
     // Check if they need to accept challenge.
     if ($pvp["accepted"] == 0 && $pvp["player2id"] == $userrow["id"]) { challenged(); }
     
     // Check if challenge has been declined.
     if ($pvp["accepted"] == 2) { 
-        $query = doquery("UPDATE {{table}} SET currentpvp='0',currentaction='In Town' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
-        $query = doquery("DELETE FROM {{table}} WHERE id='".$pvp["id"]."' LIMIT 1", "pvp");
+        $query = doquery("UPDATE <<users>> SET currentpvp='0',currentaction='In Town' WHERE id='".$userrow["id"]."' LIMIT 1");
+        $query = doquery("DELETE FROM <<pvp>> WHERE id='".$pvp["id"]."' LIMIT 1");
         display("Duel Challenge", gettemplate("pvp_declined")); 
     }
     
@@ -39,9 +39,9 @@ function donothing() {
 function challenged() {
     
     global $userrow, $monsterrow, $fightrow;
-    $pvp = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp"));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1"));
     if ($pvp == false) { die("Location: index.php"); }
-    $newuserrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player1id"]."' LIMIT 1", "users"));
+    $newuserrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player1id"]."' LIMIT 1"));
     
     if ($newuserrow["charpicture"] != "") {
         $newuserrow["avatar"] = "<img src=\"".$newuserrow["charpicture"]."\" alt=\"".$newuserrow["charname"]."\" width=\"50\" height=\"50\" />";
@@ -51,14 +51,14 @@ function challenged() {
     
     if (isset($_POST["yes"])) { 
         
-        $query = doquery("UPDATE {{table}} SET accepted='1' WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp");
-        $query = doquery("UPDATE {{table}} SET currentaction='Duelling' WHERE id='".$pvp["player1id"]."' OR id='".$pvp["player2id"]."' LIMIT 2", "users");
+        $query = doquery("UPDATE <<pvp>> SET accepted='1' WHERE id='".$userrow["currentpvp"]."' LIMIT 1");
+        $query = doquery("UPDATE <<users>> SET currentaction='Duelling' WHERE id='".$pvp["player1id"]."' OR id='".$pvp["player2id"]."' LIMIT 2");
         dofight();
         
     } elseif (isset($_POST["no"])) {
         
-        $query = doquery("UPDATE {{table}} SET accepted='2',playerturn=player1id WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp");
-        $query = doquery("UPDATE {{table}} SET currentaction='In Town', currentpvp='0' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+        $query = doquery("UPDATE <<pvp>> SET accepted='2',playerturn=player1id WHERE id='".$userrow["currentpvp"]."' LIMIT 1");
+        $query = doquery("UPDATE <<users>> SET currentaction='In Town', currentpvp='0' WHERE id='".$userrow["id"]."' LIMIT 1");
         display("Duel Challenge",parsetemplate(gettemplate("pvp_decline"),$newuserrow));
     
     } else {
@@ -72,13 +72,13 @@ function challenged() {
 function dowait() {
     
     global $userrow, $monsterrow, $fightrow;
-    $pvp = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp"));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1"));
     
     // "monsterrow" now becomes the other player's character.
     if ($pvp["player1id"] == $userrow["id"]) { 
-        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player2id"]."' LIMIT 1", "users")); 
+        $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player2id"]."' LIMIT 1")); 
     } else {
-        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player1id"]."' LIMIT 1", "users")); 
+        $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player1id"]."' LIMIT 1")); 
     }
     
     $pagerow = array(
@@ -102,15 +102,15 @@ function dowait() {
 function dofight() {
     
     global $userrow, $monsterrow, $fightrow, $spells;
-    $pvp = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp"));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1"));
     
     // "monsterrow" now becomes the other player's character.
     if ($pvp["player1id"] == $userrow["id"]) { 
         $nextplayer = $pvp["player2id"];
-        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player2id"]."' LIMIT 1", "users")); 
+        $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player2id"]."' LIMIT 1")); 
     } else {
         $nextplayer = $pvp["player1id"];
-        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player1id"]."' LIMIT 1", "users")); 
+        $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player1id"]."' LIMIT 1")); 
     }
     
     if (isset($_POST["fight"])) {
@@ -120,7 +120,7 @@ function dofight() {
         updateopponent();
         
         $fightrowimploded = $fightrow["playerphysdamage"].",".$fightrow["playermagicdamage"].",".$fightrow["playerfiredamage"].",".$fightrow["playerlightdamage"].",".$fightrow["message"];
-        $query = doquery("UPDATE {{table}} SET fightrow='$fightrowimploded', playerturn='$nextplayer' WHERE id='".$pvp["id"]."' LIMIT 1", "pvp");
+        $query = doquery("UPDATE <<pvp>> SET fightrow='$fightrowimploded', playerturn='$nextplayer' WHERE id='".$pvp["id"]."' LIMIT 1");
         
         $pagerow = array(
             "message"=>$fightrow["message"],
@@ -156,7 +156,7 @@ function dofight() {
         updateopponent();
         
         $fightrowimploded = $fightrow["playerphysdamage"].",".$fightrow["playermagicdamage"].",".$fightrow["playerfiredamage"].",".$fightrow["playerlightdamage"].",".$fightrow["message"];
-        $query = doquery("UPDATE {{table}} SET fightrow='$fightrowimploded', playerturn='$nextplayer' WHERE id='".$pvp["id"]."' LIMIT 1", "pvp");   
+        $query = doquery("UPDATE <<pvp>> SET fightrow='$fightrowimploded', playerturn='$nextplayer' WHERE id='".$pvp["id"]."' LIMIT 1");   
         
         $pagerow = array(
             "message"=>$fightrow["message"],
@@ -255,7 +255,7 @@ function playerturn() {
         
     // Chance to make an excellent hit.
     $toexcellent = rand(0,150);
-    if ($toexcellent <= sqrt($userrow["strength"])) { 
+    if ($toexcellent <= sqrt($userrow["dexterity"])) { 
         $fightrow["playerphysdamage"] *= 2;
         $fightrow["playermagicdamage"] *= 2;
         $fightrow["playerfiredamage"] *= 2;
@@ -265,7 +265,7 @@ function playerturn() {
     
     // Chance for monster to dodge.
     $tododge = rand(0,200);
-    if ($tododge <= sqrt($monsterrow["physdefense"])) { 
+    if ($tododge <= sqrt($monsterrow["dexterity"])) { 
         $fightrow["playerphysdamage"] = 0;
         $fightrow["playermagicdamage"] = 0;
         $fightrow["playerfiredamage"] = 0;
@@ -274,6 +274,8 @@ function playerturn() {
     }
     
     // Now we add Per Turn mods.
+    bonusattack();
+    bonusdefense_pvp();
     hpleech("player");
     mpleech("player");
     
@@ -285,7 +287,7 @@ function playerturn() {
 function youwin() {
     
     global $userrow, $monsterrow, $fightrow;
-    $pvp = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp"));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1"));
     
     // "monsterrow" now becomes the other player's character.
     if ($pvp["player1id"] == $userrow["id"]) { 
@@ -299,6 +301,8 @@ function youwin() {
     $userrow["currentaction"] = "In Town";
     $userrow["currentfight"] = 0;
     $userrow["currentpvp"] = 0;
+    $userrow["bonusattack"] = 0;
+    $userrow["bonusdefense"] = 0;
     
     // Now we add Per Kill mods.
     hpgain();
@@ -311,7 +315,7 @@ function youwin() {
     updateopponent();
     updateuserrow();
     $fightrowimploded = $fightrow["playerphysdamage"].",".$fightrow["playermagicdamage"].",".$fightrow["playerfiredamage"].",".$fightrow["playerlightdamage"].",".$fightrow["message"];
-    $query = doquery("UPDATE {{table}} SET fightrow='$fightrowimploded', playerturn='$nextplayer' WHERE id='".$pvp["id"]."' LIMIT 1", "pvp");
+    $query = doquery("UPDATE <<pvp>> SET fightrow='$fightrowimploded', playerturn='$nextplayer' WHERE id='".$pvp["id"]."' LIMIT 1");
     
     // And we're done.
     $pagerow = array(
@@ -336,12 +340,12 @@ function youwin() {
 function youlose() {
     
     global $userrow, $monsterrow, $fightrow;
-    $pvp = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentpvp"]."' LIMIT 1", "pvp"));
+    $pvp = dorow(doquery("SELECT * FROM <<pvp>> WHERE id='".$userrow["currentpvp"]."' LIMIT 1""));
     
     if ($pvp["player1id"] == $userrow["id"]) { 
-        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player2id"]."' LIMIT 1", "users")); 
+        $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player2id"]."' LIMIT 1")); 
     } else {
-        $monsterrow = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$pvp["player1id"]."' LIMIT 1", "users")); 
+        $monsterrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$pvp["player1id"]."' LIMIT 1")); 
     }
     
     $tempfightrow = explode(",",$pvp["fightrow"]);
@@ -356,10 +360,12 @@ function youlose() {
     $userrow["currentfight"] = 0;
     $userrow["currentpvp"] = 0;
     $userrow["currenthp"] = ceil($userrow["maxhp"] / 4);
+    $userrow["bonusattack"] = 0;
+    $userrow["bonusdefense"] = 0;
     
     // Update.
     updateuserrow();
-    $query = doquery("DELETE FROM {{table}} WHERE id='".$pvp["id"]."' LIMIT 1", "pvp");
+    $query = doquery("DELETE FROM <<pvp>> WHERE id='".$pvp["id"]."' LIMIT 1");
     
     // And we're done.
     $pagerow = array(
@@ -391,7 +397,7 @@ function updateopponent() {
     }
     $querystring = rtrim($querystring, ",");
     
-    $query = doquery("UPDATE {{table}} SET $querystring WHERE id='".$monsterrow["id"]."' LIMIT 1", "users");
+    $query = doquery("UPDATE <<users>> SET $querystring WHERE id='".$monsterrow["id"]."' LIMIT 1");
     
 }
 

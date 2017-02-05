@@ -1,6 +1,22 @@
 DRAGON SCOURGE
 Changelog
 
+***** BETA FOUR *****
+
+8.09.2006 - Build 17 (Haiku):
+- Moved stylesheets into .css files.
+- Added javascript tooltips for the class info when creating a new character.
+- Changed doquery() format - rewrote all calls to this function to match the new format.
+- Various changes to the structure of lib.php.
+- Implemented Anman's increased attack and defense spells (Blessed Strike & Stone Skin).
+- Fixed class display in profile view.
+- Began admin control panel.
+- Various little bitty fixes.
+- You can no longer gamble 0 gold.
+- Added new level stat type: life.
+- Monsters can now do excellent hits, and you can now dodge monsters.
+- Removed several columns from controlrow that are no longer used.
+
 ***** BETA THREE *****
 
 4.26.2006 - Build 16 (Road Rage):

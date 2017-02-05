@@ -3,7 +3,7 @@
 include("lib.php");
 include("globals.php");
 
-$story = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$userrow["story"]."' LIMIT 1", "story"));
+$story = dorow(doquery("SELECT * FROM <<story>> WHERE id='".$userrow["story"]."' LIMIT 1"));
 
 // Decide which type of story to run.
 if ($story["targetmonster"] != "0") { storymonster(); }
@@ -17,7 +17,7 @@ function storyteleport() { // Sends to a new location, or just displays a chunk 
     if (isset($_POST["submit"])) {
         
         if ($story["nextstory"] != "0") { 
-            $nextstory = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$story["nextstory"]."' LIMIT 1", "story"));
+            $nextstory = dorow(doquery("SELECT * FROM <<story>> WHERE id='".$story["nextstory"]."' LIMIT 1"));
             $userrow["story"] = $nextstory["id"];
             $userrow["storylat"] = $nextstory["latitude"];
             $userrow["storylon"] = $nextstory["longitude"];
@@ -41,7 +41,7 @@ function storyteleport() { // Sends to a new location, or just displays a chunk 
     
     $story["reward"] = "";
     if ($story["rewardname"] != "") {
-        $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+        $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
         foreach($premodrow as $a=>$b) {
                 $modrow[$b["fieldname"]] = $b;
         }
@@ -62,9 +62,9 @@ function storymonster() {
     
     if (isset($_POST["submit"])) {
         
-        $monster = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$story["targetmonster"]."' LIMIT 1", "monsters"));
+        $monster = dorow(doquery("SELECT * FROM <<monsters>> WHERE id='".$story["targetmonster"]."' LIMIT 1"));
         $querystring = "currentmonsterid='".$monster["id"]."', currentmonsterhp='".(ceil(rand($monster["maxhp"] * .75, $monster["maxhp"]) * $userrow["difficulty"]))."', currentaction='Fighting'";
-        $update = doquery("UPDATE {{table}} SET $querystring WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+        $update = doquery("UPDATE <<users>> SET $querystring WHERE id='".$userrow["id"]."' LIMIT 1");
         die(header("Location: fight.php"));
         
     }
@@ -78,23 +78,23 @@ function storyitem() {
     
     global $userrow, $story;
     
-    $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+    $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
     foreach($premodrow as $a=>$b) {
             $modrow[$b["fieldname"]] = $b;
     }
     
     $thenewitem = explode(",",$story["targetitem"]);
-    $newitem = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$thenewitem[1]."' LIMIT 1", "itembase"));
-    $newprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$thenewitem[0]."' LIMIT 1", "itemprefixes"));
-    $newsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$thenewitem[2]."' LIMIT 1", "itemsuffixes"));
+    $newitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='".$thenewitem[1]."' LIMIT 1"));
+    $newprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='".$thenewitem[0]."' LIMIT 1"));
+    $newsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='".$thenewitem[2]."' LIMIT 1"));
     $newfullitem = builditem($newprefix, $newitem, $newsuffix, $modrow);
     $story["itemtable"] = parsetemplate(gettemplate("explore_drop_itemrow"), $newfullitem);
     
     if ($userrow["item".$newitem["slotnumber"]."idstring"] != "0") {
         $theolditem = explode(",",$userrow["item".$newitem["slotnumber"]."idstring"]);
-        $olditem = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$theolditem[1]."' LIMIT 1", "itembase"));
-        $oldprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$theolditem[0]."' LIMIT 1", "itemprefixes"));
-        $oldsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$theolditem[2]."' LIMIT 1", "itemsuffixes"));
+        $olditem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='".$theolditem[1]."' LIMIT 1"));
+        $oldprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='".$theolditem[0]."' LIMIT 1"));
+        $oldsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='".$theolditem[2]."' LIMIT 1"));
         $oldfullitem = builditem($oldprefix, $olditem, $oldsuffix, $modrow);
         $story["olditems"] = parsetemplate(gettemplate("town_buy_olditemrow"), $oldfullitem);
     } else {
@@ -142,7 +142,7 @@ function storyitem() {
         }
         
         if ($story["nextstory"] != "0") { 
-            $nextstory = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$story["nextstory"]."' LIMIT 1", "story"));
+            $nextstory = dorow(doquery("SELECT * FROM <<story>> WHERE id='".$story["nextstory"]."' LIMIT 1"));
             $userrow["story"] = $nextstory["id"];
             $userrow["storylat"] = $nextstory["latitude"];
             $userrow["storylon"] = $nextstory["longitude"];
@@ -167,7 +167,7 @@ function storyitem() {
     if (isset($_POST["noitem"])) {
         
         if ($story["nextstory"] != "0") { 
-            $nextstory = dorow(doquery("SELECT * FROM {{table}} WHERE id='".$story["nextstory"]."' LIMIT 1", "story"));
+            $nextstory = dorow(doquery("SELECT * FROM <<story>> WHERE id='".$story["nextstory"]."' LIMIT 1"));
             $userrow["story"] = $nextstory["id"];
             $userrow["storylat"] = $nextstory["latitude"];
             $userrow["storylon"] = $nextstory["longitude"];
@@ -191,7 +191,7 @@ function storyitem() {
     
     $story["reward"] = "";
     if ($story["rewardname"] != "") {
-        $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+        $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
         foreach($premodrow as $a=>$b) {
                 $modrow[$b["fieldname"]] = $b;
         }

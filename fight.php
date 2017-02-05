@@ -10,7 +10,7 @@ if ($userrow["currentaction"] != "Fighting") { die(header("Location: index.php")
 
 // Global monsterrow.
 if($userrow["currentmonsterid"] != 0) {
-    $monsterquery = doquery("SELECT * FROM {{table}} WHERE id='".$userrow["currentmonsterid"]."' LIMIT 1", "monsters");
+    $monsterquery = doquery("SELECT * FROM <<monsters>> WHERE id='".$userrow["currentmonsterid"]."' LIMIT 1");
     $monsterrow = dorow($monsterquery);
 } else {
     rollmonster();
@@ -26,7 +26,7 @@ function rollmonster() {
     if($userrow["longitude"] < 0) { $longitude = $userrow["longitude"] * -1; } else { $longitude = $userrow["longitude"]; }
     $maxlevel = ceil(max($latitude, $longitude) / 5);
     $minlevel = $maxlevel - 3;
-    $monsterquery = doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' AND level >= $minlevel AND level <= $maxlevel ORDER BY RAND() LIMIT 1", "monsters");
+    $monsterquery = doquery("SELECT * FROM <<monsters>> WHERE world='".$userrow["world"]."' AND level >= $minlevel AND level <= $maxlevel ORDER BY RAND() LIMIT 1");
     $monsterrow = dorow($monsterquery);
     
     $userrow["currentmonsterhp"] = (ceil(rand($monsterrow["maxhp"] * .75, $monsterrow["maxhp"]) * $userrow["difficulty"]));
@@ -98,7 +98,7 @@ function dofight() {
     
     } elseif (isset($_POST["run"])) {
         
-        if (rand(4,10) + ceil(sqrt($userrow["physdefense"])) < (rand(1,5) + ceil(sqrt($monsterrow["physattack"])))) {
+        if (rand(4,10) + ceil(sqrt($userrow["dexterity"])) < (rand(1,5) + ceil(sqrt((0.75 * $monsterrow["physattack"]))))) {
             
             monsterturn();
             $fightrow["message"] = "You tried to run away, but the monster blocked you!<br />";
@@ -126,7 +126,7 @@ function dofight() {
         
     } else {
         
-        if (rand(1,10) + ceil(sqrt($userrow["physdefense"])) < (rand(1,7) + ceil(sqrt($monsterrow["physattack"])))) {
+        if (rand(1,10) + ceil(sqrt($userrow["dexterity"])) < (rand(1,7) + ceil(sqrt((0.75 * $monsterrow["physattack"]))))) {
  
             monsterturn();
             $fightrow["message"] = "The monster attacked before you were ready!<br />";
@@ -187,7 +187,7 @@ function playerturn() {
     
     // Chance to make an excellent hit.
     $toexcellent = rand(0,150);
-    if ($toexcellent <= sqrt($userrow["strength"])) { 
+    if ($toexcellent <= sqrt($userrow["dexterity"])) { 
         $fightrow["playerphysdamage"] *= 2;
         $fightrow["playermagicdamage"] *= 2;
         $fightrow["playerfiredamage"] *= 2;
@@ -206,6 +206,7 @@ function playerturn() {
     }
     
     // Now we add Per Turn mods.
+    bonusattack();
     hpleech("player");
     mpleech("player");
     
@@ -242,7 +243,28 @@ function monsterturn() {
         $fightrow["monsterlightdamage"] = max($lighthit - $lightblock, 0);
     }
     
+    // Chance to make an excellent hit.
+    $toexcellent = rand(0,150);
+    if ($toexcellent <= sqrt($monsterrow["dexterity"])) { 
+        $fightrow["monsterphysdamage"] *= 2;
+        $fightrow["monstermagicdamage"] *= 2;
+        $fightrow["monsterfiredamage"] *= 2;
+        $fightrow["monsterlightdamage"] *= 2;
+        $fightrow["message"] = "<b>Excellent hit!</b><br />"; 
+    }
+    
+    // Chance for player to dodge.
+    $tododge = rand(0,200);
+    if ($tododge <= sqrt($userrow["physdefense"])) { 
+        $fightrow["monsterphysdamage"] = 0;
+        $fightrow["monstermagicdamage"] = 0;
+        $fightrow["monsterfiredamage"] = 0;
+        $fightrow["monsterlightdamage"] = 0;
+        $fightrow["message"] = "<b>You dodged the monster's hit!</b><br />"; 
+    }
+    
     // Now we add Per Turn mods.
+    bonusdefense();
     hpleech("monster");
     
     // Subtract all damage from player's hp.
@@ -267,6 +289,8 @@ function youwin() {
     if ($monsterrow["newstory"] != "0") {
         $userrow["story"] = $monsterrow["newstory"];
     }
+    $userrow["bonusattack"] = 0;
+    $userrow["bonusdefense"] = 0;
     
     // Now we add Per Kill mods.
     hpgain();
@@ -288,9 +312,9 @@ function youwin() {
     if (rand(0,7) == 1) {
         
         // Grab lots of stuff from the DB.
-        $preitemsrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel>='".($userrow["level"] - 5)."' AND reqlevel<='".$userrow["level"]."' AND willdrop='1' ORDER BY RAND() LIMIT 1", "itembase"));
-        $preprefixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemprefixes"));
-        $presuffixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemsuffixes"));
+        $preitemsrow = dorow(doquery("SELECT * FROM <<itembase>> WHERE reqlevel>='".($userrow["level"] - 5)."' AND reqlevel<='".$userrow["level"]."' AND willdrop='1' ORDER BY RAND() LIMIT 1", "itembase"));
+        $preprefixrow = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemprefixes"));
+        $presuffixrow = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemsuffixes"));
         
         $idstring = "";
         if (rand(0,4)==1) { $idstring .= $preprefixrow["id"] . ","; } else { $idstring .= "0,"; }
@@ -351,7 +375,7 @@ function youlose() {
         "deathpenalty"=>$userrow["deathpenalty"]);
         
     // Then put them in town & reset fight stuff.
-    $townrow = dorow(doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1", "towns"));
+    $townrow = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1"));
     $userrow["latitude"] = $townrow["latitude"];
     $userrow["longitude"] = $townrow["longitude"];
     $userrow["currentaction"] = "In Town";
@@ -359,6 +383,8 @@ function youlose() {
     $userrow["currentmonsterid"] = 0;
     $userrow["currentmonsterhp"] = 0;
     $userrow["currenthp"] = ceil($userrow["maxhp"] / 4);
+    $userrow["bonusattack"] = 0;
+    $userrow["bonusdefense"] = 0;
     
     // Update.
     updateuserrow();

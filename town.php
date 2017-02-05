@@ -7,7 +7,7 @@ if ($townrow == false) { die(header("Location: index.php")); }
 function dotown() { // Default town screen.
     
     global $userrow;
-    $newpm = doquery("SELECT * FROM {{table}} WHERE recipientid='".$userrow["id"]."' AND status='0'", "messages");
+    $newpm = doquery("SELECT * FROM <<messages>> WHERE recipientid='".$userrow["id"]."' AND status='0'");
     if (mysql_num_rows($newpm) > 0) {
         $row["unread"] = "<b>(".mysql_num_rows($newpm)." new)</b>";
     } else {
@@ -32,7 +32,7 @@ function inn() { // Resting at the inn restores hp/mp/tp.
         $userrow["currentmp"] = $userrow["maxmp"];
         $userrow["currenttp"] = $userrow["maxtp"];
         $userrow["gold"] -= $townrow["innprice"];
-        $query = doquery("UPDATE {{table}} SET currenthp='".$userrow["maxhp"]."', currentmp='".$userrow["maxmp"]."', currenttp='".$userrow["maxtp"]."', gold='".$userrow["gold"]."' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+        $query = doquery("UPDATE <<users>> SET currenthp='".$userrow["maxhp"]."', currentmp='".$userrow["maxmp"]."', currenttp='".$userrow["maxtp"]."', gold='".$userrow["gold"]."' WHERE id='".$userrow["id"]."' LIMIT 1");
         display("Rest at the Inn", gettemplate("town_inn2"));
         
     } elseif (isset($_POST["abortmission"])) { die(header("Location: index.php")); }
@@ -47,7 +47,7 @@ function map() { // Buy maps to towns for the Travel To menu.
     
     if (isset($_POST["three"])) {
 
-        $townquery = doquery("SELECT * FROM {{table}} WHERE id='".$_POST["id"]."' LIMIT 1", "towns");
+        $townquery = doquery("SELECT * FROM <<towns>> WHERE id='".$_POST["id"]."' LIMIT 1");
         $townrow = dorow($townquery);
         
         if ($userrow["gold"] < $townrow["mapprice"]) { err("You do not have enough gold to buy this map. Please <a href=\"index.php\">go back</a> and try again."); }
@@ -55,7 +55,7 @@ function map() { // Buy maps to towns for the Travel To menu.
         if ($townrow != false) {
             $userrow["townslist"] .= "," . $townrow["id"];
             $userrow["gold"] -= $townrow["mapprice"];
-            $query = doquery("UPDATE {{table}} SET townslist='".$userrow["townslist"]."', gold='".$userrow["gold"]."' WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+            $query = doquery("UPDATE <<users>> SET townslist='".$userrow["townslist"]."', gold='".$userrow["gold"]."' WHERE id='".$userrow["id"]."' LIMIT 1");
             display("Buy Maps", gettemplate("town_map3"));
         } else {
             err("Invalid action. Please <a href=\"index.php\">go back</a> and try again.");
@@ -63,7 +63,7 @@ function map() { // Buy maps to towns for the Travel To menu.
         
     } elseif (isset($_POST["two"])) {
         
-        $townquery = doquery("SELECT * FROM {{table}} WHERE name='".$_POST["two"]."' LIMIT 1", "towns");
+        $townquery = doquery("SELECT * FROM <<towns>> WHERE name='".$_POST["two"]."' LIMIT 1");
         $townrow = dorow($townquery);
         
         if ($userrow["gold"] < $townrow["mapprice"]) { err("You do not have enough gold to buy this map. Please <a href=\"index.php\">go back</a> and try again."); }
@@ -76,7 +76,7 @@ function map() { // Buy maps to towns for the Travel To menu.
         
     } else {
     
-        $townquery = doquery("SELECT * FROM {{table}} WHERE world='".$userrow["world"]."' ORDER BY id", "towns");
+        $townquery = doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' ORDER BY id");
         $townrow = dorow($townquery);
         $townslist = explode(",",$userrow["townslist"]);
         
@@ -116,10 +116,10 @@ function buy() { // Buy items from merchants.
         foreach($idstring as $a=>$b) { if(!is_numeric($b)) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); } }
         
         // Get database info on new item.
-        $newbaseitem = dorow(doquery("SELECT * FROM {{table}} WHERE id='$idstring[1]' LIMIT 1", "itembase"));
-        $newprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$idstring[0]' LIMIT 1", "itemprefixes"));
-        $newsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$idstring[2]' LIMIT 1", "itemsuffixes"));
-        $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+        $newbaseitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='$idstring[1]' LIMIT 1"));
+        $newprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='$idstring[0]' LIMIT 1"));
+        $newsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='$idstring[2]' LIMIT 1"));
+        $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
         
         // Format the mod name row.
         foreach($premodrow as $a=>$b) {
@@ -132,9 +132,9 @@ function buy() { // Buy items from merchants.
         if ($userrow["item" . $newbaseitem["slotnumber"] . "idstring"] != "0") {
             
             $oldidstring = explode(",",$userrow["item" . $newbaseitem["slotnumber"] . "idstring"]);
-            $oldbaseitem = dorow(doquery("SELECT * FROM {{table}} WHERE id='$oldidstring[1]' LIMIT 1", "itembase"));
-            $oldprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$oldidstring[0]' LIMIT 1", "itemprefixes"));
-            $oldsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$oldidstring[2]' LIMIT 1", "itemsuffixes"));
+            $oldbaseitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='$oldidstring[1]' LIMIT 1"));
+            $oldprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='$oldidstring[0]' LIMIT 1"));
+            $oldsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='$oldidstring[2]' LIMIT 1"));
             $oldfullitem = builditem($oldprefix, $oldbaseitem, $oldsuffix, $modrow);
             
         } else { $oldfullitem = false; $oldprefix = false; $oldsuffix = false; }
@@ -189,10 +189,10 @@ function buy() { // Buy items from merchants.
         foreach($idstring as $a=>$b) { if(!is_numeric($b)) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); } }
         
         // Get database info on new item.
-        $newbaseitem = dorow(doquery("SELECT * FROM {{table}} WHERE id='$idstring[1]' LIMIT 1", "itembase"));
-        $newprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$idstring[0]' LIMIT 1", "itemprefixes"));
-        $newsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$idstring[2]' LIMIT 1", "itemsuffixes"));
-        $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+        $newbaseitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='$idstring[1]' LIMIT 1"));
+        $newprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='$idstring[0]' LIMIT 1"));
+        $newsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='$idstring[2]' LIMIT 1"));
+        $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
         
         // Format the mod name row.
         foreach($premodrow as $a=>$b) {
@@ -205,9 +205,9 @@ function buy() { // Buy items from merchants.
         if ($userrow["item" . $newbaseitem["slotnumber"] . "idstring"] != "0") {
             
             $oldidstring = explode(",",$userrow["item" . $newbaseitem["slotnumber"] . "idstring"]);
-            $oldbaseitem = dorow(doquery("SELECT * FROM {{table}} WHERE id='$oldidstring[1]' LIMIT 1", "itembase"));
-            $oldprefix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$oldidstring[0]' LIMIT 1", "itemprefixes"));
-            $oldsuffix = dorow(doquery("SELECT * FROM {{table}} WHERE id='$oldidstring[2]' LIMIT 1", "itemsuffixes"));
+            $oldbaseitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='$oldidstring[1]' LIMIT 1"));
+            $oldprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='$oldidstring[0]' LIMIT 1"));
+            $oldsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='$oldidstring[2]' LIMIT 1"));
             $oldfullitem = builditem($oldprefix, $oldbaseitem, $oldsuffix, $modrow);
             
         } else { $oldfullitem = false; }
@@ -232,13 +232,13 @@ function buy() { // Buy items from merchants.
     } else {
         
         // Grab lots of stuff from the DB.
-        $preitemsrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel>='".$townrow["itemminlvl"]."' AND reqlevel<='".$townrow["itemmaxlvl"]."' ORDER BY RAND() LIMIT 10 ", "itembase"));
-        $preprefixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."'", "itemprefixes"));
-        $presuffixrow = dorow(doquery("SELECT * FROM {{table}} WHERE reqlevel<='".$userrow["level"]."'", "itemsuffixes"));
-        $allitemsrow = dorow(doquery("SELECT * FROM {{table}}", "itembase"));
-        $allprefixrow = dorow(doquery("SELECT * FROM {{table}}", "itemprefixes"));
-        $allsuffixrow = dorow(doquery("SELECT * FROM {{table}}", "itemsuffixes"));
-        $premodrow = dorow(doquery("SELECT * FROM {{table}} ORDER BY id","itemmodnames"));
+        $preitemsrow = dorow(doquery("SELECT * FROM <<itembase>> WHERE reqlevel>='".$townrow["itemminlvl"]."' AND reqlevel<='".$townrow["itemmaxlvl"]."' ORDER BY RAND() LIMIT 10"));
+        $preprefixrow = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE reqlevel<='".$userrow["level"]."'"));
+        $presuffixrow = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE reqlevel<='".$userrow["level"]."'"));
+        $allitemsrow = dorow(doquery("SELECT * FROM <<itembase>>"));
+        $allprefixrow = dorow(doquery("SELECT * FROM <<itemprefixes>>"));
+        $allsuffixrow = dorow(doquery("SELECT * FROM <<itemsuffixes>>"));
+        $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
         
         // Format the rows.
         foreach($allitemsrow as $a=>$b) {
@@ -306,7 +306,7 @@ function gamble() {
         // Bet amount errors.
         if (trim($amount) == "") { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
         if (!is_numeric($amount)) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
-        if ($amount < 0) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
+        if ($amount <= 0) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
         if ($userrow["gold"] < $amount) { err("Invalid bet amount. Please <a href=\"index.php?do=gamble\">go back</a> and try again."); }
         
         if ($mode == "hard") {
@@ -316,11 +316,11 @@ function gamble() {
 
             if ($thecup == $thewin) {
                 $userrow["gold"] += ($amount * 10);
-                doquery("UPDATE {{table}} SET gold=gold+($amount * 10) WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                doquery("UPDATE <<users>> SET gold=gold+($amount * 10) WHERE id='".$userrow["id"]."' LIMIT 1");
                 display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 10)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             } else {
                 $userrow["gold"] -= $amount;
-                doquery("UPDATE {{table}} SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                doquery("UPDATE <<users>> SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1");
                 display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble&mode=hard\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             }
             
@@ -333,11 +333,11 @@ function gamble() {
 
             if ($thecup == $thewin) {
                 $userrow["gold"] += ($amount * 2);
-                doquery("UPDATE {{table}} SET gold=gold+($amount * 2) WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                doquery("UPDATE <<users>> SET gold=gold+($amount * 2) WHERE id='".$userrow["id"]."' LIMIT 1");
                 display("Gamble", "You won!<br /><br />You just picked up <b>".($amount * 2)." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             } else {
                 $userrow["gold"] -= $amount;
-                doquery("UPDATE {{table}} SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1", "users");
+                doquery("UPDATE <<users>> SET gold=gold-$amount WHERE id='".$userrow["id"]."' LIMIT 1");
                 display("Gamble", "You lost!<br /><br />Sorry buddy, but we're gonna have to take your <b>".$amount." Gold</b>.<br /><br />Care to <a href=\"index.php?do=gamble\">try again</a> or would you rather go back to <a href=\"index.php\">town</a>?");
             }
             
@@ -425,7 +425,7 @@ function bank() {
 
 function halloffame() {
     
-    $top = dorow(doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM {{table}} ORDER BY experience DESC LIMIT 25", "users"), "id");
+    $top = dorow(doquery("SELECT *, DATE_FORMAT(birthdate, '%m.%d.%Y') AS fregdate FROM <<users>> ORDER BY experience DESC LIMIT 25"), "id");
     $row["halltable"] = "";
     $i = 1;
     
@@ -455,7 +455,7 @@ function duel() {
     
     global $userrow;
     
-    $row = dorow(doquery("SELECT * FROM {{table}} WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' AND id !='".$userrow["id"]."' ORDER BY id", "users"), "id");
+    $row = dorow(doquery("SELECT * FROM <<users>> WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' AND id !='".$userrow["id"]."' ORDER BY id"), "id");
     
     $list = "";
     if ($row == false) {
@@ -483,7 +483,7 @@ function duelchallenge() {
     if(isset($_GET["uid"])) {
         if (!is_numeric($_GET["uid"])) { err("Invalid UID."); }
         if ($_GET["uid"] == $userrow["id"]) { err("You cannot duel yourself."); }
-        $newuserrow = dorow(doquery("SELECT *,UNIX_TIMESTAMP(onlinetime) as fonlinetime FROM {{table}} WHERE id='".$_GET["uid"]."' LIMIT 1", "users"));
+        $newuserrow = dorow(doquery("SELECT *,UNIX_TIMESTAMP(onlinetime) as fonlinetime FROM <<users>> WHERE id='".$_GET["uid"]."' LIMIT 1"));
         if ($newuserrow == false) { err("That user doesn't exist."); }
         if ($newuserrow["account"] == $userrow["account"]) { err("You cannot duel another character on your own account."); }
         if ($newuserrow["fonlinetime"] <= (time() - 600)) { err("That user is not online."); }
@@ -492,8 +492,8 @@ function duelchallenge() {
     } else { err("Invalid UID."); }
     
     // No errors, so create the PVP record and update everyone's userrow.
-    $query = doquery("INSERT INTO {{table}} SET id='',player1id='".$userrow["id"]."',player2id='".$newuserrow["id"]."',player1name='".$userrow["charname"]."',player2name='".$newuserrow["charname"]."',playerturn='".$newuserrow["id"]."',turntime=NOW(),fightrow=''","pvp");
-    $query2 = doquery("UPDATE {{table}} SET currentpvp='".mysql_insert_id()."' WHERE id='".$newuserrow["id"]."' OR id='".$userrow["id"]."' LIMIT 2", "users");
+    $query = doquery("INSERT INTO <<pvp>> SET id='',player1id='".$userrow["id"]."',player2id='".$newuserrow["id"]."',player1name='".$userrow["charname"]."',player2name='".$newuserrow["charname"]."',playerturn='".$newuserrow["id"]."',turntime=NOW(),fightrow=''");
+    $query2 = doquery("UPDATE <<users>> SET currentpvp='".mysql_insert_id()."' WHERE id='".$newuserrow["id"]."' OR id='".$userrow["id"]."' LIMIT 2");
     display("Duel Challenge",parsetemplate(gettemplate("pvp_challenge"),$newuserrow));
     
 }

@@ -61,7 +61,7 @@ THEVERYENDOFYOU;
     $townstring .= ") AND world='".$userrow["world"]."'";
     
     // Then we do the query.
-    $traveltoquery = dorow(doquery("SELECT id,name FROM {{table}} WHERE $townstring ORDER BY id", "towns"), "id");
+    $traveltoquery = dorow(doquery("SELECT id,name FROM <<towns>> WHERE $townstring ORDER BY id"), "id");
     
     // Finally we build the link list.
     foreach ($traveltoquery as $a => $b) {
@@ -82,13 +82,13 @@ function panelright() {
     // Babblebox.
     if ($controlrow["showshout"] == 1) {
         $row["babblebox"] = "<div class=\"big\"><b>Babblebox</b></div>";
-        $row["babblebox"] .= "<iframe src=\"index.php?do=babblebox\" name=\"sbox\" width=\"100%\" height=\"200\" frameborder=\"0\" id=\"bbox\">Your browser does not support inline frames! The Babble Box will not be available until you upgrade to a newer <a href=\"http://www.mozilla.org\" target=\"_new\">browser</a>.</iframe>";
+        $row["babblebox"] .= "<iframe src=\"index.php?do=babblebox\" name=\"sbox\" width=\"100%\" height=\"200\" frameborder=\"0\" id=\"bbox\">Your browser does not support inline frames! The Babble Box will not be available until you upgrade to a newer <a href=\"http://www.mozilla.org\" target=\"_new\">browser</a>.</iframe><br /><br />";
     }
     
     // Who's Online.
     if ($controlrow["showonline"] == 1) {
         $row["whosonline"] = "<div class=\"big\"><b>Who's Online</b></div>";
-        $users = dorow(doquery("SELECT * FROM {{table}} WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."'", "users"), "id");
+        $users = dorow(doquery("SELECT * FROM <<users>> WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."'"), "id");
         $number = count($users);
         $row["whosonline"] .= "There are <b>$number</b> user(s) online within the last 10 minutes: ";
         foreach ($users as $a => $b) {
@@ -113,7 +113,7 @@ function paneltop($loggedin = true) {
     if ($loggedin == true || isset($acctrow)) {
         
         if ($userrow == false) { $userrow["charname"] = "No Characters Yet"; $userrow["guild"] = 0; }
-        if ($acctrow["authlevel"] == 2) { $admin = " (<a href=\"admin/index.php\">Admin</a>)"; } else { $admin = ""; }
+        if ($acctrow["authlevel"] == 255) { $admin = " (<a href=\"admin/index.php\">Admin</a>)"; } else { $admin = ""; }
         if ($userrow["guild"] != 0) { 
             $charname = "[<span style=\"color: ".$userrow["tagcolor"].";\">".$userrow["guildtag"]."</span>]<span style=\"color: ".$userrow["namecolor"].";\">".$userrow["charname"]."</span>";
         } else { 

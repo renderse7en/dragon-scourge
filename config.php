@@ -5,7 +5,7 @@ $dbsettings = Array(
         "user"          => "",          // MySQL username.
         "pass"          => "",      // MySQL password.
         "name"          => "",           // MySQL database name.
-        "prefix"        => "",            // Prefix for table names.
+        "prefix"        => "sx",            // Prefix for table names.
         "secretword"    => ""); // Secret word used when hashing information for cookies.
         
 ?>

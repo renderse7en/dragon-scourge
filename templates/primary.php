@@ -14,21 +14,10 @@ Thank you.
 $template = <<<END
 <head>
 <title>{{gamename}} :: {{pagetitle}}</title>
+<link rel="stylesheet" href="css/primary.css" type="text/css" />
+<script type="text/javascript" src="scripts/tooltip.js"></script>
 <style type="text/css">
-body { font: 10px Verdana; background-image: url(images/{{background}}.jpg); padding: 0px; }
-table { font: 10px Verdana; }
-td { vertical-align: top; }
-input { font: 10px Verdana; }
-img { border-style: none; }
-a { color: #996600; text-decoration: none; font-weight: bold; }
-a:hover { color: #663300; }
-.main { border: solid 1px black; }
-.grey { color: #999999; }
-.red { color: #ff0000; }
-.blue { color: #0000ff; }
-.big { font: 11px Verdana; background-color: #dddddd; border: solid 1px #aaaaaa; padding: 2px; margin-bottom: 3px; }
-.babble1 { background-color: #eeeeee; font: 10px Verdana; margin: 0px; padding: 2px; }
-.babble2 { background-color: #ffffff; font: 10px Verdana; margin: 0px; padding: 2px; }
+body { background-image: url(images/{{background}}.jpg); }
 </style>
 </head>
 <body><center>
@@ -63,21 +52,6 @@ a:hover { color: #663300; }
     <td colspan="3" style="border-top: solid 1px #cccccc;">{{bottomnav}}</td>
   </tr>
 </table>
-<table cellspacing="0" cellpadding="3" style="width: 800px; border: solid 1px black; background-color: white; margin-top: 2px;">
-  <tr>
-    <td width="40%">
-    Version <a href="index.php?do=version">{{version}}</a> / {{numqueries}} Queries / {{totaltime}} Seconds
-    </td>
-    <td width="20%" style="text-align: center;">
-    {{forumslink}}
-    </td>
-    <td width="40%" style="text-align:right;">
-    <a href="http://www.dragonscourge.com">Dragon Scourge</a> &copy; by <a href="http://www.renderse7en.com">renderse7en</a>
-    </td>
-  </tr>
-</table>
-</center></body>
-</html>
 END;
 
 ?>

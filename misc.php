@@ -3,7 +3,7 @@
 function iddqd() { 
     
     global $acctrow;
-    doquery("UPDATE {{table}} SET extra1='1' WHERE id='".$acctrow["id"]."' LIMIT 1", "accounts");
+    doquery("UPDATE <<accounts>> SET extra1='1' WHERE id='".$acctrow["id"]."' LIMIT 1");
     $page = "\"Please don't take everything I say so seriously.\"<br /><i><a href=\"http://www.nin.com\">---Trent Reznor</a></i>";
     display("LMFAO!", $page);
     
@@ -49,14 +49,14 @@ function babblebox2() {
         
         // Add new shout.
         if (trim($_POST["babble"]) != "") { 
-            $insert = doquery("INSERT INTO {{table}} SET id='', posttime=NOW(), charid='".$userrow["id"]."', charname='".$userrow["charname"]."', content='".$_POST["babble"]."' $g2", "babblebox");
+            $insert = doquery("INSERT INTO <<babblebox>> SET id='', posttime=NOW(), charid='".$userrow["id"]."', charname='".$userrow["charname"]."', content='".$_POST["babble"]."' $g2");
         }
         
         // Only keep 20 shouts in DB at any one time.
-        $check = doquery("SELECT * FROM {{table}} $g", "babblebox");
+        $check = doquery("SELECT * FROM <<babblebox>> $g");
         if (mysql_num_rows($check) > 20) {
-            $delete1 = dorow(doquery("SELECT id FROM {{table}} $g ORDER BY id LIMIT 1", "babblebox"));
-            $delete2 = doquery("DELETE FROM {{table}} WHERE id='".$delete1["id"]."' LIMIT 1", "babblebox");
+            $delete1 = dorow(doquery("SELECT id FROM <<babblebox>> $g ORDER BY id LIMIT 1"));
+            $delete2 = doquery("DELETE FROM <<babblebox>> WHERE id='".$delete1["id"]."' LIMIT 1");
         }
         
         // And we're done.
@@ -64,7 +64,7 @@ function babblebox2() {
         
     }
     
-    $shouts = dorow(doquery("SELECT * FROM {{table}} $g ORDER BY id LIMIT 20", "babblebox"), "id");
+    $shouts = dorow(doquery("SELECT * FROM <<babblebox>> $g ORDER BY id LIMIT 20"), "id");
     $row["shouts"] = "";
     $background = 1;
     if ($shouts != false) {

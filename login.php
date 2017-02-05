@@ -18,7 +18,7 @@ function login() {
         // Setup.
         include("config.php");
         extract($_POST);
-        $query = doquery("SELECT * FROM {{table}} WHERE username='$username' LIMIT 1", "accounts");
+        $query = doquery("SELECT * FROM <<accounts>> WHERE username='$username' LIMIT 1");
         $row = dorow($query);
         
         // Errors.

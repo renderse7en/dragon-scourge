@@ -12,7 +12,7 @@ function checkcookies() {
         // {ID} {USERNAME} {PASSWORDHASH} {REMEMBERME}
         $theuser = explode(" ",$_COOKIE["scourge"]);
         if (!is_numeric($theuser[0])) { err("Invalid cookie data (Error 0). Please clear cookies and log in again."); }
-        $row = dorow(doquery("SELECT * FROM {{table}} WHERE username='$theuser[1]' LIMIT 1", "accounts"));
+        $row = dorow(doquery("SELECT * FROM <<accounts>> WHERE username='$theuser[1]' LIMIT 1"));
         if ($row == false) { err("Invalid cookie data (Error 1). Please clear cookies and log in again."); }
         if ($row["id"] != $theuser[0]) { err("Invalid cookie data (Error 2). Please clear cookies and log in again."); }
         if (md5($row["password"] . "--" . $dbsettings["secretword"]) !== $theuser[2]) { err("Invalid cookie data (Error 3). Please clear cookies and log in again."); }

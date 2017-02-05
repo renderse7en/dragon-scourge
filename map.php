@@ -7,7 +7,7 @@ $perpix = 500 / ($worldrow["size"] * 2);
 $text = "&";
 
 // First do towns.
-$towns = dorow(doquery("SELECT * FROM {{table}} WHERE world='".$worldrow["id"]."'", "towns"));
+$towns = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$worldrow["id"]."'"));
 $text .= "towns=".sizeof($towns)."&";
 $count = 0;
 foreach($towns as $a=>$b) {
@@ -31,7 +31,7 @@ $text .= "player_y=".$y."&";
 $text .= "player_name=".$userrow["charname"]."&";
 
 // Then do everyone else.
-$users = dorow(doquery("SELECT * FROM {{table}} WHERE world='".$worldrow["id"]."' AND UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND id != '".$userrow["id"]."'", "users"), "id");
+$users = dorow(doquery("SELECT * FROM <<users>> WHERE world='".$worldrow["id"]."' AND UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."' AND id != '".$userrow["id"]."'"), "id");
 $text .= "users=".count($users)."&";
 $count = 0;
 if ($users != false) {
