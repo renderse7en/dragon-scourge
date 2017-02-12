@@ -1,4 +1,7 @@
 # Dragon Scourge
+- See also: [Dragon Knight](https://github.com/renderse7en/dragon-knight)
+- [Live Demo](http://www.dragonscourge.com/play)
+
 Many years ago, when I was young and dumb, I wrote a [simple little game](https://github.com/renderse7en/dragon-knight) based on the game *Dragon Warrior* for the NES. It was fun, it helped me learn how to code, and a lot of people liked it.
 
 After that, I begin writing a sequel, of sorts, called Dragon Scourge. I never really finished that game. Life got in the way. Got married. Got a job. Had kids. All that.
@@ -23,7 +26,7 @@ As with Dragon Knight before it, please keep some things in mind:
 1. Clone this repo or download the zip.
 2. Create a new database for Dragon Scourge to use, if you don't already have one set up.
 3. Edit `config.php` to include the correct values for your database setup.
-4. Upload the contents of the Dragon Knight folder to your site.
+4. Upload the contents of the Dragon Scourge folder to your site.
 5. Using a MySQL client such as HeidiSQL or PHPMyAdmin, run the contents of `install.sql` on the database you created.
 7. Enjoy the game.
 
