@@ -1,3 +1,279 @@
-<?php // This file is protected by copyright law and provided under license. Reverse engineering of this file is strictly prohibited.
-$OOO0O0O00=__FILE__;$O00O00O00=__LINE__;$OO00O0000=12844;eval((base64_decode('JE8wMDBPME8wMD1mb3BlbigkT09PME8wTzAwLCdyYicpO3doaWxlKC0tJE8wME8wME8wMClmZ2V0cygkTzAwME8wTzAwLDEwMjQpO2ZnZXRzKCRPMDAwTzBPMDAsNDA5Nik7JE9PMDBPMDBPMD0oYmFzZTY0X2RlY29kZShzdHJ0cihmcmVhZCgkTzAwME8wTzAwLDM3MiksJ0VudGVyeW91d2toUkhZS05XT1VUQWFCYkNjRGRGZkdnSWlKakxsTW1QcFFxU3NWdlh4WnowMTIzNDU2Nzg5Ky89JywnQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLycpKSk7ZXZhbCgkT08wME8wME8wKTs=')));return;?>
-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fuaZdJELfoasFoxifoA7eWPIwtEIeWp9eWPYtMc1dMY0DB9Vwoflfo1pC3kvfolscUIpwuSIRZ8IabYlctnMd3wIfolsDB5mwuYjFMlXftnvFoaZCbOpd25zRI0heWPIwtEIdolzftILfbYlCZXIkuYlCZLINUnlGunSd2OlhtwIwJxsDBYZd3OpdBAPhUL7wE0hwtEIwuklfuaZdJEPhocSd2y0hUO1F2ajwtSIhocSd2y0hUOzcBHpKZEYtI0hgW0heWpMfB5jfolvdJnpF19ldBypdtILcB1iDBXpwuSIRZ8IaoiidMszwuOvwtksCBlShoy0hbnPDBxpFuEsdo91DbHVcoAJwocZd20IFoiXRM5lftrYtI0hwtEIwuklfuaZdJiXFMamb21ifoYPhtwvblSsbZ5dKMySdmasKl1fh0EPhtidBzpido51dTpfbbxdBzpido51dTpfbasdKMySdmasKl0sbUpdBzpido51dTpfbUlFRJLqhoyLgoylgoylFM98CBc8CBf8CBl8CBx8CB18CB58CB98Cby8Cbk8CbkXCbxiF3xifuxifbxif3xiGmxJCbxJCmxJcuxJcbxJcmxJc3xJDuxJDbxJDbp8CMp8CM18CM58CM98Cmk8CmY8CmO8Cmc8Cmf8Cml8Cmp8C2y8C2Y8C2O8C2c8C2f8C2i8C2l8C2s8C2x8C218C258C298C29sgoYvd3n8C3k8C3Y8C3a8C3c8C3i8C3l8C3p8coa8cop8cos8co18co98cup8cBY8cBO1goalgoamgoaPgoaZgoazgoa0goa1gocpgocQgocqgocsgocvgocZgofigofJgofLgoflgofMgofPgofpgofSgofsgofVgofvfmxmFuxmFbxmFmxmF3xmfuxmfbxmf3xmGbxPD3xPdbxPdmxPFmxPfuxPfbxpcuxpcbxpduxpdmxpdMcvgolVfuxpd3xpFbxpFmxpF3xpfuxQdbxQd3xQFuxqcbxqc3xqDuxqDbxqdbxqdmxqFuxqFmxqf3xqGbxqGmxSCbxSCmxSC3xSDbxSD3xSFmxSF3xSfuxSfbxSfmxSGbxsCbxsC3xscuxsc3xsDuxsDBx8dBs8dBx8dB18dB58dB98dbn8dby8dbk8dbY8dbO8dba8dbazcbasgo12go13go14go15go16go5igo5idBa8dMY8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
+<?php
+
+// lib.php :: Common functions used throughout the program.
+
+//	Dragon Scourge
+//
+//	Program authors: Jamin Blount
+//	Copyright (C) 2007 by renderse7en
+//	Script Version 1.0 Beta 5 Build 20
+
+//	You may not distribute this program in any manner, modified or
+//	otherwise, without the express, written consent from
+//	renderse7en.
+//
+//	You may make modifications, but only for your own use and
+//	within the confines of the Dragon Scourge License Agreement
+//	(see our website for that).
+
+
+//if (file_exists("install.php")) { die("Please remove the <b>install.php</b> and <b>install.sql</b> files from your game directory before continuing."); }
+//if (file_exists("install.sql")) { die("Please remove the install.php file from your game directory before continuing."); }
+
+// Setup for superglobal stuff that can't go in globals.php.
+$starttime = getmicrotime();
+$numqueries = 0;
+$link = opendb();
+$version = "Beta 5";
+$bnumber = "20";
+$bname = "Consolation Prize Part Deux";
+$bdate = "9.2.2007";
+include("lib2.php");
+
+// Handling for servers with magic_quotes turned on.
+if (get_magic_quotes_gpc()) {
+
+   $_POST = array_map('uber_ss', $_POST);
+   $_GET = array_map('uber_ss', $_GET);
+   $_COOKIE = array_map('uber_ss', $_COOKIE);
+
+}
+$_POST = array_map('uber_mres', $_POST);
+$_POST = array_map('uber_hsc', $_POST);
+$_GET = array_map('uber_mres', $_GET);
+$_GET = array_map('uber_hsc', $_GET);
+$_COOKIE = array_map('uber_mres', $_COOKIE);
+$_COOKIE = array_map('uber_hsc', $_COOKIE);
+
+function uber_ss($value) {
+    
+   $value = is_array($value) ?
+               array_map('uber_ss', $value) :
+               stripslashes($value);
+   return $value;
+   
+}
+
+function uber_mres($value) {
+    
+   $value = is_array($value) ?
+               array_map('uber_mres', $value) :
+               mysql_real_escape_string($value);
+   return $value;
+   
+}
+
+function uber_hsc($value) {
+    
+   $value = is_array($value) ?
+               array_map('uber_hsc', $value) :
+               htmlspecialchars($value);
+   return $value;
+   
+}
+
+function opendb() { // Open database connection.
+
+    include("config.php");
+    extract($dbsettings);
+    $link = mysql_connect($server, $user, $pass) or err(mysql_error(),true);
+    mysql_select_db($name) or err(mysql_error(),true);
+    return $link;
+
+}
+
+function doquery($query) { // Something of a tiny little database abstraction layer.
+    
+    include('config.php');
+    global $numqueries, $controlrow;
+    $sqlquery = mysql_query(preg_replace('/<<([a-zA-Z0-9_\-]+)>>/', $dbsettings["prefix"].'_$1', $query));
+
+    if ($sqlquery == false) {
+        if ($controlrow["debug"] == 1) { die(mysql_error() . "<br /><br />" . $query); } else { die("A MySQL query error occurred. Please contact the game administrator for more help."); }
+    }
+    
+    $numqueries++;
+    return $sqlquery;
+    
+}
+
+function dorow($sqlquery, $force = "") { // Abstraction layer part deux.
+    
+    switch (mysql_num_rows($sqlquery)) {
+        
+        case 0:
+            $row = false;
+            break;
+        case 1:
+            if ($force == "") {
+                $row = mysql_fetch_assoc($sqlquery);
+            } else {
+                $temprow = mysql_fetch_assoc($sqlquery);
+                $row[$temprow[$force]] = $temprow;
+            }
+            break;
+        default:
+            if ($force == "") {
+                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                    $row[] = $temprow;
+                }
+            } else {
+                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                    $row[$temprow[$force]] = $temprow;
+                }
+            }
+            break;
+    
+    }
+        
+    return $row;
+    
+}
+
+function gettemplate($templatename) { // SQL query for the template.
+    
+    $filename = "templates/" . $templatename . ".php";
+    include("$filename");
+    return $template;
+    
+}
+
+function parsetemplate($template, $array) { // Replace template with proper content. Also does languages.
+    
+    foreach($array as $a => $b) {
+        $template = str_replace("{{{$a}}}", $b, $template);
+    }
+    return $template;
+    
+}
+
+function getmicrotime() { // Used for timing script operations.
+
+    list($usec, $sec) = explode(" ",microtime()); 
+    return ((float)$usec + (float)$sec); 
+
+}
+
+function is_email($email) { // Thanks to "mail(at)philipp-louis.de" from php.net!
+
+    return(preg_match("/^[-_.[:alnum:]]+@((([[:alnum:]]|[[:alnum:]][[:alnum:]-]*[[:alnum:]])\.)+(ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|in|info|int|io|iq|ir|is|it|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)$|(([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5])\.){3}([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))$/i",$email));
+
+}
+
+function mymail($to, $title, $body, $from = '') { // thanks to arto dot PLEASE dot DO dot NOT dot SPAM at artoaaltonen dot fi.
+
+    global $controlrow;
+    extract($controlrow);
+    
+
+    $from = trim($from);
+
+    if (!$from) {
+    $from = "<$adminemail>";
+    }
+    
+    $rp    = $adminemail;
+    $org    = "$gameurl";
+    $mailer = "PHP";
+    
+    $head  = "";
+    $head  .= "Content-Type: text/plain \r\n";
+    $head  .= "Date: ". date('r'). " \r\n";
+    $head  .= "Return-Path: $rp \r\n";
+    $head  .= "From: $from \r\n";
+    $head  .= "Sender: $from \r\n";
+    $head  .= "Reply-To: $from \r\n";
+    $head  .= "Organization: $org \r\n";
+    $head  .= "X-Sender: $from \r\n";
+    $head  .= "X-Priority: 3 \r\n";
+    $head  .= "X-Mailer: $mailer \r\n";
+    
+    $body  = str_replace("\r\n", "\n", $body);
+    $body  = str_replace("\n", "\r\n", $body);
+    
+    return mail($to, $title, $body, $head);
+  
+}
+
+function err($error, $system = false, $panels = true) { // Basic little error handler.
+
+     $errmsg = "One or more errors have occurred:<br /><br /><b>$error</b><br /><br />Please <a href=\"javascript:history.go(-1);\">go back</a> and try again.";
+     display("Error", $errmsg, $panels);
+     
+}
+
+function display($title, $content, $panels = true) { // Finalize page and output to browser.
+    
+    include('config.php');
+    global $controlrow, $userrow, $worldrow, $numqueries, $starttime, $version, $build;
+    
+    if (!isset($controlrow)) {
+        $controlrow = dorow(doquery("SELECT * FROM <<control>> WHERE id='1' LIMIT 1"));
+    }
+
+    // Make page tags for XHTML validation.
+    $page = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"
+    . "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n"
+    . "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n";
+    $page .= gettemplate("primary");
+    
+    // Setup for primary page array indexes.
+    $row = array();
+    $row["gamename"] = $controlrow["gamename"];
+    $row["pagetitle"] = $title;
+    $row["background"] = "background" . $userrow["world"];
+    $row["version"] = $version;
+    $row["content"] = $content;
+    $row["moddedby"] = $controlrow["moddedby"];
+    if ($controlrow["forumurl"] != "") { $row["forumslink"] = "<a href=\"".$controlrow["forumurl"]."\">Support Forums</a>"; } else { $row["forumslink"] = ""; }
+    if ($controlrow["debug"] == 1) { $row["debug"] = "/ " . $numqueries . " Queries / " . round(getmicrotime()-$starttime,4) . " Seconds"; } else { $row["debug"] = ""; }
+    if ($row["moddedby"] != "") {
+        $row["info"] = $row["moddedby"];
+    } else {
+        $row["info"] = "Version <a href=\"index.php?do=version\">" . $row["version"] . "</a> " . $row["debug"];
+    }
+    
+    // Setup for side panels.
+    include("panels.php");
+    if ($panels == true) { 
+        $row["leftnav"] = panelleft(); 
+        $row["rightnav"] = panelright();
+        $row["topnav"] = paneltop(true);
+        $row["bottomnav"] = panelbottom();
+        $row["middlenav"] = panelmiddle();
+    } else { 
+        $row["leftnav"] = ""; 
+        $row["rightnav"] = "";
+        $row["topnav"] = paneltop(false);
+        $row["bottomnav"] = "";
+    }
+    
+    $page = rtrim($page, "<-!");
+    
+$page .= <<<THEVERYENDOFYOU
+<table cellspacing="0" cellpadding="3" style="width: 95px; color: #ffffff; border: solid 1px #ffffff; background-color: #000000; margin-top: 2px;">
+  <tr>
+    <td width="40%">
+    {{info}}
+    </td>
+    <td width="20%" style="text-align: center;">
+    {{forumslink}}
+    </td>
+    <td width="40%" style="text-align:right;">
+    <a href="index.php?do=version">Dragon Scourge</a> &copy; by <a href="http://www.renderse7en.com">renderse7en</a>.
+    </td>
+  </tr>
+</table>
+</center></body>
+</html>
+THEVERYENDOFYOU;
+    
+    // Finalize control array for output.
+    $page = parsetemplate($page, $row); 
+    
+    if ($controlrow["compression"] == 1) { ob_start("ob_gzhandler"); }
+    echo $page;
+    die();
+}
+
+?>
