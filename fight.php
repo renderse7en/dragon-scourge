@@ -24,7 +24,7 @@ if ($userrow["currentaction"] != "Fighting") { die(header("Location: index.php")
 
 // Global monsterrow.
 if($userrow["currentmonsterid"] != 0) {
-    $monsterquery = doquery("SELECT * FROM <<monsters>> WHERE id='".$userrow["currentmonsterid"]."' LIMIT 1");
+    $monsterquery = doquery("SELECT * FROM monsters WHERE id='".$userrow["currentmonsterid"]."' LIMIT 1");
     $monsterrow = dorow($monsterquery);
 } else {
     rollmonster();
@@ -40,7 +40,7 @@ function rollmonster() {
     if($userrow["longitude"] < 0) { $longitude = $userrow["longitude"] * -1; } else { $longitude = $userrow["longitude"]; }
     $maxlevel = ceil(max($latitude, $longitude) / 5);
     $minlevel = $maxlevel - 3;
-    $monsterquery = doquery("SELECT * FROM <<monsters>> WHERE world='".$userrow["world"]."' AND level >= $minlevel AND level <= $maxlevel ORDER BY RAND() LIMIT 1");
+    $monsterquery = doquery("SELECT * FROM monsters WHERE world='".$userrow["world"]."' AND level >= $minlevel AND level <= $maxlevel ORDER BY RAND() LIMIT 1");
     $monsterrow = dorow($monsterquery);
     
     $userrow["currentmonsterhp"] = (ceil(rand($monsterrow["maxhp"] * .75, $monsterrow["maxhp"]) * $userrow["difficulty"]));
@@ -343,9 +343,9 @@ function youwin() {
     if (rand(0,7) == 1) {
         
         // Grab lots of stuff from the DB.
-        $preitemsrow = dorow(doquery("SELECT * FROM <<itembase>> WHERE reqlevel>='".($userrow["level"] - 5)."' AND reqlevel<='".$userrow["level"]."' AND willdrop='1' ORDER BY RAND() LIMIT 1", "itembase"));
-        $preprefixrow = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemprefixes"));
-        $presuffixrow = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemsuffixes"));
+        $preitemsrow = dorow(doquery("SELECT * FROM itembase WHERE reqlevel>='".($userrow["level"] - 5)."' AND reqlevel<='".$userrow["level"]."' AND willdrop='1' ORDER BY RAND() LIMIT 1", "itembase"));
+        $preprefixrow = dorow(doquery("SELECT * FROM itemprefixes WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemprefixes"));
+        $presuffixrow = dorow(doquery("SELECT * FROM itemsuffixes WHERE reqlevel<='".$userrow["level"]."' ORDER BY RAND() LIMIT 1", "itemsuffixes"));
         
         if ($preitemsrow["isunique"] == 1) {
             $idstring = "0," . $preitemsrow["id"] . ",0";
@@ -410,7 +410,7 @@ function youlose() {
         "deathpenalty"=>$userrow["deathpenalty"]);
         
     // Then put them in town & reset fight stuff.
-    $townrow = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1"));
+    $townrow = dorow(doquery("SELECT * FROM towns WHERE world='".$userrow["world"]."' ORDER BY id ASC LIMIT 1"));
     $userrow["latitude"] = $townrow["latitude"];
     $userrow["longitude"] = $townrow["longitude"];
     $userrow["currentaction"] = "In Town";

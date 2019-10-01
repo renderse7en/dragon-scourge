@@ -19,7 +19,7 @@ include("config.php");
 if (trim($dbsettings["secretword"]) == "") { die("Invalid setting for secretword in config.php. This setting must never be blank."); }
 
 // Control row.
-$controlrow = dorow(doquery("SELECT * FROM <<control>> WHERE id='1' LIMIT 1"));
+$controlrow = dorow(doquery("SELECT * FROM control WHERE id='1' LIMIT 1"));
 
 // Account row.
 include("cookies.php");
@@ -29,28 +29,29 @@ if ($acctrow != false && $acctrow["characters"] == 0 && substr($_SERVER["REQUEST
 
 // User row.
 if (substr($_SERVER["REQUEST_URI"], -19) != "login.php?do=logout") {
-    $online = doquery("UPDATE <<users>> SET onlinetime=NOW() WHERE id='".$acctrow["activechar"]."' LIMIT 1");
+    $online = doquery("UPDATE users SET onlinetime=NOW() WHERE id='".$acctrow["activechar"]."' LIMIT 1");
 } else {
-    $online = doquery("UPDATE <<users>> SET onlinetime = DATE_SUB(onlinetime, INTERVAL 11 MINUTE) WHERE id='".$acctrow["activechar"]."' LIMIT 1");
+    $online = doquery("UPDATE users SET onlinetime = DATE_SUB(onlinetime, INTERVAL 11 MINUTE) WHERE id='".$acctrow["activechar"]."' LIMIT 1");
 }
-$userrow = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$acctrow["activechar"]."' LIMIT 1"));
+
+$userrow = dorow(doquery("SELECT * FROM users WHERE id='".$acctrow["activechar"]."' LIMIT 1"));
 if ($userrow != false) { $userrow = array_map("stripslashes", $userrow); }
 
 // World row.
-$worldrow = dorow(doquery("SELECT * FROM <<worlds>> WHERE id='".$userrow["world"]."' LIMIT 1")); 
+$worldrow = dorow(doquery("SELECT * FROM worlds WHERE id='".$userrow["world"]."' LIMIT 1"));
 
 // Town row.
 if ($userrow["currentaction"] == "In Town") {
-    $townrow = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' AND longitude='".$userrow["longitude"]."' AND latitude='".$userrow["latitude"]."' LIMIT 1"));
+    $townrow = dorow(doquery("SELECT * FROM towns WHERE world='".$userrow["world"]."' AND longitude='".$userrow["longitude"]."' AND latitude='".$userrow["latitude"]."' LIMIT 1"));
 } else {
     $townrow = false;
 }
 
 // Spells.
-$spells = dorow(doquery("SELECT * FROM <<spells>> ORDER BY id", "spells"), "id");
+$spells = dorow(doquery("SELECT * FROM spells ORDER BY id", "spells"), "id");
 
 // Global fightrow.
-$fightrow = array(
+$fightrow = [
     "playerphysdamage"=>0,
     "playermagicdamage"=>0,
     "playerfiredamage"=>0,
@@ -60,6 +61,7 @@ $fightrow = array(
     "monsterfiredamage"=>0,
     "monsterlightdamage"=>0,
     "track"=>"",
-    "message"=>"");
+    "message"=>""
+];
 
 ?>

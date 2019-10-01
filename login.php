@@ -27,14 +27,14 @@ switch($do) {
 
 function login() {
     
-    $controlrow = dorow(doquery("SELECT * FROM <<control>> WHERE id='1' LIMIT 1"));
-    
+    $controlrow = dorow(doquery("SELECT * FROM control WHERE id='1' LIMIT 1"));
+
     if (isset($_POST["submit"])) {
         
         // Setup.
         include("config.php");
         extract($_POST);
-        $query = doquery("SELECT * FROM <<accounts>> WHERE username='$username' LIMIT 1");
+        $query = doquery("SELECT * FROM accounts WHERE username='$username' LIMIT 1");
         $row = dorow($query);
         
         // Errors.
@@ -49,7 +49,6 @@ function login() {
         die(header("Location: index.php"));
         
     } else {
-        
         display("Log In", gettemplate("login"), false);
         
     }

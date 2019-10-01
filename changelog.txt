@@ -95,7 +95,7 @@ Changelog
 - You cannot create/join a guild until Level 10 to help prevent bank abuse.
 - Added PVP logging - wins, losses, and highest lvl character killed.
 - Hall of Fame now shows top 25 chars.
-- Hall of Fame now uses stock mysql_fetch_array() instead of custom dorow().
+- Hall of Fame now uses stock mysqli_fetch_array() instead of custom dorow().
 - Items now have a 1 in 5 chance of having prefixes/suffixes (it used to be 50:50).
 - Added email verification support.
 

@@ -19,10 +19,10 @@ include("lib.php");
 // Get a bunch of stuff.
 if (isset($_GET["id"]) && is_numeric($_GET["id"])) { $id = $_GET["id"]; }
 if (!isset($id)) { die(); }
-$userrow = dorow(doquery("SELECT *, UNIX_TIMESTAMP(onlinetime) AS fonlinetime FROM <<users>> WHERE id='$id' LIMIT 1"));
+$userrow = dorow(doquery("SELECT *, UNIX_TIMESTAMP(onlinetime) AS fonlinetime FROM users WHERE id='$id' LIMIT 1"));
 if (!$userrow) { die(); }
-$class = dorow(doquery("SELECT * FROM <<classes>> WHERE id='".$userrow["charclass"]."' LIMIT 1"));
-$world = dorow(doquery("SELECT * FROM <<worlds>> WHERE id='".$userrow["world"]."' LIMIT 1"));
+$class = dorow(doquery("SELECT * FROM classes WHERE id='".$userrow["charclass"]."' LIMIT 1"));
+$world = dorow(doquery("SELECT * FROM worlds WHERE id='".$userrow["world"]."' LIMIT 1"));
 
 // Start our image.
 $img = imagecreatefrompng("images/sigbotback.png");

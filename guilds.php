@@ -26,7 +26,7 @@ function guildmain() {
         if (!isset($_GET["list"])) { guildhome(); }
     }
     
-    $guilds = dorow(doquery("SELECT * FROM <<guilds>> WHERE isactive='1' ORDER BY honor"), "id");
+    $guilds = dorow(doquery("SELECT * FROM guilds WHERE isactive='1' ORDER BY honor"), "id");
     $row["guildlist"] = "<table style=\"width: 95%;\" cellspacing=\"0\" cellpadding=\"0\"><tr><td><b>Guild Name & Tag</b></td><td style=\"text-align: center;\"><b>Honor</b></td><td style=\"text-align: right;\"><b>Functions</b></td></tr>";
     $bgcolor = "background-color: #ffffff;";
     if ($guilds != false) { 
@@ -49,7 +49,7 @@ function guildhome() {
     global $userrow, $controlrow;
     
     if ($userrow["guild"] == 0) { err("You are not yet a member of any Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
     
     if ($guild["lastupdate"] <= (mktime() - ($controlrow["guildupdate"] * 3600))) { $guild = guildupdate(); }
     
@@ -69,7 +69,7 @@ function guildhome() {
     $pagerow["bank"] = number_format($guild["bank"]);
     
     // Pull memberslist for select box.
-    $members = dorow(doquery("SELECT * FROM <<users>> WHERE guild='".$userrow["guild"]."' ORDER BY guildrank"), "id");
+    $members = dorow(doquery("SELECT * FROM users WHERE guild='".$userrow["guild"]."' ORDER BY guildrank"), "id");
     $pagerow["memberselect"] = "<select name=\"charid\" style=\"font: 10px Arial;\">";
     foreach($members as $a => $b) {
         $pagerow["memberselect"] .= "<option value=\"".$b["id"]."\">".$b["charname"]." (Rank ".$b["guildrank"].")</option>\n";
@@ -77,7 +77,7 @@ function guildhome() {
     $pagerow["memberselect"] .= "</select>";
     
     // Pull applications for selectbox.
-    $apps = dorow(doquery("SELECT * FROM <<guildapps>> WHERE guild='".$userrow["guild"]."' ORDER BY id"), "id");
+    $apps = dorow(doquery("SELECT * FROM guildapps WHERE guild='".$userrow["guild"]."' ORDER BY id"), "id");
     if ($apps != false) { 
         $pagerow["appselect"] = "<select name=\"charid\" style=\"font: 10px Arial;\">";
         foreach ($apps as $a => $b) {
@@ -105,8 +105,8 @@ function guildcreate() {
     // Errors.
     if ($userrow["gold"] < $controlrow["guildstartup"]) { err("You do not have enough gold to create a Guild. Starting your own Guild requires ".number_format($controlrow["guildstartup"])." gold. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($userrow["guild"] != 0) { err("You are already a member of another Guild. You must renounce your current membership before starting your own Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    $appquery = doquery("SELECT * FROM <<guildapps>> WHERE charid='".$userrow["id"]."' LIMIT 1");
-    if (mysql_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
+    $appquery = doquery("SELECT * FROM guildapps WHERE charid='".$userrow["id"]."' LIMIT 1");
+    if (mysqli_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($userrow["level"] < $controlrow["guildstartlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildstartlvl"].". Please continue playing until your character is Level ".$controlrow["guildstartlvl"].", then try again."); }
     
     if (isset($_POST["submit"])) {
@@ -144,10 +144,10 @@ function guildcreate() {
                 $querystring .= "$a='$b',";
             }
             $querystring .= "id='',isactive='1',founder='".$userrow["id"]."', members='1'";
-            $query = doquery("INSERT INTO <<guilds>> SET $querystring");
+            $query = doquery("INSERT INTO guilds SET $querystring");
 
             // Now update the Founder's userrow.
-            $query = doquery("UPDATE <<users>> SET gold=gold-".$controlrow["guildstartup"].", guild='".mysql_insert_id()."',guildrank='5',guildtag='$tagline',tagcolor='$color1',namecolor='$color2' WHERE id='".$userrow["id"]."' LIMIT 1");
+            $query = doquery("UPDATE users SET gold=gold-".$controlrow["guildstartup"].", guild='".mysqli_insert_id()."',guildrank='5',guildtag='$tagline',tagcolor='$color1',namecolor='$color2' WHERE id='".$userrow["id"]."' LIMIT 1");
             
             // And we're done.
             display("Create a Guild", "Your guild was successfully created.<br /><br />You may now return to <a href=\"index.php\">the game</a>.");
@@ -170,7 +170,7 @@ function guildedit() {
     
     global $userrow;
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
     
     // Errors.
     if ($userrow["guildrank"] < 5) { err("You do not have permission to edit the Guild settings. Please <a href=\"index.php\">go back</a> and try again."); }
@@ -208,8 +208,8 @@ function guildedit() {
                 $querystring .= "$a='$b',";
             }
             $querystring .= "id=id";
-            $query = doquery("UPDATE <<guilds>> SET $querystring WHERE id='".$guild["id"]."'");
-            $updatemem = doquery("UPDATE <<users>> SET namecolor='$color2', tagcolor='$color1' WHERE guild='".$guild["id"]."'");
+            $query = doquery("UPDATE guilds SET $querystring WHERE id='".$guild["id"]."'");
+            $updatemem = doquery("UPDATE users SET namecolor='$color2', tagcolor='$color1' WHERE guild='".$guild["id"]."'");
 
             // And we're done.
             display("Edit Guild", "Your guild was successfully edited.<br /><br />You may now return to <a href=\"index.php\">town</a> or to your <a href=\"index.php?do=guildhome\">Guild Hall</a>.");
@@ -233,22 +233,22 @@ function guildapp() {
     
     $id = $_GET["id"];
     if (!is_numeric($id)) { err("Invalid input. Please <a href=\"index.php\">go back</a> and try again."); }
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='$id' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='$id' LIMIT 1"));
     if ($guild == false) { err("Invalid input. Please <a href=\"index.php\">go back</a> and try again."); }
     
     // Errors.
     if ($userrow["gold"] < $guild["joincost"]) { err("You do not have enough gold to join this Guild. Joining this Guild requires ".number_format($guild["joincost"])." gold. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($userrow["guild"] != 0) { err("You are already a member of another Guild. You must renounce your current membership before joining this Guild. Please <a href=\"index.php\">go back</a> and try again."); }
-    $appquery = doquery("SELECT * FROM <<guildapps>> WHERE charid='".$userrow["id"]."' LIMIT 1");
-    if (mysql_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
+    $appquery = doquery("SELECT * FROM guildapps WHERE charid='".$userrow["id"]."' LIMIT 1");
+    if (mysqli_num_rows($appquery) != 0) { err("You have already applied to join another Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($userrow["level"] < $controlrow["guildjoinlvl"]) { err("You cannot join a guild until you are at least Level ".$controlrow["guildjoinlvl"].". Please continue playing until your character is Level ".$controlrow["guildjoinlvl"].", then try again."); }
     
     if (isset($_POST["yes"])) {
         
-        $query = doquery("INSERT INTO <<guildapps>> SET id='',guild='$id',charid='".$userrow["id"]."',charname='".$userrow["charname"]."'");
-        $update = doquery("UPDATE <<guilds>> SET bank=bank+".$guild["joincost"]." WHERE id='".$guild["id"]."' LIMIT 1");
-        $updatemem = doquery("UPDATE <<users>> SET gold=gold-".$guild["joincost"]." WHERE id='".$userrow["id"]."' LIMIT 1");
-        $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='".$guild["founder"]."', recipientname='Guild Leader', status='0', title='New Guild Application', message='Someone has applied to join your Guild.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
+        $query = doquery("INSERT INTO guildapps SET id='',guild='$id',charid='".$userrow["id"]."',charname='".$userrow["charname"]."'");
+        $update = doquery("UPDATE guilds SET bank=bank+".$guild["joincost"]." WHERE id='".$guild["id"]."' LIMIT 1");
+        $updatemem = doquery("UPDATE users SET gold=gold-".$guild["joincost"]." WHERE id='".$userrow["id"]."' LIMIT 1");
+        $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='".$guild["founder"]."', recipientname='Guild Leader', status='0', title='New Guild Application', message='Someone has applied to join your Guild.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
         display("Join a Guild", "Thank you for applying to this Guild. If the Guild Leader approves your application, you will be notified via the Post Office.<br /><br />You may now return to <a href=\"index.php\">the game</a>.");
         
     } elseif (isset($_POST["no"])) {
@@ -269,10 +269,10 @@ function guildmembers() {
     
     $id = $_GET["id"];
     if (!is_numeric($id)) { err("Invalid input. Please <a href=\"index.php\">go back</a> and try again."); }
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='$id' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='$id' LIMIT 1"));
     if ($guild == false) { err("Invalid input. Please <a href=\"index.php\">go back</a> and try again."); }
     
-    $guildmembers = dorow(doquery("SELECT * FROM <<users>> WHERE guild='$id' ORDER BY guildrank DESC"), "id");
+    $guildmembers = dorow(doquery("SELECT * FROM users WHERE guild='$id' ORDER BY guildrank DESC"), "id");
     $row["guildmembers"] = "<table style=\"width: 95%;\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"background-color: #dddddd; padding: 3px;\"><b>Name</b></td><td style=\"background-color: #dddddd; padding: 3px; text-align: right;\"><b>Rank</b></td></tr>\n";
     $bgcolor = "background-color: #ffffff;";
     if ($guildmembers != false) { 
@@ -294,12 +294,12 @@ function guildbank() {
     global $userrow;
     extract($_POST);
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
     
     
     if (isset($_POST["out"])) {
         
-        $member = dorow(doquery("SELECT * FROM <<users>> WHERE id='$charid' LIMIT 1"));
+        $member = dorow(doquery("SELECT * FROM users WHERE id='$charid' LIMIT 1"));
         
         // Errors.
         if ($userrow["guildrank"] < 4) { err("You do not have permission to distribute Guild funds. Please <a href=\"index.php\">go back</a> and try again."); }
@@ -312,8 +312,8 @@ function guildbank() {
         if ($member["id"] == $userrow["id"]) { err("You cannot send Guild money to yourself. Please <a href=\"index.php\">go back</a> and try again."); }
         
         // Do stuff.
-        $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Money from your Guild', message='Your Guild has sent you money from the Guild Bank.<br /><br /><b>Do not reply to this message!</b>', gold='$gold'");
-        $update = doquery("UPDATE <<guilds>> SET bank=bank-$gold WHERE id='".$userrow["guild"]."' LIMIT 1");
+        $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Money from your Guild', message='Your Guild has sent you money from the Guild Bank.<br /><br /><b>Do not reply to this message!</b>', gold='$gold'");
+        $update = doquery("UPDATE guilds SET bank=bank-$gold WHERE id='".$userrow["guild"]."' LIMIT 1");
         display("Post Office", gettemplate("mailbox_sent"));
         
     } elseif (isset($_POST["in"])) {
@@ -324,8 +324,8 @@ function guildbank() {
         if ($_POST["golddeposit"] > $userrow["gold"]) { err("You do not have that much money in your pocket."); }
         
         // Do stuff.
-        $update = doquery("UPDATE <<guilds>> SET bank=bank+".$_POST["golddeposit"]." WHERE id='".$userrow["guild"]."' LIMIT 1");
-        $updatemem = doquery("UPDATE <<users>> SET gold=gold-".$_POST["golddeposit"]." WHERE id='".$userrow["id"]."' LIMIT 1");
+        $update = doquery("UPDATE guilds SET bank=bank+".$_POST["golddeposit"]." WHERE id='".$userrow["guild"]."' LIMIT 1");
+        $updatemem = doquery("UPDATE users SET gold=gold-".$_POST["golddeposit"]." WHERE id='".$userrow["id"]."' LIMIT 1");
         display("Guild Bank", "Thank you for depositing money to the Guild Bank.<br /><br />You may now return to <a href=\"index.php\">Town</a> or to your <a href=\"index.php?do=guildhome\">Guild Hall</a>.");
     
     }
@@ -337,8 +337,8 @@ function guildpromote() {
     global $userrow;
     extract($_POST);
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
-    $member = dorow(doquery("SELECT * FROM <<users>> WHERE id='$charid' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $member = dorow(doquery("SELECT * FROM users WHERE id='$charid' LIMIT 1"));
     
     if (isset($_POST["promote"])) {
         
@@ -350,7 +350,7 @@ function guildpromote() {
         if ($member["guild"] != $userrow["guild"]) { err("That player is not in your Guild. Please <a href=\"index.php\">go back</a> and try again."); }
         
         // Do stuff.
-        $update = doquery("UPDATE <<users>> SET guildrank=guildrank+1 WHERE id='$charid' LIMIT 1");
+        $update = doquery("UPDATE users SET guildrank=guildrank+1 WHERE id='$charid' LIMIT 1");
         
     } elseif (isset($_POST["demote"])) {
     
@@ -363,7 +363,7 @@ function guildpromote() {
         if ($member["guildrank"] == 1) { guildremove(); }
         
         // Do stuff.
-        $update = doquery("UPDATE <<users>> SET guildrank=guildrank-1 WHERE id='$charid' LIMIT 1");
+        $update = doquery("UPDATE users SET guildrank=guildrank-1 WHERE id='$charid' LIMIT 1");
         
     }
     
@@ -376,9 +376,9 @@ function guildapprove() {
     global $userrow;
     extract($_POST);
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
-    $member = dorow(doquery("SELECT * FROM <<users>> WHERE id='$charid' LIMIT 1"));
-    $app = dorow(doquery("SELECT * FROM <<guildapps>> WHERE guild='".$userrow["guild"]."' AND charid='$charid' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $member = dorow(doquery("SELECT * FROM users WHERE id='$charid' LIMIT 1"));
+    $app = dorow(doquery("SELECT * FROM guildapps WHERE guild='".$userrow["guild"]."' AND charid='$charid' LIMIT 1"));
     
     // Errors.
     if ($userrow["guildrank"] < 4) { err("You do not have permission to approve new members. Please <a href=\"index.php\">go back</a> and try again."); }
@@ -386,15 +386,15 @@ function guildapprove() {
     
     // Do stuff.
     if (isset($_POST["approve"])) {
-        $updatemem = doquery("UPDATE <<users>> SET guild='".$userrow["guild"]."', guildrank='1', guildtag='".$guild["tagline"]."', tagcolor='".$guild["color1"]."', namecolor='".$guild["color2"]."' WHERE id='".$app["charid"]."' LIMIT 1");
-        $updateguild = doquery("UPDATE <<guilds>> SET members=members+1 WHERE id='".$userrow["guild"]."' LIMIT 1");
-        $deleteapp = doquery("DELETE FROM <<guildapps>> WHERE guild='".$userrow["guild"]."' AND charid='$charid' LIMIT 1");
-        $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Guild Approval', message='The Guild has approved you for membership, and you are now a member of ".$guild["name"].". Congratulations!<br /><br /><b>Do not reply to this message!</b>', gold='0'");
+        $updatemem = doquery("UPDATE users SET guild='".$userrow["guild"]."', guildrank='1', guildtag='".$guild["tagline"]."', tagcolor='".$guild["color1"]."', namecolor='".$guild["color2"]."' WHERE id='".$app["charid"]."' LIMIT 1");
+        $updateguild = doquery("UPDATE guilds SET members=members+1 WHERE id='".$userrow["guild"]."' LIMIT 1");
+        $deleteapp = doquery("DELETE FROM guildapps WHERE guild='".$userrow["guild"]."' AND charid='$charid' LIMIT 1");
+        $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Guild Approval', message='The Guild has approved you for membership, and you are now a member of ".$guild["name"].". Congratulations!<br /><br /><b>Do not reply to this message!</b>', gold='0'");
         guildupdate();
         display("Approve Members", "Thank you for approving this user.<br /><br />You may now return to <a href=\"index.php\">Town</a> or to your <a href=\"index.php?do=guildhome\">Guild Hall</a>.");
     } else {
-        $deleteapp = doquery("DELETE FROM <<guilds>> WHERE guild='".$userrow["guild"]."' AND charid='$charid' LIMIT 1");
-        $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Guild Denial', message='The Guild has denied your application for membership. Sorry.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
+        $deleteapp = doquery("DELETE FROM guilds WHERE guild='".$userrow["guild"]."' AND charid='$charid' LIMIT 1");
+        $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Guild Denial', message='The Guild has denied your application for membership. Sorry.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
         display("Approve Members", "Thank you for denying this user.<br /><br />You may now return to <a href=\"index.php\">Town</a> or to your <a href=\"index.php?do=guildhome\">Guild Hall</a>.");
     }
     
@@ -405,14 +405,14 @@ function guildremove() {
     global $userrow;
     extract($_POST);
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
-    $member = dorow(doquery("SELECT * FROM <<users>> WHERE id='$charid' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $member = dorow(doquery("SELECT * FROM users WHERE id='$charid' LIMIT 1"));
     
     if (isset($_POST["yes"])) {
         
-        $update = doquery("UPDATE <<guilds>> SET members=members-1 WHERE id='".$guild["id"]."' LIMIT 1");
-        $updatemem = doquery("UPDATE <<users>> SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE id='$charid' LIMIT 1");
-        $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Guild Removal', message='The Guild has removed you from their membership. Sorry.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
+        $update = doquery("UPDATE guilds SET members=members-1 WHERE id='".$guild["id"]."' LIMIT 1");
+        $updatemem = doquery("UPDATE users SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE id='$charid' LIMIT 1");
+        $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='$charid', recipientname='".$member["charname"]."', status='0', title='Guild Removal', message='The Guild has removed you from their membership. Sorry.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
         guildupdate();
         display("Remove Members", "Thank you for removing this user.<br /><br />You may now return to <a href=\"index.php\">Town</a> or to your <a href=\"index.php?do=guildhome\">Guild Hall</a>.");
         
@@ -433,14 +433,14 @@ function guildnews() {
     
     global $userrow;
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
     
     // Errors.
     if ($userrow["guildrank"] < 5) { err("You do not have permission to edit Guild news. Please <a href=\"index.php\">go back</a> and try again."); }
     
     if (isset($_POST["submit"])) {
         
-        $query = doquery("UPDATE <<guilds>> SET news='".$_POST["news"]."' WHERE id='".$userrow["guild"]."' LIMIT 1");
+        $query = doquery("UPDATE guilds SET news='".$_POST["news"]."' WHERE id='".$userrow["guild"]."' LIMIT 1");
         display("Guild News", "Thank you for updating your Guild News.<br /><br />You may now return to <a href=\"index.php\">Town</a> or to your <a href=\"index.php?do=guildhome\">Guild Hall</a>.");
         
     }
@@ -454,20 +454,20 @@ function guilddisband() {
     
     global $userrow;
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
     
     // Errors.
     if ($userrow["id"] != $guild["founder"]) { err("You do not have permission to disband the Guild. Please <a href=\"index.php\">go back</a> and try again."); }
     
     if (isset($_POST["yes"])) {
         
-        $guildmembers = dorow(doquery("SELECT * FROM <<users>> WHERE guild='".$guild["id"]."'"), "id");
+        $guildmembers = dorow(doquery("SELECT * FROM users WHERE guild='".$guild["id"]."'"), "id");
         foreach ($guildmembers as $a => $b) {
-            $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='".$b["id"]."', recipientname='".$b["charname"]."', status='0', title='Guild Disbanded', message='Your Guild leader has chosen to disband the guild. Your member status has been reset, and you can now apply to join another guild if you wish.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
+            $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='0', sendername='".$guild["name"]."', recipientid='".$b["id"]."', recipientname='".$b["charname"]."', status='0', title='Guild Disbanded', message='Your Guild leader has chosen to disband the guild. Your member status has been reset, and you can now apply to join another guild if you wish.<br /><br /><b>Do not reply to this message!</b>', gold='0'");
         }
-        $updatemem = doquery("UPDATE <<users>> SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE guild='".$guild["id"]."'");
-        $delete = doquery("DELETE FROM <<guilds>> WHERE id='".$guild["id"]."'");
-        $deletebb = doquery("DELETE FROM <<babblebox>> WHERE guild='".$guild["id"]."'");
+        $updatemem = doquery("UPDATE users SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE guild='".$guild["id"]."'");
+        $delete = doquery("DELETE FROM guilds WHERE id='".$guild["id"]."'");
+        $deletebb = doquery("DELETE FROM babblebox WHERE guild='".$guild["id"]."'");
         display("Disband Guild", "Thank you for disbanding your Guild.<br /><br />You may now return to <a href=\"index.php\">Town</a>.");
         
     } elseif (isset($_POST["no"])) {
@@ -488,8 +488,8 @@ function guildleave() {
     
     if (isset($_POST["yes"])) {
         
-        $updatemem = doquery("UPDATE <<users>> SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE id='".$userrow["id"]."'");
-        $update = doquery("UPDATE <<guilds>> SET members=members-1 WHERE id='".$userrow["guild"]."' LIMIT 1");
+        $updatemem = doquery("UPDATE users SET guild='0', guildrank='0', guildtag='', tagcolor='', namecolor='' WHERE id='".$userrow["id"]."'");
+        $update = doquery("UPDATE guilds SET members=members-1 WHERE id='".$userrow["guild"]."' LIMIT 1");
         guildupdate();
         display("Leave Guild", "Thank you for leaving your Guild.<br /><br />You may now return to <a href=\"index.php\">Town</a>.");
         
@@ -507,8 +507,8 @@ function guildupdate() {
     
     global $userrow;
     
-    $guild = dorow(doquery("SELECT * FROM <<guilds>> WHERE id='".$userrow["guild"]."' LIMIT 1"));
-    $users = dorow(doquery("SELECT * FROM <<users>> WHERE guild='".$userrow["guild"]."'"), "id");
+    $guild = dorow(doquery("SELECT * FROM guilds WHERE id='".$userrow["guild"]."' LIMIT 1"));
+    $users = dorow(doquery("SELECT * FROM users WHERE guild='".$userrow["guild"]."'"), "id");
     
     $honor = $guild["members"];
     $totalexp = 0;
@@ -520,7 +520,7 @@ function guildupdate() {
     $honor += floor(sqrt($totalexp));
     
     $lastupdate = mktime();
-    $update = doquery("UPDATE <<guilds>> SET honor='$honor',lastupdate='$lastupdate' WHERE id='".$userrow["guild"]."' LIMIT 1");
+    $update = doquery("UPDATE guilds SET honor='$honor',lastupdate='$lastupdate' WHERE id='".$userrow["guild"]."' LIMIT 1");
     
     // Now update the array and send back to main guild function.
     $guild["honor"] = $honor;

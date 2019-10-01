@@ -22,7 +22,7 @@ function mailbox() {
     
     global $userrow;
     
-    $messages = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM <<messages>> WHERE recipientid='".$userrow["id"]."' ORDER BY postdate DESC"), "id");
+    $messages = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM messages WHERE recipientid='".$userrow["id"]."' ORDER BY postdate DESC"), "id");
     $row["messages"] = "<table width=\"97%\">\n";
 
     if ($messages == false) { 
@@ -44,7 +44,7 @@ function outbox() {
     
     global $userrow;
     
-    $messages = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM <<messages>> WHERE senderid='".$userrow["id"]."' ORDER BY postdate DESC"), "id");
+    $messages = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM messages WHERE senderid='".$userrow["id"]."' ORDER BY postdate DESC"), "id");
     $row["messages"] = "<table width=\"97%\">\n";
 
     if ($messages == false) { 
@@ -65,7 +65,7 @@ function letter() {
     global $userrow;
     
     if (!is_numeric($_GET["id"])) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
-    $message = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM <<messages>> WHERE id='".$_GET["id"]."' LIMIT 1"));
+    $message = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM messages WHERE id='".$_GET["id"]."' LIMIT 1"));
     if ($message == false) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($message["recipientid"] != $userrow["id"]) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     
@@ -79,11 +79,11 @@ function letter() {
     
     // Reset status to old, and gold to zero, so they can't keep reading the message to get more money.
     if ($message["status"] == 0) {
-        $statusquery = doquery("UPDATE <<messages>> SET status='1', gold='0' WHERE id='".$_GET["id"]."' LIMIT 1");
+        $statusquery = doquery("UPDATE messages SET status='1', gold='0' WHERE id='".$_GET["id"]."' LIMIT 1");
     }
     
     // Pull the sender's userrow so we can show avatars.
-    $sender = dorow(doquery("SELECT * FROM <<users>> WHERE id='".$message["senderid"]."' LIMIT 1"));
+    $sender = dorow(doquery("SELECT * FROM users WHERE id='".$message["senderid"]."' LIMIT 1"));
     if ($sender["charpicture"] != "") {
         $message["senderavatar"] = "<img src=\"".$sender["charpicture"]."\" alt=\"".$sender["charname"]."\" width=\"50\" height=\"50\" />";
     } else {
@@ -100,7 +100,7 @@ function letterout() {
     global $userrow;
     
     if (!is_numeric($_GET["id"])) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
-    $message = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM <<messages>> WHERE id='".$_GET["id"]."' LIMIT 1"));
+    $message = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM messages WHERE id='".$_GET["id"]."' LIMIT 1"));
     if ($message == false) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($message["senderid"] != $userrow["id"]) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     
@@ -119,7 +119,7 @@ function mailnew() {
         extract($_POST);
         $errors = 0; $errorlist = "";
         if ($userrow["gold"] < 5) { $errors++; $errorlist .= "You do not have enough gold to cover the postage fee.<br />"; }
-        $checkuser = dorow(doquery("SELECT * FROM <<users>> WHERE charname='$recipient' LIMIT 1"));
+        $checkuser = dorow(doquery("SELECT * FROM users WHERE charname='$recipient' LIMIT 1"));
         if ($checkuser == false) { $errors++; $errorlist .= "There is no player with that Character Name.<br />"; }
         if (trim($gold) != "") {
             if (!is_numeric($gold)) { $errors++; $errorlist .= "The Send Gold field must be a number.<br />"; }
@@ -138,7 +138,7 @@ function mailnew() {
             updateuserrow();
             
             // And send the message.
-            $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='".$userrow["id"]."', sendername='".$userrow["charname"]."', recipientid='".$checkuser["id"]."', recipientname='$recipient', status='0', title='$title', message='$message', gold='$gold'");
+            $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='".$userrow["id"]."', sendername='".$userrow["charname"]."', recipientid='".$checkuser["id"]."', recipientname='$recipient', status='0', title='$title', message='$message', gold='$gold'");
             display("Post Office", gettemplate("mailbox_sent"));
             
         } else {
@@ -159,7 +159,7 @@ function mailreply() {
     global $userrow;
     
     if (!is_numeric($_GET["id"])) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
-    $origmessage = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM <<messages>> WHERE id='".$_GET["id"]."' LIMIT 1"));
+    $origmessage = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM messages WHERE id='".$_GET["id"]."' LIMIT 1"));
     if ($origmessage == false) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($origmessage["recipientid"] != $userrow["id"]) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     
@@ -169,7 +169,7 @@ function mailreply() {
         extract($_POST);
         $errors = 0; $errorlist = "";
         if ($userrow["gold"] < 5) { $errors++; $errorlist .= "You do not have enough gold to cover the postage fee.<br />"; }
-        $checkuser = dorow(doquery("SELECT * FROM <<users>> WHERE charname='".$origmessage["sendername"]."' LIMIT 1"));
+        $checkuser = dorow(doquery("SELECT * FROM users WHERE charname='".$origmessage["sendername"]."' LIMIT 1"));
         if ($checkuser == false) { $errors++; $errorlist .= "There is no player with that Character Name.<br />"; }
         if (trim($gold) != "") {
             if (!is_numeric($gold)) { $errors++; $errorlist .= "The Send Gold field must be a number.<br />"; }
@@ -187,7 +187,7 @@ function mailreply() {
             updateuserrow();
             
             // And send the message.
-            $send = doquery("INSERT INTO <<messages>> SET id='', postdate=NOW(), senderid='".$userrow["id"]."', sendername='".$userrow["charname"]."', recipientid='".$origmessage["senderid"]."', recipientname='".$origmessage["sendername"]."', status='0', title='$title', message='$message', gold='$gold'");
+            $send = doquery("INSERT INTO messages SET id='', postdate=NOW(), senderid='".$userrow["id"]."', sendername='".$userrow["charname"]."', recipientid='".$origmessage["senderid"]."', recipientname='".$origmessage["sendername"]."', status='0', title='$title', message='$message', gold='$gold'");
             display("Post Office", gettemplate("mailbox_sent"));
             
         } else {
@@ -211,11 +211,11 @@ function maildelete() {
     global $userrow;
     
     if (!is_numeric($_GET["id"])) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
-    $message = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM <<messages>> WHERE id='".$_GET["id"]."' LIMIT 1"));
+    $message = dorow(doquery("SELECT *, DATE_FORMAT(postdate, '%m.%d.%Y ~ %H:%i') AS fpostdate FROM messages WHERE id='".$_GET["id"]."' LIMIT 1"));
     if ($message == false) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     if ($message["recipientid"] != $userrow["id"]) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
     
-    $delete = doquery("DELETE FROM <<messages>> WHERE id='".$_GET["id"]."'");
+    $delete = doquery("DELETE FROM messages WHERE id='".$_GET["id"]."'");
     die(header("Location: index.php?do=mailbox"));
         
 }

@@ -52,25 +52,25 @@ function move() { // Primary exploring function. Move them with the compass butt
     // Breakout for story.
     if ($userrow["story"] != "0" && $userrow["storylat"] == $userrow["latitude"] && $userrow["storylon"] == $userrow["longitude"]) {
         $string = ltrim($string," ,");
-        doquery("UPDATE <<users>> SET $string WHERE id='".$userrow["id"]."' LIMIT 1");
+        doquery("UPDATE users SET $string WHERE id='".$userrow["id"]."' LIMIT 1");
         die(header("Location: story.php"));
     }
     
     // Breakout for towns.
-    $row = dorow(doquery("SELECT * FROM <<towns>> WHERE world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' LIMIT 1"));
+    $row = dorow(doquery("SELECT * FROM towns WHERE world='".$userrow["world"]."' AND latitude='".$userrow["latitude"]."' AND longitude='".$userrow["longitude"]."' LIMIT 1"));
     if ($row != false) {
         $townslist = explode(",",$userrow["townslist"]);
         if (!in_array($row["id"], $townslist)) { 
             $userrow["townslist"] .= ",".$row["id"]; 
             $string .= ", townslist='".$userrow["townslist"]."'";
         }
-        doquery("UPDATE <<users>> SET currentaction='In Town' $string WHERE id='".$userrow["id"]."' LIMIT 1");
+        doquery("UPDATE users SET currentaction='In Town' $string WHERE id='".$userrow["id"]."' LIMIT 1");
         display("Exploring", parsetemplate(gettemplate("town_enter"), $row));
     }
     
     // Decide if we want to pick a fight with someone.
     if (rand(1,5) == 1 && $userrow["currentaction"] != "In Town") { 
-        doquery("UPDATE <<users>> SET currentaction='Fighting' $string WHERE id='".$userrow["id"]."' LIMIT 1");
+        doquery("UPDATE users SET currentaction='Fighting' $string WHERE id='".$userrow["id"]."' LIMIT 1");
         die(header("Location: fight.php"));
     }
     
@@ -83,7 +83,7 @@ function move() { // Primary exploring function. Move them with the compass butt
     
     // If we've gotten this far, nothing has happened.
     $userrow["currentaction"] = "Exploring";
-    doquery("UPDATE <<users>> SET currentaction='Exploring', dropidstring='0' $string WHERE id='".$userrow["id"]."' LIMIT 1");
+    doquery("UPDATE users SET currentaction='Exploring', dropidstring='0' $string WHERE id='".$userrow["id"]."' LIMIT 1");
     display("Exploring", gettemplate("explore"));
     
 }
@@ -98,7 +98,7 @@ function travel($id) { // Move them with the Travel To list.
     if ($userrow["exploreverify"] != "") { botkillah(); }
     
     if (!is_numeric($id)) { err("Invalid action. Please <a href=\"index.php\">go back</a> and try again."); }
-    $query = doquery("SELECT * FROM <<towns>> WHERE id='$id' LIMIT 1");
+    $query = doquery("SELECT * FROM towns WHERE id='$id' LIMIT 1");
     $row = dorow($query);
     
     // Errors.
@@ -112,7 +112,7 @@ function travel($id) { // Move them with the Travel To list.
     $userrow["longitude"] = $row["longitude"];
     $userrow["latitude"] = $row["latitude"];
     $userrow["currenttp"] -= $row["travelpoints"];
-    $query = doquery("UPDATE <<users>> SET dropidstring='0', latitude='".$userrow["latitude"]."', longitude='".$userrow["longitude"]."', currenttp='".$userrow["currenttp"]."', currentaction='In Town' WHERE id='".$userrow["id"]."' LIMIT 1");
+    $query = doquery("UPDATE users SET dropidstring='0', latitude='".$userrow["latitude"]."', longitude='".$userrow["longitude"]."', currenttp='".$userrow["currenttp"]."', currentaction='In Town' WHERE id='".$userrow["id"]."' LIMIT 1");
     display("Exploring", parsetemplate(gettemplate("town_enter"), $row));
     
 }
@@ -138,7 +138,7 @@ function quickheal() { // Quick heal.
     // Now heal them.
     $userrow["currenthp"] = min($userrow["currenthp"] + $spells[$id]["value"], $userrow["maxhp"]);
     $userrow["currentmp"] = $userrow["currentmp"] - $spells[$id]["mp"];
-    doquery("UPDATE <<users>> SET currenthp='".$userrow["currenthp"]."', currentmp='".$userrow["currentmp"]."' WHERE id='".$userrow["id"]."' LIMIT 1");
+    doquery("UPDATE users SET currenthp='".$userrow["currenthp"]."', currentmp='".$userrow["currentmp"]."' WHERE id='".$userrow["id"]."' LIMIT 1");
     display("Exploring", gettemplate("explore_quickheal"));
     
 }
@@ -149,23 +149,23 @@ function itemdrop() { // Handling for item drops from monsters.
     
     if ($userrow["dropidstring"] == "0") { err("No item has been dropped. Please <a href=\"index.php\">go back</a> and try again."); }
     
-    $premodrow = dorow(doquery("SELECT * FROM <<itemmodnames>> ORDER BY id"));
+    $premodrow = dorow(doquery("SELECT * FROM itemmodnames ORDER BY id"));
     foreach($premodrow as $a=>$b) {
             $modrow[$b["fieldname"]] = $b;
     }
     
     $thenewitem = explode(",",$userrow["dropidstring"]);
-    $newitem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='".$thenewitem[1]."' LIMIT 1"));
-    $newprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='".$thenewitem[0]."' LIMIT 1"));
-    $newsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='".$thenewitem[2]."' LIMIT 1"));
+    $newitem = dorow(doquery("SELECT * FROM itembase WHERE id='".$thenewitem[1]."' LIMIT 1"));
+    $newprefix = dorow(doquery("SELECT * FROM itemprefixes WHERE id='".$thenewitem[0]."' LIMIT 1"));
+    $newsuffix = dorow(doquery("SELECT * FROM itemsuffixes WHERE id='".$thenewitem[2]."' LIMIT 1"));
     $newfullitem = builditem($newprefix, $newitem, $newsuffix, $modrow);
     $row["itemtable"] = parsetemplate(gettemplate("explore_drop_itemrow"), $newfullitem);
     
     if ($userrow["item".$newitem["slotnumber"]."idstring"] != "0") {
         $theolditem = explode(",",$userrow["item".$newitem["slotnumber"]."idstring"]);
-        $olditem = dorow(doquery("SELECT * FROM <<itembase>> WHERE id='".$theolditem[1]."' LIMIT 1"));
-        $oldprefix = dorow(doquery("SELECT * FROM <<itemprefixes>> WHERE id='".$theolditem[0]."' LIMIT 1"));
-        $oldsuffix = dorow(doquery("SELECT * FROM <<itemsuffixes>> WHERE id='".$theolditem[2]."' LIMIT 1"));
+        $olditem = dorow(doquery("SELECT * FROM itembase WHERE id='".$theolditem[1]."' LIMIT 1"));
+        $oldprefix = dorow(doquery("SELECT * FROM itemprefixes WHERE id='".$theolditem[0]."' LIMIT 1"));
+        $oldsuffix = dorow(doquery("SELECT * FROM itemsuffixes WHERE id='".$theolditem[2]."' LIMIT 1"));
         $oldfullitem = builditem($oldprefix, $olditem, $oldsuffix, $modrow);
         $row["olditems"] = parsetemplate(gettemplate("town_buy_olditemrow"), $oldfullitem);
     } else {
@@ -236,11 +236,11 @@ function botkillah() { // Bust a cap in the asses of macro bots. Word.
     if (isset($_POST["submit"])) {
         
         if (strtoupper($_POST["verify"]) == $userrow["exploreverify"]) {
-            $query = doquery("UPDATE <<users>> SET exploreverify='',exploreverifyimage='' WHERE id='".$userrow["id"]."' LIMIT 1");
+            $query = doquery("UPDATE users SET exploreverify='',exploreverifyimage='' WHERE id='".$userrow["id"]."' LIMIT 1");
             unlink("images/botcheck/".$userrow["exploreverifyimage"]);
             die(header("Location: index.php"));
         } else {
-            $query = doquery("UPDATE <<users>> SET explorefailed=explorefailed+1 WHERE id='".$userrow["id"]."' LIMIT 1");
+            $query = doquery("UPDATE users SET explorefailed=explorefailed+1 WHERE id='".$userrow["id"]."' LIMIT 1");
             die(header("Location: index.php?do=humanity"));
         }
         
@@ -267,7 +267,7 @@ function botkillah() { // Bust a cap in the asses of macro bots. Word.
             for($i=0; $i<8; $i++) { $randomext .= rand(0,9); }
             ImagePNG($im, "images/botcheck/$randomext".".png");
             ImageDestroy($im);
-            $query = doquery("UPDATE <<users>> SET exploreverify='$new_string',exploreverifyimage='$randomext".".png' WHERE id='".$userrow["id"]."' LIMIT 1");
+            $query = doquery("UPDATE users SET exploreverify='$new_string',exploreverifyimage='$randomext".".png' WHERE id='".$userrow["id"]."' LIMIT 1");
             
             $pagerow["exploreverifyimage"] = $randomext.".png";
             

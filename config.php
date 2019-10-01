@@ -16,10 +16,10 @@
 
 $dbsettings = Array(
         "server"        => "localhost",     // MySQL server name. (Usually localhost.)
-        "user"          => "",              // MySQL username.
+        "user"          => "root",              // MySQL username.
         "pass"          => "",              // MySQL password.
-        "name"          => "",              // MySQL database name.
+        "name"          => "ds",              // MySQL database name.
         "prefix"        => "sx",            // Prefix for table names.
-        "secretword"    => "");             // Secret word used when hashing information for cookies.
+        "secretword"    => "test123");             // Secret word used when hashing information for cookies.
         
 ?>

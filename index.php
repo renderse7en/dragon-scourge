@@ -14,7 +14,7 @@
 //	within the confines of the Dragon Scourge License Agreement
 //	(see our website for that).
 
-error_reporting(E_STRICT);
+//error_reporting(E_STRICT);
 
 include("lib.php");
 include("globals.php");

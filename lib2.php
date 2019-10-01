@@ -25,7 +25,7 @@ function updateuserrow() {
     }
     $querystring = rtrim($querystring, ",");
     
-    $query = doquery("UPDATE <<users>> SET $querystring WHERE id='".$userrow["id"]."' LIMIT 1");
+    $query = doquery("UPDATE users SET $querystring WHERE id='".$userrow["id"]."' LIMIT 1");
     
 }
 

@@ -18,7 +18,7 @@ function panelleft() {
     
     global $controlrow, $userrow, $acctrow, $townrow, $worldrow;
     $row = array();
-    
+
     // Action handling.
     if ($userrow["currentaction"] == "In Town") { 
         $row["action"] = "In Town:";
@@ -68,15 +68,17 @@ THEVERYENDOFYOU;
     // First we build the query string.
     $townstring = "(";
     $townslist = explode(",",$userrow["townslist"]);
+
     foreach($townslist as $a=>$b) {
         $townstring .= "id='$b' OR ";
     }
+
     $townstring = rtrim($townstring, " OR ");
     $townstring .= ") AND world='".$userrow["world"]."'";
-    
+
     // Then we do the query.
-    $traveltoquery = dorow(doquery("SELECT id,name FROM <<towns>> WHERE $townstring ORDER BY id"), "id");
-    
+    $traveltoquery = dorow(doquery("SELECT id, 'name' FROM towns WHERE $townstring ORDER BY id"), "id");
+
     // Finally we build the link list.
     foreach ($traveltoquery as $a => $b) {
         $row["travelto"] .= "<a href=\"index.php?do=travel:".$b["id"]."\">".$b["name"]."</a><br />\n";
@@ -102,7 +104,7 @@ function panelright() {
     // Who's Online.
     if ($controlrow["showonline"] == 1) {
         $row["whosonline"] = "<div class=\"big\"><b>Who's Online</b></div>";
-        $users = dorow(doquery("SELECT * FROM <<users>> WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."'"), "id");
+        $users = dorow(doquery("SELECT * FROM users WHERE UNIX_TIMESTAMP(onlinetime) >= '".(time()-600)."'"), "id");
         $number = count($users);
         $row["whosonline"] .= "There are <b>$number</b> user(s) online within the last 10 minutes: ";
         foreach ($users as $a => $b) {

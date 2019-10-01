@@ -21,6 +21,7 @@
 //if (file_exists("install.sql")) { die("Please remove the install.php file from your game directory before continuing."); }
 
 // Setup for superglobal stuff that can't go in globals.php.
+
 $starttime = getmicrotime();
 $numqueries = 0;
 $link = opendb();
@@ -55,10 +56,16 @@ function uber_ss($value) {
 }
 
 function uber_mres($value) {
+
+    include("config.php");
+    extract($dbsettings);
+
+    $link = mysqli_connect($server, $user, $pass) or err(mysqli_error(),true);
+    mysqli_select_db($link, $name) or err(mysqli_error(),true);
     
    $value = is_array($value) ?
                array_map('uber_mres', $value) :
-               mysql_real_escape_string($value);
+               mysqli_real_escape_string($link, $value);
    return $value;
    
 }
@@ -76,81 +83,95 @@ function opendb() { // Open database connection.
 
     include("config.php");
     extract($dbsettings);
-    $link = mysql_connect($server, $user, $pass) or err(mysql_error(),true);
-    mysql_select_db($name) or err(mysql_error(),true);
+
+    $link = mysqli_connect($server, $user, $pass) or err(mysqli_error(),true);
+    mysqli_select_db($link, $name) or err(mysqli_error(),true);
     return $link;
 
 }
 
 function doquery($query) { // Something of a tiny little database abstraction layer.
-    
-    include('config.php');
+
+    include("config.php");
+    extract($dbsettings);
+
+    $mysqlConnect = mysqli_connect($server, $user, $pass);
+    mysqli_select_db($mysqlConnect, $name);
+
     global $numqueries, $controlrow;
-    $sqlquery = mysql_query(preg_replace('/<<([a-zA-Z0-9_\-]+)>>/', $dbsettings["prefix"].'_$1', $query));
+    $sqlquery = mysqli_query($mysqlConnect, preg_replace('/<<([a-zA-Z0-9_\-]+)>>/', $dbsettings["prefix"].'_$1', $query));
 
     if ($sqlquery == false) {
-        if ($controlrow["debug"] == 1) { die(mysql_error() . "<br /><br />" . $query); } else { die("A MySQL query error occurred. Please contact the game administrator for more help."); }
+        if ($controlrow["debug"] == 1) {
+            die(mysqli_error($mysqlConnect) . "<br /><br />" . $query);
+        } else {
+            echo "<pre>";
+            print_r($query);
+            echo "</pre>";
+
+            die("A MySQL query error occurred. Please contact the game administrator for more help.");
+        }
     }
-    
+
     $numqueries++;
     return $sqlquery;
-    
+
 }
 
 function dorow($sqlquery, $force = "") { // Abstraction layer part deux.
-    
-    switch (mysql_num_rows($sqlquery)) {
-        
+
+    switch (mysqli_num_rows($sqlquery)) {
+
         case 0:
             $row = false;
             break;
         case 1:
             if ($force == "") {
-                $row = mysql_fetch_assoc($sqlquery);
+                $row = mysqli_fetch_assoc($sqlquery);
             } else {
-                $temprow = mysql_fetch_assoc($sqlquery);
+                $temprow = mysqli_fetch_assoc($sqlquery);
                 $row[$temprow[$force]] = $temprow;
             }
             break;
         default:
             if ($force == "") {
-                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                while ($temprow = mysqli_fetch_assoc($sqlquery)) {
                     $row[] = $temprow;
                 }
             } else {
-                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                while ($temprow = mysqli_fetch_assoc($sqlquery)) {
                     $row[$temprow[$force]] = $temprow;
                 }
             }
             break;
-    
+
     }
-        
+
     return $row;
-    
+
 }
 
 function gettemplate($templatename) { // SQL query for the template.
-    
+
     $filename = "templates/" . $templatename . ".php";
     include("$filename");
     return $template;
-    
+
 }
 
 function parsetemplate($template, $array) { // Replace template with proper content. Also does languages.
-    
+
     foreach($array as $a => $b) {
         $template = str_replace("{{{$a}}}", $b, $template);
     }
     return $template;
-    
+
 }
 
 function getmicrotime() { // Used for timing script operations.
 
-    list($usec, $sec) = explode(" ",microtime()); 
-    return ((float)$usec + (float)$sec); 
+    list($usec, $sec) = explode(" ",microtime());
+    return ((float)$usec + (float)$sec);
 
 }
 
@@ -164,18 +185,18 @@ function mymail($to, $title, $body, $from = '') { // thanks to arto dot PLEASE d
 
     global $controlrow;
     extract($controlrow);
-    
+
 
     $from = trim($from);
 
     if (!$from) {
     $from = "<$adminemail>";
     }
-    
+
     $rp    = $adminemail;
     $org    = "$gameurl";
     $mailer = "PHP";
-    
+
     $head  = "";
     $head  .= "Content-Type: text/plain \r\n";
     $head  .= "Date: ". date('r'). " \r\n";
@@ -187,28 +208,28 @@ function mymail($to, $title, $body, $from = '') { // thanks to arto dot PLEASE d
     $head  .= "X-Sender: $from \r\n";
     $head  .= "X-Priority: 3 \r\n";
     $head  .= "X-Mailer: $mailer \r\n";
-    
+
     $body  = str_replace("\r\n", "\n", $body);
     $body  = str_replace("\n", "\r\n", $body);
-    
+
     return mail($to, $title, $body, $head);
-  
+
 }
 
 function err($error, $system = false, $panels = true) { // Basic little error handler.
 
      $errmsg = "One or more errors have occurred:<br /><br /><b>$error</b><br /><br />Please <a href=\"javascript:history.go(-1);\">go back</a> and try again.";
      display("Error", $errmsg, $panels);
-     
+
 }
 
 function display($title, $content, $panels = true) { // Finalize page and output to browser.
-    
+
     include('config.php');
     global $controlrow, $userrow, $worldrow, $numqueries, $starttime, $version, $build;
-    
+
     if (!isset($controlrow)) {
-        $controlrow = dorow(doquery("SELECT * FROM <<control>> WHERE id='1' LIMIT 1"));
+        $controlrow = dorow(doquery("SELECT * FROM control WHERE id='1' LIMIT 1"));
     }
 
     // Make page tags for XHTML validation.
@@ -216,7 +237,7 @@ function display($title, $content, $panels = true) { // Finalize page and output
     . "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n"
     . "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n";
     $page .= gettemplate("primary");
-    
+
     // Setup for primary page array indexes.
     $row = array();
     $row["gamename"] = $controlrow["gamename"];
@@ -232,24 +253,24 @@ function display($title, $content, $panels = true) { // Finalize page and output
     } else {
         $row["info"] = "Version <a href=\"index.php?do=version\">" . $row["version"] . "</a> " . $row["debug"];
     }
-    
+
     // Setup for side panels.
     include("panels.php");
-    if ($panels == true) { 
-        $row["leftnav"] = panelleft(); 
+    if ($panels == true) {
+        $row["leftnav"] = panelleft();
         $row["rightnav"] = panelright();
         $row["topnav"] = paneltop(true);
         $row["bottomnav"] = panelbottom();
         $row["middlenav"] = panelmiddle();
-    } else { 
-        $row["leftnav"] = ""; 
+    } else {
+        $row["leftnav"] = "";
         $row["rightnav"] = "";
         $row["topnav"] = paneltop(false);
         $row["bottomnav"] = "";
     }
-    
+
     $page = rtrim($page, "<-!");
-    
+
 $page .= <<<THEVERYENDOFYOU
 <table cellspacing="0" cellpadding="3" style="width: 95px; color: #ffffff; border: solid 1px #ffffff; background-color: #000000; margin-top: 2px;">
   <tr>

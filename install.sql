@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `<<accounts>>`;
-CREATE TABLE `<<accounts>>` (
+DROP TABLE IF EXISTS `accounts`;
+CREATE TABLE `accounts` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `username` varchar(30) NOT NULL default '',
   `password` varchar(32) NOT NULL default '',
@@ -14,10 +14,10 @@ CREATE TABLE `<<accounts>>` (
   `imageformat` varchar(4) NOT NULL default '0',
   `minimap` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<babblebox>>`;
-CREATE TABLE `<<babblebox>>` (
+DROP TABLE IF EXISTS `babblebox`;
+CREATE TABLE `babblebox` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `posttime` datetime NOT NULL default '0000-00-00 00:00:00',
   `charname` varchar(30) NOT NULL default '',
@@ -25,10 +25,10 @@ CREATE TABLE `<<babblebox>>` (
   `content` varchar(255) NOT NULL default '',
   `guild` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<classes>>`;
-CREATE TABLE `<<classes>>` (
+DROP TABLE IF EXISTS `classes`;
+CREATE TABLE `classes` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `expbonus` tinyint(3) unsigned NOT NULL default '0',
@@ -39,15 +39,15 @@ CREATE TABLE `<<classes>>` (
   `mpperenergy` float unsigned NOT NULL default '0',
   `description` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<classes>>` (`id`, `name`, `expbonus`, `goldbonus`, `damageperstrength`, `defenseperdex`, `hpperlife`, `mpperenergy`, `description`) VALUES 
+INSERT INTO `classes` (`id`, `name`, `expbonus`, `goldbonus`, `damageperstrength`, `defenseperdex`, `hpperlife`, `mpperenergy`, `description`) VALUES
 (1, 'Barbarian', 0, 0, 3, 1, 2, 1, 'Barbarians specialize in physical damage. 3 damage per strength point, 1 defense per dexterity point, 2 hp per life point, 1 mp per energy point.'),
 (2, 'Sorceress', 0, 0, 1, 1, 2, 3, 'Sorceresses specialize in magical damage. 1 damage per strength point, 1 defense per dexterity point, 2 hp per life point, 3 mp per energy point.'),
 (3, 'Paladin', 0, 0, 1, 2, 3, 1, 'Paladins specialize in staying alive. 1 damage per strength point, 2 defense per dexterity point, 3 hp per life point, 1 mp per energy point.');
 
-DROP TABLE IF EXISTS `<<control>>`;
-CREATE TABLE `<<control>>` (
+DROP TABLE IF EXISTS `control`;
+CREATE TABLE `control` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
   `gamename` varchar(50) NOT NULL default '',
   `gameopen` tinyint(3) unsigned NOT NULL default '0',
@@ -77,10 +77,10 @@ CREATE TABLE `<<control>>` (
   `guildjoinlvl` int(10) unsigned NOT NULL default '0',
   `guildupdate` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<difficulties>>`;
-CREATE TABLE `<<difficulties>>` (
+DROP TABLE IF EXISTS `difficulties`;
+CREATE TABLE `difficulties` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `expbonus` tinyint(3) unsigned NOT NULL default '0',
@@ -88,24 +88,24 @@ CREATE TABLE `<<difficulties>>` (
   `multiplier` float NOT NULL default '0',
   `deathpenalty` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<difficulties>>` (`id`, `name`, `expbonus`, `goldbonus`, `multiplier`, `deathpenalty`) VALUES 
+INSERT INTO `difficulties` (`id`, `name`, `expbonus`, `goldbonus`, `multiplier`, `deathpenalty`) VALUES
 (1, 'Easy', 0, 0, 1, 0),
 (2, 'Medium', 3, 3, 1.5, 3),
 (3, 'Hard', 5, 5, 2, 7);
 
-DROP TABLE IF EXISTS `<<guildapps>>`;
-CREATE TABLE `<<guildapps>>` (
+DROP TABLE IF EXISTS `guildapps`;
+CREATE TABLE `guildapps` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `guild` int(10) unsigned NOT NULL default '0',
   `charid` int(10) unsigned NOT NULL default '0',
   `charname` varchar(30) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<guilds>>`;
-CREATE TABLE `<<guilds>>` (
+DROP TABLE IF EXISTS `guilds`;
+CREATE TABLE `guilds` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `lastupdate` bigint(20) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
@@ -127,10 +127,10 @@ CREATE TABLE `<<guilds>>` (
   `statement` text NOT NULL,
   `news` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<itembase>>`;
-CREATE TABLE `<<itembase>>` (
+DROP TABLE IF EXISTS `itembase`;
+CREATE TABLE `itembase` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `slotnumber` tinyint(3) unsigned NOT NULL default '0',
@@ -157,9 +157,9 @@ CREATE TABLE `<<itembase>>` (
   `mod6name` varchar(50) NOT NULL default '',
   `mod6attr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<itembase>>` (`id`, `name`, `slotnumber`, `isunique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`, `mod1name`, `mod1attr`, `mod2name`, `mod2attr`, `mod3name`, `mod3attr`, `mod4name`, `mod4attr`, `mod5name`, `mod5attr`, `mod6name`, `mod6attr`) VALUES 
+INSERT INTO `itembase` (`id`, `name`, `slotnumber`, `isunique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`, `mod1name`, `mod1attr`, `mod2name`, `mod2attr`, `mod3name`, `mod3attr`, `mod4name`, `mod4attr`, `mod5name`, `mod5attr`, `mod6name`, `mod6attr`) VALUES
 (1, 'Pointy Stick', 1, 0, 1, 10, 5, 1, 0, 0, 0, 'physattack', 3, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (2, 'Big Stick', 1, 0, 1, 15, 8, 1, 0, 0, 0, 'physattack', 4, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (3, 'Dagger', 1, 0, 1, 20, 10, 1, 0, 0, 0, 'physattack', 5, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
@@ -334,16 +334,16 @@ INSERT INTO `<<itembase>>` (`id`, `name`, `slotnumber`, `isunique`, `willdrop`, 
 (169, 'Titanium Horned Helm', 3, 0, 1, 50000, 25000, 85, 105, 126, 0, 'physdefense', 175, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0),
 (51, 'Giant Maul', 1, 0, 1, 38000, 19000, 83, 405, 0, 0, 'physattack', 400, '', 0, '', 0, '', 0, '', 0, '', 0, '', 0);
 
-DROP TABLE IF EXISTS `<<itemmodnames>>`;
-CREATE TABLE `<<itemmodnames>>` (
+DROP TABLE IF EXISTS `itemmodnames`;
+CREATE TABLE `itemmodnames` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `fieldname` varchar(50) NOT NULL default '',
   `prettyname` varchar(50) NOT NULL default '',
   `percent` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<itemmodnames>>` (`id`, `fieldname`, `prettyname`, `percent`) VALUES 
+INSERT INTO `itemmodnames` (`id`, `fieldname`, `prettyname`, `percent`) VALUES
 (1, 'expbonus', 'Experience Bonus', 1),
 (2, 'goldbonus', 'Gold Bonus', 1),
 (3, 'maxhp', 'Max HP', 0),
@@ -365,8 +365,8 @@ INSERT INTO `<<itemmodnames>>` (`id`, `fieldname`, `prettyname`, `percent`) VALU
 (19, 'hpgain', 'HP Per Kill', 0),
 (20, 'mpgain', 'MP Per Kill', 0);
 
-DROP TABLE IF EXISTS `<<itemprefixes>>`;
-CREATE TABLE `<<itemprefixes>>` (
+DROP TABLE IF EXISTS `itemprefixes`;
+CREATE TABLE `itemprefixes` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `slotnumber` tinyint(3) unsigned NOT NULL default '0',
@@ -381,14 +381,14 @@ CREATE TABLE `<<itemprefixes>>` (
   `basename` varchar(50) NOT NULL default '',
   `baseattr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<itemprefixes>>` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES 
+INSERT INTO `itemprefixes` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES
 (1, 'Sharp', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'physattack', 2),
 (2, 'Magic', 1, 0, 0, 8, 4, 1, 0, 0, 0, 'magicattack', 5);
 
-DROP TABLE IF EXISTS `<<itemsuffixes>>`;
-CREATE TABLE `<<itemsuffixes>>` (
+DROP TABLE IF EXISTS `itemsuffixes`;
+CREATE TABLE `itemsuffixes` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `slotnumber` tinyint(3) unsigned NOT NULL default '0',
@@ -403,14 +403,14 @@ CREATE TABLE `<<itemsuffixes>>` (
   `basename` varchar(50) NOT NULL default '',
   `baseattr` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<itemsuffixes>>` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES 
+INSERT INTO `itemsuffixes` (`id`, `name`, `slotnumber`, `unique`, `willdrop`, `buycost`, `sellcost`, `reqlevel`, `reqstrength`, `reqdexterity`, `reqenergy`, `basename`, `baseattr`) VALUES
 (1, 'of the Vampire', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'hpleech', 5),
 (2, 'of the Bear', 1, 0, 0, 5, 3, 1, 0, 0, 0, 'strength', 5);
 
-DROP TABLE IF EXISTS `<<messages>>`;
-CREATE TABLE `<<messages>>` (
+DROP TABLE IF EXISTS `messages`;
+CREATE TABLE `messages` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `postdate` datetime NOT NULL default '0000-00-00 00:00:00',
   `senderid` int(10) unsigned NOT NULL default '0',
@@ -422,10 +422,10 @@ CREATE TABLE `<<messages>>` (
   `message` text NOT NULL,
   `gold` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<monsters>>`;
-CREATE TABLE `<<monsters>>` (
+DROP TABLE IF EXISTS `monsters`;
+CREATE TABLE `monsters` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `world` tinyint(3) unsigned NOT NULL default '0',
@@ -449,9 +449,9 @@ CREATE TABLE `<<monsters>>` (
   `newstory` int(10) unsigned NOT NULL default '0',
   `hpleech` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<monsters>>` (`id`, `name`, `world`, `level`, `maxexp`, `maxgold`, `maxhp`, `physattack`, `physdefense`, `magicattack`, `magicdefense`, `fireattack`, `firedefense`, `lightattack`, `lightdefense`, `spell1`, `spell2`, `spellimmune1`, `spellimmune2`, `boss`, `newstory`, `hpleech`) VALUES 
+INSERT INTO `monsters` (`id`, `name`, `world`, `level`, `maxexp`, `maxgold`, `maxhp`, `physattack`, `physdefense`, `magicattack`, `magicdefense`, `fireattack`, `firedefense`, `lightattack`, `lightdefense`, `spell1`, `spell2`, `spellimmune1`, `spellimmune2`, `boss`, `newstory`, `hpleech`) VALUES
 (1, 'Small Slime', 1, 1, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2, 'Shade', 1, 1, 4, 2, 3, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (3, 'Slime', 1, 2, 4, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -661,8 +661,8 @@ INSERT INTO `<<monsters>>` (`id`, `name`, `world`, `level`, `maxexp`, `maxgold`,
 (208, 'Xiran', 5, 99, 1000, 1000, 1400, 1500, 1300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 0),
 (209, 'Xiran', 5, 99, 5000, 5000, 1600, 1800, 1200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 19, 0);
 
-DROP TABLE IF EXISTS `<<pvp>>`;
-CREATE TABLE `<<pvp>>` (
+DROP TABLE IF EXISTS `pvp`;
+CREATE TABLE `pvp` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `player1id` int(10) unsigned NOT NULL default '0',
   `player2id` int(10) unsigned NOT NULL default '0',
@@ -673,10 +673,10 @@ CREATE TABLE `<<pvp>>` (
   `turntime` timestamp NOT NULL,
   `fightrow` text NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<spells>>`;
-CREATE TABLE `<<spells>>` (
+DROP TABLE IF EXISTS `spells`;
+CREATE TABLE `spells` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `fname` varchar(30) NOT NULL default '',
@@ -686,9 +686,9 @@ CREATE TABLE `<<spells>>` (
   `classonly` int(10) unsigned NOT NULL default '0',
   `classexclude` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<spells>>` (`id`, `name`, `fname`, `value`, `mp`, `minlevel`, `classonly`, `classexclude`) VALUES 
+INSERT INTO `spells` (`id`, `name`, `fname`, `value`, `mp`, `minlevel`, `classonly`, `classexclude`) VALUES
 (1, 'Heal 1', 'heal', 5, 2, 5, 2, 0),
 (2, 'Heal 2', 'heal', 10, 5, 10, 0, 0),
 (3, 'Heal 3', 'heal', 20, 10, 15, 0, 0),
@@ -765,8 +765,8 @@ INSERT INTO `<<spells>>` (`id`, `name`, `fname`, `value`, `mp`, `minlevel`, `cla
 (74, 'Blessed Strike 9', 'bonusattack', 70, 200, 87, 1, 0),
 (75, 'Blessed Strike 10', 'bonusattack', 90, 350, 95, 1, 0);
 
-DROP TABLE IF EXISTS `<<story>>`;
-CREATE TABLE `<<story>>` (
+DROP TABLE IF EXISTS `story`;
+CREATE TABLE `story` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `title` text NOT NULL,
   `story` text NOT NULL,
@@ -783,9 +783,9 @@ CREATE TABLE `<<story>>` (
   `rewardname` varchar(30) NOT NULL default '',
   `rewardattr` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<story>>` (`id`, `title`, `story`, `world`, `latitude`, `longitude`, `nextstory`, `targetmonster`, `targetitem`, `targetworld`, `targetlat`, `targetlon`, `targetaction`, `rewardname`, `rewardattr`) VALUES 
+INSERT INTO `story` (`id`, `title`, `story`, `world`, `latitude`, `longitude`, `nextstory`, `targetmonster`, `targetitem`, `targetworld`, `targetlat`, `targetlon`, `targetaction`, `rewardname`, `rewardattr`) VALUES
 (1, 'Prologue', 'The light has forsaken this land, and not for the first time. Centuries ago, it was overrun by darkness and then saved by a hero whose lifelong quest was to eradicate evil. The hero succeeded, and in the end, Lucifuge, King of the Dragons, was destroyed... at least for the time being. In the many long years since that time, Lucifuge has been gathering his forces and his power, and has finally regained enough of his former strength to return.\r\n\r\nSo the land is once again in need of a saviour. It will be no easy task, dear adventurer. In the last age, Lucifuge and his minions controlled but a small country. This time, he has sent his forces to sow chaos and darkness throughout the world. Only a brave adventurer will be able to conquer him and restore peace and order to the world.\r\n\r\nContinue on, dear adventurer. You shall be tested dearly, but the rewards will be great.', 1, 0, 0, 2, 0, '', 1, 0, 0, '', '', 0),
 (2, 'Queen of Demons', 'You come to a great stone door, with the inscription ''RAZORA'' carved in the Language of the Fallen. Next to the door lie the skeletons of several dead warriors who failed to enter. One of the skeletons is holding a scrap of paper, which reads:\r\n\r\n"We finally made it. The legends are true, Razora does exist. As I write this, we are standing outside the demon queen''s throneroom. Something is following us, though, and has been for several days. We''re making camp tonight, and we''ll head inside in the morning. After the months of travelling, we definitely need our rest if we''re really preparing to face Razora. We''ve survived this far, surely whatever is following us will hold off one more night..."\r\n\r\nYou are now faced with a choice, dear adventurer. Are you ready to face the demon queen Razora, or do you still need more preparation?', 1, 100, -100, 0, 201, '', 0, 0, 0, '', '', 0),
 (3, 'Fallen Queen', 'Razora, the Demon Queen, lies dead at your feet. Even now, her body and all the black blood spilled from it are melting away into the nether. Soon, all that''s left is her heart, which you take with you as proof that you destroyed her.\r\n\r\nOne section of the wall crumbles and falls, and leads to a doorway, guarded by a large statue of an angel. In the angel''s hand is a sword with flames engraved in the blade.\r\n\r\nIt wouldn''t be too much trouble to take the sword, and it does seem like your right to take it, after all the trouble you went through to kill Razora. You can now take the sword and continue through the doorway, or just continue on without it.', 1, 100, -100, 4, 0, '', 2, 0, 0, '', 'maxhp', 50),
@@ -807,8 +807,8 @@ INSERT INTO `<<story>>` (`id`, `title`, `story`, `world`, `latitude`, `longitude
 (19, 'Epilogue', 'With one final triumphant swing, you pierce Xiran''s heart and immediately your weapon disintegrates in front of your eyes. Xiran falls to the ground, and as the walls of the ice prison are falling down around you, Xiran''s body bursts into flames and is utterly consumed in seconds, leaving only a pile of ash on the floor.\r\n\r\nHis sword, though, remains unscathed by the fire, so as you are looking for the quickest way out of the crumbling building, you grab it and sling it over your shoulder. It''s only fair, after all, since the demon god''s heart took your own weapon away from you.\r\n\r\nYou make your way back to the last outpost, and the entire population has come out to see you. After many long ages, the dreadful task of awating Xiran''s escape has been lifted from their shoulders.\r\n\r\nNow that you''ve finally saved the world, you can''t wait to have a drink...\r\n\r\nThe End', 5, 100, 100, 20, 0, '0,173,0', 0, 0, 0, '', '', 0),
 (20, 'Fin', 'You have now beat the game and have been added to the Scroll of Heroes.  You may continue playing if you want, or of course you could also take a well-deserved rest. Thank you for playing, and we hope you''ve enjoyed it.', 5, 100, 100, 9999, 0, '', 0, 0, 0, '', '', 0);
 
-DROP TABLE IF EXISTS `<<towns>>`;
-CREATE TABLE `<<towns>>` (
+DROP TABLE IF EXISTS `towns`;
+CREATE TABLE `towns` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `world` tinyint(3) unsigned NOT NULL default '0',
@@ -820,9 +820,9 @@ CREATE TABLE `<<towns>>` (
   `itemminlvl` int(10) unsigned NOT NULL default '0',
   `itemmaxlvl` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<towns>>` (`id`, `name`, `world`, `latitude`, `longitude`, `innprice`, `mapprice`, `travelpoints`, `itemminlvl`, `itemmaxlvl`) VALUES 
+INSERT INTO `towns` (`id`, `name`, `world`, `latitude`, `longitude`, `innprice`, `mapprice`, `travelpoints`, `itemminlvl`, `itemmaxlvl`) VALUES
 (1, 'Middleton', 1, 0, 0, 5, 0, 0, 1, 5),
 (2, 'Norfolk', 1, 25, 25, 10, 25, 5, 3, 8),
 (3, 'Calentia', 1, 50, -50, 25, 50, 15, 6, 11),
@@ -849,8 +849,8 @@ INSERT INTO `<<towns>>` (`id`, `name`, `world`, `latitude`, `longitude`, `innpri
 (24, 'Outpost 22', 5, -74, -69, 800, 4500, 400, 80, 84),
 (25, 'Outpost 42', 5, 89, 94, 950, 5000, 425, 83, 85);
 
-DROP TABLE IF EXISTS `<<users>>`;
-CREATE TABLE `<<users>>` (
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `account` int(10) unsigned NOT NULL default '0',
   `birthdate` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -953,17 +953,17 @@ CREATE TABLE `<<users>>` (
   `bonusdefense` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   FULLTEXT KEY `item1name` (`item1name`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-DROP TABLE IF EXISTS `<<worlds>>`;
-CREATE TABLE `<<worlds>>` (
+DROP TABLE IF EXISTS `worlds`;
+CREATE TABLE `worlds` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(30) NOT NULL default '',
   `size` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ;
+) ENGINE=MyISAM ;
 
-INSERT INTO `<<worlds>>` (`id`, `name`, `size`) VALUES 
+INSERT INTO `worlds` (`id`, `name`, `size`) VALUES
 (1, 'Raenslide', 100),
 (2, 'Lorenfall', 100),
 (3, 'Borderlands', 100),

@@ -1,187 +1,236 @@
 <?php
 
-//	Dragon Scourge
-//
-//	Program authors: Jamin Blount
-//	Copyright (C) 2007 by renderse7en
-//	Script Version 1.0 Beta 5 Build 20
+    //	Dragon Scourge
+    //
+    //	Program authors: Jamin Blount
+    //	Copyright (C) 2007 by renderse7en
+    //	Script Version 1.0 Beta 5 Build 20
 
-//	You may not distribute this program in any manner, modified or
-//	otherwise, without the express, written consent from
-//	renderse7en.
-//
-//	You may make modifications, but only for your own use and
-//	within the confines of the Dragon Scourge License Agreement
-//	(see our website for that).
+    //	You may not distribute this program in any manner, modified or
+    //	otherwise, without the express, written consent from
+    //	renderse7en.
+    //
+    //	You may make modifications, but only for your own use and
+    //	within the confines of the Dragon Scourge License Agreement
+    //	(see our website for that).
 
-opendb();
+    opendb();
 
-// Handling for servers with magic_quotes turned on.
-if (get_magic_quotes_gpc()) {
+    // Handling for servers with magic_quotes turned on.
+    if (get_magic_quotes_gpc()) {
 
-   $_POST = array_map('uber_ss', $_POST);
-   $_GET = array_map('uber_ss', $_GET);
-   $_COOKIE = array_map('uber_ss', $_COOKIE);
+        $_POST = array_map('uber_ss', $_POST);
+        $_GET = array_map('uber_ss', $_GET);
+        $_COOKIE = array_map('uber_ss', $_COOKIE);
 
-}
-$_POST = array_map('uber_mres', $_POST);
-$_POST = array_map('uber_hsc', $_POST);
-$_GET = array_map('uber_mres', $_GET);
-$_GET = array_map('uber_hsc', $_GET);
-$_COOKIE = array_map('uber_mres', $_COOKIE);
-$_COOKIE = array_map('uber_hsc', $_COOKIE);
-
-$page = "one";
-if (isset($_GET["page"])) { $page = $_GET["page"]; }
-switch ($page) {
-    case "one": one(); break;
-    case "two": two(); break;
-    case "three": three(); break;
-    case "four": four(); break;
-    case "five": five(); break;
-    default: one(); break;
-}
-
-function uber_ss($value) {
-    
-   $value = is_array($value) ?
-               array_map('uber_ss', $value) :
-               stripslashes($value);
-   return $value;
-   
-}
-
-function uber_mres($value) {
-    
-   $value = is_array($value) ?
-               array_map('uber_mres', $value) :
-               mysql_real_escape_string($value);
-   return $value;
-   
-}
-
-function uber_hsc($value) {
-    
-   $value = is_array($value) ?
-               array_map('uber_hsc', $value) :
-               htmlspecialchars($value);
-   return $value;
-   
-}
-
-function opendb() { // Open database connection.
-
-    include("config.php");
-    extract($dbsettings);
-    if (!mysql_connect($server, $user, $pass)) {
-        define("MYSQLRESULT",false);
-    } else {
-        define("MYSQLRESULT",true);
     }
-    if (MYSQLRESULT) {
-        if (!mysql_select_db($name)) {
-            define("DBRESULT", false);
-        } else {
-            define("DBRESULT", true);
-        }
+    $_POST = array_map('uber_mres', $_POST);
+    $_POST = array_map('uber_hsc', $_POST);
+    $_GET = array_map('uber_mres', $_GET);
+    $_GET = array_map('uber_hsc', $_GET);
+    $_COOKIE = array_map('uber_mres', $_COOKIE);
+    $_COOKIE = array_map('uber_hsc', $_COOKIE);
+
+    $page = "one";
+    if (isset($_GET["page"])) {
+        $page = $_GET["page"];
     }
-    return $link;
-
-}
-
-function doquery($query) { // Something of a tiny little database abstraction layer.
-    
-    include('config.php');
-    $sqlquery = mysql_query(preg_replace("/<<([a-zA-Z0-9_\-]+)>>/", $dbsettings["prefix"]."_$1", $query));
-    
-    if ($sqlquery == false) {
-        die(mysql_error() . "<br /><br />" . $query);
-    }
-    
-    return $sqlquery;
-    
-}
-
-function dorow($sqlquery, $force = "") { // Abstraction layer part deux.
-    
-    switch (mysql_num_rows($sqlquery)) {
-        
-        case 0:
-            $row = false;
+    switch ($page) {
+        case "one":
+            one();
             break;
-        case 1:
-            if ($force == "") {
-                $row = mysql_fetch_assoc($sqlquery);
-            } else {
-                $temprow = mysql_fetch_assoc($sqlquery);
-                $row[$temprow[$force]] = $temprow;
-            }
+        case "two":
+            two();
+            break;
+        case "three":
+            three();
+            break;
+        case "four":
+            four();
+            break;
+        case "five":
+            five();
             break;
         default:
-            if ($force == "") {
-                while ($temprow = mysql_fetch_assoc($sqlquery)) {
-                    $row[] = $temprow;
-                }
+            one();
+            break;
+    }
+
+    function uber_ss($value)
+    {
+
+        $value = is_array($value) ?
+            array_map('uber_ss', $value) :
+            stripslashes($value);
+        return $value;
+
+    }
+
+    function uber_mres($value)
+    {
+
+        include("config.php");
+        extract($dbsettings);
+
+        $mysqlConnect = mysqli_connect($server, $user, $pass);
+
+        $value = is_array($value) ?
+            array_map('uber_mres', $value) :
+            mysqli_real_escape_string($mysqlConnect, $value);
+        return $value;
+
+    }
+
+    function uber_hsc($value)
+    {
+
+        $value = is_array($value) ?
+            array_map('uber_hsc', $value) :
+            htmlspecialchars($value);
+        return $value;
+
+    }
+
+    function opendb()
+    { // Open database connection.
+
+        include("config.php");
+        extract($dbsettings);
+        if (!$mysqlConnect = mysqli_connect($server, $user, $pass)) {
+            define("MYSQLRESULT", false);
+        } else {
+            define("MYSQLRESULT", true);
+        }
+        if (MYSQLRESULT) {
+            if (!mysqli_select_db($mysqlConnect, $name)) {
+                define("DBRESULT", false);
             } else {
-                while ($temprow = mysql_fetch_assoc($sqlquery)) {
+                define("DBRESULT", true);
+            }
+        }
+        return $mysqlConnect;
+
+    }
+
+    function doquery($query)
+    { // Something of a tiny little database abstraction layer.
+
+        include("config.php");
+        extract($dbsettings);
+
+        $mysqlConnect = mysqli_connect($server, $user, $pass);
+        mysqli_select_db($mysqlConnect, $name);
+
+        $sqlquery = mysqli_query($mysqlConnect,
+            preg_replace("/<<([a-zA-Z0-9_\-]+)>>/", $dbsettings["prefix"] . "_$1", $query));
+
+        if ($sqlquery == false) {
+            die(mysqli_error($mysqlConnect) . "<br /><br />" . $query);
+        }
+
+        return $sqlquery;
+
+    }
+
+    function dorow($sqlquery, $force = "")
+    { // Abstraction layer part deux.
+
+        switch (mysqli_num_rows($sqlquery)) {
+
+            case 0:
+                $row = false;
+                break;
+            case 1:
+                if ($force == "") {
+                    $row = mysqli_fetch_assoc($sqlquery);
+                } else {
+                    $temprow = mysqli_fetch_assoc($sqlquery);
                     $row[$temprow[$force]] = $temprow;
                 }
-            }
-            break;
-    
-    }
-        
-    return $row;
-    
-}
-
-// Thanks to Predrag Supurovic from php.net for this function!
-function dobatch($p_query) {
-    $query_split = preg_split ("/[;]+/", $p_query);
-    foreach ($query_split as $command_line) {
-        $command_line = trim($command_line);
-        if ($command_line != '') {
-            $query_result = doquery($command_line);
-            if ($query_result == 0) {
                 break;
+            default:
+                if ($force == "") {
+                    while ($temprow = mysqli_fetch_assoc($sqlquery)) {
+                        $row[] = $temprow;
+                    }
+                } else {
+                    while ($temprow = mysqli_fetch_assoc($sqlquery)) {
+                        $row[$temprow[$force]] = $temprow;
+                    }
+                }
+                break;
+
+        }
+
+        return $row;
+
+    }
+
+    // Thanks to Predrag Supurovic from php.net for this function!
+    function dobatch($p_query)
+    {
+        $query_split = preg_split("/[;]+/", $p_query);
+        foreach ($query_split as $command_line) {
+            $command_line = trim($command_line);
+            if ($command_line != '') {
+                $query_result = doquery($command_line);
+                if ($query_result == 0) {
+                    break;
+                }
             }
         }
+        return $query_result;
     }
-    return $query_result;
-}
 
-/***** DONE WITH ALL THE SETUP STUFF, SO ACTUALLY START INSTALLING. *****/
+    /***** DONE WITH ALL THE SETUP STUFF, SO ACTUALLY START INSTALLING. *****/
 
-function one() {
-    
-    // Test file permissions.
-    $botcheck = false;
-    $f = fopen("images/botcheck/test.txt", "a");
-    if ($f) { 
-        if (fwrite($f,"test")) {
-            $botcheck = true;
-            fclose($f);
-            unlink("images/botcheck/test.txt");
+    function one()
+    {
+
+        // Test file permissions.
+        $botcheck = false;
+        $f = fopen("images/botcheck/test.txt", "a");
+        if ($f) {
+            if (fwrite($f, "test")) {
+                $botcheck = true;
+                fclose($f);
+                unlink("images/botcheck/test.txt");
+            }
         }
-    }
-    $users = false;
-    $f = fopen("images/users/test.txt", "a");
-    if ($f) { 
-        if (fwrite($f,"test")) {
-            $users = true;
-            fclose($f);
-            unlink("images/users/test.txt");
+        $users = false;
+        $f = fopen("images/users/test.txt", "a");
+        if ($f) {
+            if (fwrite($f, "test")) {
+                $users = true;
+                fclose($f);
+                unlink("images/users/test.txt");
+            }
         }
-    }
-    
-    // Display status.
-    if ($botcheck) { $botcheck = "<span style=\"color: Green;\">Pass</span>"; } else { $botcheck = "<span style=\"color: red;\">Fail</span>"; }
-    if ($users) { $users = "<span style=\"color: Green;\">Pass</span>"; } else { $users = "<span style=\"color: red;\">Fail</span>"; }
-    if (MYSQLRESULT) { $mysqlresult = "<span style=\"color: Green;\">Pass</span>"; } else { $mysqlresult = "<span style=\"color: red;\">Fail</span>"; }
-    if (DBRESULT) { $dbresult = "<span style=\"color: Green;\">Pass</span>"; } else { $dbresult = "<span style=\"color: red;\">Fail</span>"; }
-    
-    // Done. Show page.
-$page = <<<THEVERYENDOFYOU
+
+        // Display status.
+        if ($botcheck) {
+            $botcheck = "<span style=\"color: Green;\">Pass</span>";
+        } else {
+            $botcheck = "<span style=\"color: red;\">Fail</span>";
+        }
+        if ($users) {
+            $users = "<span style=\"color: Green;\">Pass</span>";
+        } else {
+            $users = "<span style=\"color: red;\">Fail</span>";
+        }
+        if (MYSQLRESULT) {
+            $mysqlresult = "<span style=\"color: Green;\">Pass</span>";
+        } else {
+            $mysqlresult = "<span style=\"color: red;\">Fail</span>";
+        }
+        if (DBRESULT) {
+            $dbresult = "<span style=\"color: Green;\">Pass</span>";
+        } else {
+            $dbresult = "<span style=\"color: red;\">Fail</span>";
+        }
+
+        // Done. Show page.
+        $page = <<<THEVERYENDOFYOU
 <html>
     <head>
         <title>Dragon Scourge :: Installation (Step 1)</title>
@@ -225,16 +274,17 @@ $page = <<<THEVERYENDOFYOU
     </center></body>
 </html>
 THEVERYENDOFYOU;
-die($page);
+        die($page);
 
-}
+    }
 
-function two() {
-    
-    $installsql = file_get_contents("install.sql");
-    $status = dobatch($installsql);
-    
-$page = <<<THEVERYENDOFYOU
+    function two()
+    {
+
+        $installsql = file_get_contents("install.sql");
+        $status = dobatch($installsql);
+
+        $page = <<<THEVERYENDOFYOU
 <html>
     <head>
         <title>Dragon Scourge :: Installation (Step 2)</title>
@@ -265,22 +315,23 @@ $page = <<<THEVERYENDOFYOU
     </center></body>
 </html>
 THEVERYENDOFYOU;
-die($page);
+        die($page);
 
-}
+    }
 
-function three() {
-    
-    // Path stuff. Easy.
-    $gamepath = str_replace("install.php","",__FILE__);
-    $gamepath = str_replace("\\","/",$gamepath);
-    $avatarpath = $gamepath . "images/users/";
-    $gameurl = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["PHP_SELF"];
-    $gameurl = str_replace("install.php","",$gameurl);
-    $avatarurl = $gameurl . "images/users/";
-    
-    
-$page = <<<THEVERYENDOFYOU
+    function three()
+    {
+
+        // Path stuff. Easy.
+        $gamepath = str_replace("install.php", "", __FILE__);
+        $gamepath = str_replace("\\", "/", $gamepath);
+        $avatarpath = $gamepath . "images/users/";
+        $gameurl = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["PHP_SELF"];
+        $gameurl = str_replace("install.php", "", $gameurl);
+        $avatarurl = $gameurl . "images/users/";
+
+
+        $page = <<<THEVERYENDOFYOU
 <html>
     <head>
         <title>Dragon Scourge :: Installation (Step 3)</title>
@@ -337,33 +388,66 @@ $page = <<<THEVERYENDOFYOU
     </center></body>
 </html>
 THEVERYENDOFYOU;
-die($page);
+        die($page);
 
-}
+    }
 
-function four() {
-    
-    // Check for errors.
-    $requires = array("gamename","gamepath","gameurl","avatarpath","avatarurl","avatarmaxsize","adminemail","botcheck","pvprefresh","pvptimeout","guildstartup","guildstartlvl","guildjoinlvl","guildupdate");
-    $numerics = array("avatarmaxsize","botcheck","pvprefresh","pvptimeout","guildstartup","guildstartlvl","guildjoinlvl","guildupdate");
-    $toggles = array("showshout","showonline","showsigbot","verifyemail","compression","debug");
-    $errors = "";
-    foreach($requires as $a => $b) {
-        if (!isset($_POST[$b]) || trim($_POST[$b])=="") { $errors .= "$b field is required.<br />"; }
-    }
-    foreach($numerics as $a => $b) {
-        if (!is_numeric($_POST[$b])) { $errors .= "$b field must contain numbers only.<br />"; }
-    }
-    if ($errors != "") { die("The following errors occurred. Please go back and correct these errors before continuing.<br /><br />$errors"); }
-    
-    // Check toggles.
-    foreach($toggles as $a => $b) {
-        if (!isset($_POST[$b])) { $_POST[$b] = "0"; }
-    }
-    
-    // No errors, so set up the table.
-    extract($_POST);
-    doquery("INSERT INTO <<control>> SET 
+    function four()
+    {
+
+        // Check for errors.
+        $requires = array(
+            "gamename",
+            "gamepath",
+            "gameurl",
+            "avatarpath",
+            "avatarurl",
+            "avatarmaxsize",
+            "adminemail",
+            "botcheck",
+            "pvprefresh",
+            "pvptimeout",
+            "guildstartup",
+            "guildstartlvl",
+            "guildjoinlvl",
+            "guildupdate"
+        );
+        $numerics = array(
+            "avatarmaxsize",
+            "botcheck",
+            "pvprefresh",
+            "pvptimeout",
+            "guildstartup",
+            "guildstartlvl",
+            "guildjoinlvl",
+            "guildupdate"
+        );
+        $toggles = array("showshout", "showonline", "showsigbot", "verifyemail", "compression", "debug");
+        $errors = "";
+        foreach ($requires as $a => $b) {
+            if (!isset($_POST[$b]) || trim($_POST[$b]) == "") {
+                $errors .= "$b field is required.<br />";
+            }
+        }
+        foreach ($numerics as $a => $b) {
+            if (!is_numeric($_POST[$b])) {
+                $errors .= "$b field must contain numbers only.<br />";
+            }
+        }
+        if ($errors != "") {
+            die("The following errors occurred. Please go back and correct these errors before continuing.<br /><br />$errors");
+        }
+
+        // Check toggles.
+        foreach ($toggles as $a => $b) {
+            if (!isset($_POST[$b])) {
+                $_POST[$b] = "0";
+            }
+        }
+
+        // No errors, so set up the table.
+        extract($_POST);
+        doquery("INSERT INTO control SET 
         id='1',
         gamename='$gamename',
         gameopen='1',
@@ -393,9 +477,9 @@ function four() {
         guildjoinlvl='$guildjoinlvl',
         guildupdate='$guildupdate'
         ");
-        
-    // Done with the controlrow creator. Now show admin user creation form.'
-$page = <<<THEVERYENDOFYOU
+
+        // Done with the controlrow creator. Now show admin user creation form.'
+        $page = <<<THEVERYENDOFYOU
 <html>
     <head>
         <title>Dragon Scourge :: Installation (Step 4)</title>
@@ -434,31 +518,36 @@ $page = <<<THEVERYENDOFYOU
     </center></body>
 </html>
 THEVERYENDOFYOU;
-die($page);
-}
-
-function five() {
-    
-    // Check for errors.
-    $requires = array("username","password","emailaddress");
-    $errors = "";
-    foreach($requires as $a => $b) {
-        if (!isset($_POST[$b]) || trim($_POST[$b])=="") { $errors .= "$b field is required.<br />"; }
+        die($page);
     }
-    if ($errors != "") { die("The following errors occurred. Please go back and correct these errors before continuing.<br /><br />$errors"); }
-    
-    // No errors, so set up the table.
-    extract($_POST);
-    $password = md5($password);
-    
-    doquery("INSERT INTO <<accounts>> SET 
+
+    function five()
+    {
+
+        // Check for errors.
+        $requires = array("username", "password", "emailaddress");
+        $errors = "";
+        foreach ($requires as $a => $b) {
+            if (!isset($_POST[$b]) || trim($_POST[$b]) == "") {
+                $errors .= "$b field is required.<br />";
+            }
+        }
+        if ($errors != "") {
+            die("The following errors occurred. Please go back and correct these errors before continuing.<br /><br />$errors");
+        }
+
+        // No errors, so set up the table.
+        extract($_POST);
+        $password = md5($password);
+
+        doquery("INSERT INTO accounts SET 
         id='1',
         username='$username',
         password='$password',
         emailaddress='$emailaddress',
         verifycode='1',
         regdate=NOW(),
-        regip='".$_SERVER["REMOTE_ADDR"]."',
+        regip='" . $_SERVER["REMOTE_ADDR"] . "',
         authlevel='255',
         language='English',
         characters='0',
@@ -466,9 +555,9 @@ function five() {
         imageformat='.png',
         minimap='1'
         ");
-        
-    // Done with the controlrow creator. Now show admin user creation form.'
-$page = <<<THEVERYENDOFYOU
+
+        // Done with the controlrow creator. Now show admin user creation form.'
+        $page = <<<THEVERYENDOFYOU
 <html>
     <head>
         <title>Dragon Scourge :: Installation Complete</title>
@@ -493,7 +582,7 @@ $page = <<<THEVERYENDOFYOU
     </center></body>
 </html>
 THEVERYENDOFYOU;
-die($page);
-}
+        die($page);
+    }
 
 ?>

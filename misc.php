@@ -17,14 +17,14 @@
 function iddqd() { 
     
     global $acctrow;
-    doquery("UPDATE <<accounts>> SET extra1='1' WHERE id='".$acctrow["id"]."' LIMIT 1");
+    doquery("UPDATE accounts SET extra1='1' WHERE id='".$acctrow["id"]."' LIMIT 1");
     $page = "\"Please don't take everything I say so seriously.\"<br /><i><a href=\"http://www.nin.com\">---Trent Reznor</a></i>";
     display("LMFAO!", $page);
-    
+
 }
 
 function version() {
-    
+
     global $controlrow, $version, $bname, $bdate, $bnumber;
     $year = date("Y");
     if ($controlrow["moddedby"] != "") {
@@ -32,8 +32,8 @@ function version() {
     } else {
         $moddedby = "";
     }
-    
-$page = <<<END
+
+$page = <END
 <center>
 <img src="images/r7_logo.png" alt="renderse7en" /><br /><br />
 <span style="font: 12px Verdana;"><a href="http://www.dragonscourge.com" target="_new">Dragon Scourge</a><br />&copy; 2003-$year by <a href="http://www.renderse7en.com">renderse7en</a></b></span><br /><br />
@@ -49,13 +49,13 @@ $moddedby
 END;
 
     display("Version Information",$page);
-    
+
 }
 
 function babblebox2() {
-    
+
     global $userrow, $controlrow;
-    
+
     if (isset($_GET["g"])) {
         $guild = $userrow["guild"];
         $g = "WHERE guild='$guild'";
@@ -65,27 +65,27 @@ function babblebox2() {
         $g = "WHERE guild='0'";
         $row["guild"] = "";
     }
-    
+
     if (isset($_POST["babble"])) {
-        
+
         // Add new shout.
-        if (trim($_POST["babble"]) != "") { 
-            $insert = doquery("INSERT INTO <<babblebox>> SET id='', posttime=NOW(), charid='".$userrow["id"]."', charname='".$userrow["charname"]."', content='".$_POST["babble"]."' $g2");
+        if (trim($_POST["babble"]) != "") {
+            $insert = doquery("INSERT INTO babblebox SET id='', posttime=NOW(), charid='".$userrow["id"]."', charname='".$userrow["charname"]."', content='".$_POST["babble"]."' $g2");
         }
-        
+
         // Only keep 20 shouts in DB at any one time.
-        $check = doquery("SELECT * FROM <<babblebox>> $g");
-        if (mysql_num_rows($check) > 20) {
-            $delete1 = dorow(doquery("SELECT id FROM <<babblebox>> $g ORDER BY id LIMIT 1"));
-            $delete2 = doquery("DELETE FROM <<babblebox>> WHERE id='".$delete1["id"]."' LIMIT 1");
+        $check = doquery("SELECT * FROM babblebox $g");
+        if (mysqli_num_rows($check) > 20) {
+            $delete1 = dorow(doquery("SELECT id FROM babblebox $g ORDER BY id LIMIT 1"));
+            $delete2 = doquery("DELETE FROM babblebox WHERE id='".$delete1["id"]."' LIMIT 1");
         }
-        
+
         // And we're done.
         die(header("Location: index.php?do=babblebox".$row["guild"]));
-        
+
     }
-    
-    $shouts = dorow(doquery("SELECT * FROM <<babblebox>> $g ORDER BY id LIMIT 20"), "id");
+
+    $shouts = dorow(doquery("SELECT * FROM babblebox $g ORDER BY id LIMIT 20"), "id");
     $row["shouts"] = "";
     $background = 1;
     if ($shouts != false) {
