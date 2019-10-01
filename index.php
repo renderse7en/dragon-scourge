@@ -77,6 +77,7 @@ if(isset($_GET["do"])) {
 function donothing() {
     
     global $userrow;
+
     if ($userrow["story"] != "0" && $userrow["storylat"] == $userrow["latitude"] && $userrow["storylon"] == $userrow["longitude"]) {
         die(header("Location: story.php"));
     }

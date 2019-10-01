@@ -35,6 +35,7 @@ if (substr($_SERVER["REQUEST_URI"], -19) != "login.php?do=logout") {
 }
 
 $userrow = dorow(doquery("SELECT * FROM users WHERE id='".$acctrow["activechar"]."' LIMIT 1"));
+
 if ($userrow != false) { $userrow = array_map("stripslashes", $userrow); }
 
 // World row.

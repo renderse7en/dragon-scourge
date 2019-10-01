@@ -33,7 +33,7 @@ function version() {
         $moddedby = "";
     }
 
-$page = <END
+$page = <<<END
 <center>
 <img src="images/r7_logo.png" alt="renderse7en" /><br /><br />
 <span style="font: 12px Verdana;"><a href="http://www.dragonscourge.com" target="_new">Dragon Scourge</a><br />&copy; 2003-$year by <a href="http://www.renderse7en.com">renderse7en</a></b></span><br /><br />
